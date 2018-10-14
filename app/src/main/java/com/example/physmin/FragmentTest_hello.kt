@@ -44,8 +44,8 @@ class FragmentTest_hello : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_fragment_test_hello, container, false)
-        view.button_start_test.setOnClickListener { view ->
-            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_state)
+        view.button_start_test.setOnClickListener {
+            view -> view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_state)
         }
         view.button_start_test_2.setOnClickListener { view ->
             view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph2)

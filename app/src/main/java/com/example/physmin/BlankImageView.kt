@@ -12,7 +12,6 @@ import android.widget.ImageView
 
 class BlankImageView(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
 
-
     override var par: SettableGroup? = null
     override var answerView: Pickable? = null
         set(value) {
@@ -42,3 +41,4 @@ class BlankImageView(context: Context, attributeSet: AttributeSet?) : ImageView(
     }
 
 }
+
