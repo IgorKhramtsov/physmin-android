@@ -63,7 +63,7 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
         popupView.findViewById<ImageView>(R.id.imageView_more).setOnClickListener(listener)
 
         var location = intArrayOf(0,0)
-        this.getLocationOnScreen(location);
+        this.getLocationOnScreen(location)
         popupWindow.showAtLocation(view,0,location[0]-25,location[1]-130)
     }
 
@@ -74,9 +74,13 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
             return
 
         var bitmap = (picked_view!!.drawable as? BitmapDrawable)?.bitmap
+        var image_bitmap = (this!!.drawable as? BitmapDrawable)?.bitmap
+        var iHeight = canvas.height/10f
+        var iWidth = canvas.width/10f
+
 
         val src = Rect(0, 0, bitmap!!.getWidth() - 1, bitmap!!.getHeight() - 1)
-        val dest = Rect(this.left/2-28, this.top/2-39, this.left/2+28, this.top/2+39)
+        val dest = Rect(Math.round(iWidth*4),Math.round(iHeight),Math.round(iWidth*6),Math.round(iHeight*9))
         canvas.drawBitmap(bitmap,src,dest,null)
 
     }
