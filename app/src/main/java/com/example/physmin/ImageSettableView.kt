@@ -12,7 +12,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
-class ImageSettableView(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
+open class ImageSettableView(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
 
     override var par: SettableGroup? = null
     override var answerView: Pickable? = null
@@ -38,6 +38,10 @@ class ImageSettableView(context: Context, attributeSet: AttributeSet?) : ImageVi
         canvas.translate(this.width / 2f - staticLayout.width / 2f, this.height / 2f - staticLayout.height / 2f)
         staticLayout.draw(canvas)
         canvas.restore()
+    }
+
+    open fun onClick() {
+
     }
 
 }

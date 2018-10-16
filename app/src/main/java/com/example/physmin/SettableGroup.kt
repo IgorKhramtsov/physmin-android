@@ -3,10 +3,9 @@ package com.example.physmin
 import android.content.Context
 import android.graphics.Point
 import android.util.AttributeSet
-import android.view.Display
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
+import android.widget.ImageView
+import android.widget.PopupWindow
 
 class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
@@ -77,6 +76,9 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
 
         (child as? BlankImageView)?.setParent(this)
         (child as? BlankImageView)?.setOnClickListener(this)
+
+        (child as? SettablePopUpView)?.setParent(this)
+
     }
 
     override fun onChildViewRemoved(parent: View?, child: View?) {
