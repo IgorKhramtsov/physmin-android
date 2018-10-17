@@ -34,10 +34,12 @@ class BlankImageView(context: Context, attributeSet: AttributeSet?) : ImageView(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        paint.strokeWidth = 10f
+
         canvas.drawLine(0f, 0f, width * 1f, 0f, paint)
         canvas.drawLine(0f, 0f, 0f, height * 1f, paint)
-        canvas.drawLine(width * 1f, 0f, width * 1f, 0f, paint)
-        canvas.drawLine(0f, height * 1f, 0f, height * 1f, paint)
+        canvas.drawLine(width * 1f, 0f, width * 1f, height * 1f, paint)
+        canvas.drawLine(0f, height * 1f, width * 1f, height * 1f, paint)
     }
 
 }
