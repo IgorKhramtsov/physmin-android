@@ -19,6 +19,7 @@ open class ImageSettableView(context: Context, attributeSet: AttributeSet?) : Im
     var paint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
 
     init {
+        var a = 1
     }
 
     override  fun setParent(_parent: SettableGroup) {
