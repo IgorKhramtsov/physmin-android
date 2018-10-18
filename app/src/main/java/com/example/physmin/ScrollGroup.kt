@@ -193,9 +193,9 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
                     bottom = childView.measuredHeight
                 } else {
                     left = 0
-                    top = i * measuredHeight
+                    top = i * childView.measuredHeight
                     right = childView.measuredWidth
-                    bottom = i * measuredHeight + childView.measuredHeight + paddingTop
+                    bottom = i * childView.measuredHeight + childView.measuredHeight + paddingTop
                 }
                 childView.layout(left, top, right, bottom)
             }

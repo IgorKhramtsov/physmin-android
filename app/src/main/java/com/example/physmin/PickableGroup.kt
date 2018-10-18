@@ -31,12 +31,12 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
 
         setOnHierarchyChangeListener(this)
 
-        val mScrollGroup = findViewById(R.id.pickableGroup) as ScrollGroup
-        mScrollGroup.setHorizontalOrVertical(false)
-                .setStartEndScroll(true)
-                .setScrollEdge(deviceWidth / 2)
-                .setDuration(1000)
-                .setInvalidate()
+        val mScrollGroup = findViewById(R.id.pickableGroup) as? ScrollGroup
+        mScrollGroup?.setHorizontalOrVertical(false)
+                ?.setStartEndScroll(true)
+                ?.setScrollEdge(deviceWidth / 2)
+                ?.setDuration(1000)
+                ?.setInvalidate()
     }
 
     public fun setParent(_par: TestConstraintLayout?) {

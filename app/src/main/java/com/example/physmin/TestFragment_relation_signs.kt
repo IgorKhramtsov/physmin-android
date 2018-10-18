@@ -23,7 +23,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class TestFramgent_relation_signs : Fragment() {
+class TestFragment_relation_signs : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -40,7 +40,7 @@ class TestFramgent_relation_signs : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test_framgent_relation_signs, container, false)
+        return inflater.inflate(R.layout.fragment_test_fragment_relation_signs, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,7 +90,7 @@ class TestFramgent_relation_signs : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                TestFramgent_relation_signs().apply {
+                TestFragment_relation_signs().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
