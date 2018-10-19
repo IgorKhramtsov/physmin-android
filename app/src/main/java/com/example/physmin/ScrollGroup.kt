@@ -108,8 +108,12 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val touchX = event.x
         val touchY = event.y
+
+        // Override view height by height of first child
+        val height = this.getChildAt(0).height
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+
             }
             MotionEvent.ACTION_MOVE -> {
                 if (!mScroller!!.isFinished) {
@@ -123,10 +127,11 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
                     scrollByStartX = if (isStartEndScroll) (touchX - mLastX) / 3 else 0f
                 } else if (scrollX + width - scrollByStartX > rightEdge && isHorizontalOrVertical) {
                     scrollByStartX = if (isStartEndScroll) (touchX - mLastX) / 3 else 0f
+
                 } else if (scrollY - scrollByStartY < topEdge && !isHorizontalOrVertical) {
-                    scrollByStartY = if (isStartEndScroll) (touchY - mLastY) / 3 else 0f
+                    scrollByStartY = if (isStartEndScroll) (touchY - mLastY) / 1.2f else 0f
                 } else if (scrollY + height - scrollByStartY > bottomEdge && !isHorizontalOrVertical) {
-                    scrollByStartY = if (isStartEndScroll) (touchY - mLastY) / 3 else 0f
+                    scrollByStartY = if (isStartEndScroll) (touchY - mLastY) / 1.2f else 0f
                 }
                 scrollBy((-scrollByStartX).toInt(), (-scrollByStartY).toInt())
             }
@@ -142,8 +147,9 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
                 val edgeX = if (isScrollPath) scrollEdge else width - scrollEdge
                 val edgeY = if (isScrollPath) scrollEdge else height - scrollEdge
                 var index = if (isHorizontalOrVertical) (scrollX + width - edgeX) / width else (scrollY + height - edgeY) / height
-                if (index > childCount - 1) {
-                    index = childCount - 1
+                // Disallow scroll if it last row (work if 2 child in row)
+                if (index > childCount / 2 - 1) {
+                    index = childCount / 2 - 1
                 }
                 val dx = if (isHorizontalOrVertical) index * width - scrollX else 0
                 val dy = if (isHorizontalOrVertical) 0 else index * height - scrollY

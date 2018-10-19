@@ -23,12 +23,6 @@ import android.view.Display
 import android.view.WindowManager
 
 
-
-
-
-
-
-
 class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(context, attrs), View.OnClickListener, Settable {
 
     var picked_view: ImageView? = null
