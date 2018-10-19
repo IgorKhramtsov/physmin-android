@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TestFragment_relation_signs">
+
+    <com.example.physmin.TestConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="355dp"
+            android:layout_height="144dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/screenshot1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.physmin.SettableGroup
+            android:layout_width="375dp"
+            android:layout_height="433dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView10">
+
+            <com.example.physmin.SettablePopUpView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/screenshot_2" />
+
+            <com.example.physmin.SettablePopUpView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/screenshot_2" />
+
+            <com.example.physmin.SettablePopUpView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/screenshot_2" />
+
+            <com.example.physmin.SettablePopUpView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/screenshot_2" />
+
+            <com.example.physmin.SettablePopUpView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/screenshot_2" />
+
+            <com.example.physmin.SettablePopUpView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/screenshot_2" />
+
+        </com.example.physmin.SettableGroup>
+
+
+    </com.example.physmin.TestConstraintLayout>
+</FrameLayout>

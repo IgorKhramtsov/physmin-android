@@ -1,17 +1,22 @@
 package com.example.physmin
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Point
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.util.DisplayMetrics
+import android.os.Bundle
+import android.widget.ScrollView
+
 
 /**
  * TODO: document your custom view class.
  */
-class PickableGroup(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs),
+class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
     var deviceWidth: Int = 0
@@ -26,6 +31,12 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ViewGroup(context,
         deviceWidth = displaySize.x
 
         setOnHierarchyChangeListener(this)
+
+        val mScrollGroup = findViewById(R.id.pickableGroup) as? ScrollGroup
+        mScrollGroup?.setHorizontalOrVertical(false)
+                ?.setStartEndScroll(true)
+                ?.setDuration(300)
+                ?.setInvalidate()
     }
 
     public fun setParent(_par: TestConstraintLayout?) {
@@ -98,6 +109,10 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ViewGroup(context,
 
             curLeft += curWidth
         }
+        val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+        val displaySize = Point()
+        display.getSize(displaySize)
+        deviceWidth = displaySize.x
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {
