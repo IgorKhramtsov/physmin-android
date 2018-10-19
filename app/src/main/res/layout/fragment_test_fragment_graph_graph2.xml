@@ -130,6 +130,21 @@
 
         </com.example.physmin.PickableGroup>
 
+        <com.example.physmin.ScrollGroup
+            android:id="@+id/scrollGroup"
+            android:layout_width="0dp"
+            android:layout_height="324dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="273dp">
+
+
+        </com.example.physmin.ScrollGroup>
+
     </com.example.physmin.TestConstraintLayout>
 
 </FrameLayout>

@@ -19,13 +19,14 @@ class CustomTimer(context: Context, attrs: AttributeSet?) : ImageView(context, a
     var paintText = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
     var paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var time = 60f
-
-    var hsv  = floatArrayOf(120f, 1f, 0.75f)
+    var staticLayout: StaticLayout?= null
+    var hsv  = floatArrayOf(120f, 0.4f, 0.75f)
 
     init {
         var pb = this
         paint.strokeWidth = 5f
-        paintText.textSize = 50f
+        var density = context.getResources().getDisplayMetrics().density
+        paintText.textSize = 20f*density
 
         var cdt = object : CountDownTimer(60000,500) {
             override fun onTick(millisUntilFinished: Long) {
@@ -50,13 +51,14 @@ class CustomTimer(context: Context, attrs: AttributeSet?) : ImageView(context, a
     override  fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         paint.color = Color.HSVToColor(hsv)
-        canvas.drawArc(RectF(canvas.width/2-100f,canvas.height/2-100f,canvas.width/2+100f,canvas.height/2+100f), 360F, 0F+time*6, true, paint)
+        canvas.drawArc(RectF(canvas.width/2-canvas.width/3f,canvas.height/2-canvas.height/3f,canvas.width/2+canvas.width/3f,canvas.height/2+canvas.height/3f), 360F, 0F+time*6, true, paint)
+
         paint.color = Color.WHITE
-        canvas.drawOval(RectF(canvas.width/2-80f,canvas.width/2-80f,canvas.width/2+80f,canvas.width/2+80f),paint)
-        val staticLayout = StaticLayout(Math.round(time).toString(), paintText, canvas.width, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+        canvas.drawOval(RectF(canvas.width/2-canvas.width/4f,canvas.width/2-canvas.width/4f,canvas.width/2+canvas.width/4f,canvas.width/2+canvas.width/4f),paint)
+        staticLayout = StaticLayout(Math.round(time).toString(), paintText, canvas.width, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
         canvas.save()
-        canvas.translate(this.width / 2f - staticLayout.width / 2f, this.height / 2f - staticLayout.height / 2f)
-        staticLayout.draw(canvas)
+        canvas.translate(this.width / 2f - staticLayout!!.width / 2f, this.height / 2f - staticLayout!!.height / 2f)
+        staticLayout!!.draw(canvas)
         canvas.restore()
     }
 

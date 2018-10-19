@@ -21,6 +21,9 @@ import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
 import android.view.Display
 import android.view.WindowManager
+import android.util.DisplayMetrics
+
+
 
 
 class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(context, attrs), View.OnClickListener, Settable {
@@ -58,7 +61,7 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
 
         var location = intArrayOf(0,0)
         this.getLocationOnScreen(location)
-        popupWindow.showAtLocation(view,0,location[0]-25,location[1]-130)
+        popupWindow.showAtLocation(view,0,location[0]+Math.round(this.width*0.1f),location[1]-Math.round(this.height*0.4f))
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -69,12 +72,12 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
 
         var bitmap = (picked_view!!.drawable as? BitmapDrawable)?.bitmap
         var image_bitmap = (this!!.drawable as? BitmapDrawable)?.bitmap
-        var iHeight = canvas.height/10f
-        var iWidth = canvas.width/10f
 
+        var iHeight = (canvas.height/10f)
+        var iWidth = (canvas.width/10f)
 
         val src = Rect(0, 0, bitmap!!.getWidth() - 1, bitmap!!.getHeight() - 1)
-        val dest = Rect(Math.round(iWidth*4),Math.round(iHeight),Math.round(iWidth*6),Math.round(iHeight*9))
+        val dest = Rect(Math.round(iWidth*4),Math.round(iHeight*3),Math.round(iWidth*6),Math.round(iHeight*7))
         canvas.drawBitmap(bitmap,src,dest,null)
 
     }

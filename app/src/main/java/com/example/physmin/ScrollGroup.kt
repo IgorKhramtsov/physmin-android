@@ -110,7 +110,9 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
         val touchY = event.y
 
         // Override view height by height of first child
+        if(this.getChildAt(0) == null) return  super.onTouchEvent(event)
         val height = this.getChildAt(0).height
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
 
