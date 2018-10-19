@@ -32,7 +32,7 @@
         <com.example.physmin.SettableGroup
             android:id="@+id/settableGroup"
             android:layout_width="wrap_content"
-            android:layout_height="165dp"
+            android:layout_height="119dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
@@ -45,23 +45,24 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="115dp"
+                android:layout_height="115dp"
                 android:src="@drawable/graph1" />
 
             <com.example.physmin.BlankImageView
                 android:id="@+id/asd"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:minWidth="250dp"
-                android:minHeight="250dp"
+                android:layout_width="115dp"
+                android:layout_height="115dp"
+                android:minWidth="115dp"
+                android:minHeight="115dp"
                 android:padding="10dp" />
 
             <com.example.physmin.BlankImageView
                 android:id="@+id/sad"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@android:drawable/screen_background_dark_transparent" />
+                android:layout_width="115dp"
+                android:layout_height="115dp"
+                android:minWidth="115dp"
+                android:minHeight="115dp" />
 
         </com.example.physmin.SettableGroup>
 
