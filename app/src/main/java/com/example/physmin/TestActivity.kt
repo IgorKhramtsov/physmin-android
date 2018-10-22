@@ -8,7 +8,8 @@ class TestActivity : AppCompatActivity(),
         FragmentTest_hello.OnFragmentInteractionListener,
         TestFragment_graph_state.OnFragmentInteractionListener,
         TestFragment_graph_graph2.OnFragmentInteractionListener,
-        TestFragment_relation_signs.OnFragmentInteractionListener{
+        TestFragment_relation_signs.OnFragmentInteractionListener,
+        TestFragment_graph_graph.OnFragmentInteractionListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

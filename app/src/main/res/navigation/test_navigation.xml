@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_fragmentTest_hello_to_testFragment_relation_signs2"
             app:destination="@id/testFragment_relation_signs2" />
+        <action
+            android:id="@+id/action_fragmentTest_hello_to_testFragment_graph_graph3"
+            app:destination="@id/testFragment_graph_graph3" />
     </fragment>
     <fragment
         android:id="@+id/testFragment_graph_graph"
@@ -70,4 +73,9 @@
         android:name="com.example.physmin.TestFragment_relation_signs"
         android:label="fragment_test_fragment_relation_signs"
         tools:layout="@layout/fragment_test_fragment_relation_signs" />
+    <fragment
+        android:id="@+id/testFragment_graph_graph3"
+        android:name="com.example.physmin.TestFragment_graph_graph"
+        android:label="fragment_test_fragment_graph_graph"
+        tools:layout="@layout/fragment_test_fragment_graph_graph" />
 </navigation>

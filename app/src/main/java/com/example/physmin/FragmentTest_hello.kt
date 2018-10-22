@@ -53,6 +53,9 @@ class FragmentTest_hello : Fragment() {
         view.button_start_test_3.setOnClickListener{ view ->
             view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_relation_signs2)
         }
+        view.button_start_test_2_2.setOnClickListener{ view ->
+            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph)
+        }
 
         return view
     }
