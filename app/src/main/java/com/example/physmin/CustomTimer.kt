@@ -28,15 +28,15 @@ class CustomTimer(context: Context, attrs: AttributeSet?) : ImageView(context, a
         var density = context.getResources().getDisplayMetrics().density
         paintText.textSize = 20f*density
 
-        var cdt = object : CountDownTimer(60000,500) {
+        var cdt = object : CountDownTimer(60000,100) {
             override fun onTick(millisUntilFinished: Long) {
 
-                time-=0.5f
+                time-=0.1f
 
                 if(hsv[0] > 0 ) {
                     if (hsv[0] > 40)
-                        hsv[0] -= 1.25f
-                    else hsv[0] -=1f
+                        hsv[0] -= 0.25f
+                    else hsv[0] -=0.2f
                     if(hsv[0] < 0)
                         hsv[0] = 0f
                 }

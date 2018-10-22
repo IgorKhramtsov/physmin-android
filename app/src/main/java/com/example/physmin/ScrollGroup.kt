@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Scroller
 
-/**
- * Created by DengXiao on 2017/2/20.
+/*
+    TODO: Make cleanup
+    TODO: Make scrolling available in empty space of view
  */
 
 open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
