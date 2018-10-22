@@ -9,7 +9,6 @@ import android.widget.Scroller
 
 /*
     TODO: Make cleanup
-    TODO: Make scrolling available in empty space of view
  */
 
 open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
@@ -165,7 +164,7 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
         }
         mLastX = touchX
         mLastY = touchY
-        return super.onTouchEvent(event)
+        return true
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -51,18 +51,18 @@
 
             <com.example.physmin.BlankImageView
                 android:id="@+id/asd"
-                android:layout_width="115dp"
-                android:layout_height="115dp"
-                android:minWidth="115dp"
-                android:minHeight="115dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:minWidth="110dp"
+                android:minHeight="110dp"
                 android:padding="10dp" />
 
             <com.example.physmin.BlankImageView
                 android:id="@+id/sad"
-                android:layout_width="115dp"
-                android:layout_height="115dp"
-                android:minWidth="115dp"
-                android:minHeight="115dp" />
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:minWidth="110dp"
+                android:minHeight="110dp" />
 
         </com.example.physmin.SettableGroup>
 
