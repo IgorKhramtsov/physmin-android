@@ -12,10 +12,6 @@ import android.util.DisplayMetrics
 import android.os.Bundle
 import android.widget.ScrollView
 
-
-/**
- * TODO: document your custom view class.
- */
 class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
@@ -68,12 +64,17 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
     }
 
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
+        if(this.childCount <= 0)
+            return
+
         val count: Int = childCount
         var curWidth = 0
         var curHeight = 0
         var curLeft = 0
-        var curTop = 0
-        var maxHeight = 0
+        var curTop = 20
+
+        var maxWidth = this.getChildAt(0).measuredWidth
+        var maxHeight = this.getChildAt(0).measuredHeight
 
         val contentLeft = this.paddingLeft
         val contentTop = this.paddingTop
@@ -81,6 +82,10 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
         val contentBottom = this.measuredHeight - this.paddingBottom
         val childWidth = if (count > 0 ) getChildAt(0).layoutParams.width else contentRight - contentLeft
         val childHeight = if(count > 0) getChildAt(0).layoutParams.height else contentBottom - contentTop
+
+        var childInRow = Math.floor((contentRight - contentLeft)*1.0/maxWidth*1.0).toInt()
+        var childSpacing = ((contentRight - contentLeft)-childInRow*maxWidth)/(childInRow+1)
+        var curChildInRow = 0
 
         curLeft = contentLeft
         curTop = contentTop
@@ -90,29 +95,32 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
 
 //            if(child.visibility == View.GONE)
 //                continue
-
             //Get the maximum size of the child
-            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
-            curWidth = child.measuredWidth
-            curHeight = child.measuredHeight
+//            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
+//            curWidth = maxWidth
+//            curHeight = maxHeight
             //wrap is reach to the end
-            if(curLeft + curWidth >= contentRight) {
-                curLeft = contentLeft
-                curTop += maxHeight
-                maxHeight = 0
-            }
-            //do the layout
-            child.layout(curLeft, curTop, curLeft + curWidth, curTop + curHeight)
-            //store the max height
-            if(maxHeight < curHeight)
-                maxHeight = curHeight
+//            if(curLeft + curWidth >= contentRight) {
+//                curLeft = contentLeft
+//                curTop += maxHeight
+//                maxHeight = 0
+//            }
 
-            curLeft += curWidth
+            curChildInRow++
+            if(curChildInRow > childInRow){
+                curLeft = contentLeft
+                curTop += maxHeight + 20
+                curChildInRow = 1
+            }
+            curLeft += childSpacing
+            //do the layout
+            child.layout(curLeft, curTop, curLeft + maxWidth, curTop + maxHeight)
+            //store the max height
+//            if(maxHeight < curHeight)
+//                maxHeight = curHeight
+
+            curLeft += maxWidth
         }
-        val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
-        val displaySize = Point()
-        display.getSize(displaySize)
-        deviceWidth = displaySize.x
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {

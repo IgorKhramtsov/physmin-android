@@ -13,7 +13,7 @@ import android.widget.Scroller
 
 open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
     //是否是水平滚动
-    private var isHorizontalOrVertical = true
+    private var isHorizontalOrVertical = false
     //是否添加首位滑动阻尼效果
     private var isStartEndScroll = true
     //用于判断滑动翻页的距离

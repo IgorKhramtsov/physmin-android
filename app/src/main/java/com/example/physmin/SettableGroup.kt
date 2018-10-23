@@ -26,19 +26,28 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
     }
 
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
+        if(this.childCount <= 0)
+            return
+
         val count: Int = childCount
         var curWidth = 0
         var curHeight = 0
         var curLeft = 0
-        var curTop = 0
-        var maxHeight = 0
+        var curTop: Int = 20
 
-        val contentLeft = this.paddingLeft + 8
+        var maxWidth = this.getChildAt(0).measuredWidth
+        var maxHeight = this.getChildAt(0).measuredHeight
+
+        val contentLeft = this.paddingLeft
         val contentTop = this.paddingTop
         val contentRight = this.measuredWidth - this.paddingRight
         val contentBottom = this.measuredHeight - this.paddingBottom
         val childWidth = if (count > 0 ) getChildAt(0).layoutParams.width else contentRight - contentLeft
         val childHeight = if(count > 0) getChildAt(0).layoutParams.height else contentBottom - contentTop
+
+        var childInRow = Math.floor((contentRight - contentLeft)*1.0/maxWidth*1.0).toInt()
+        var childSpacing = ((contentRight - contentLeft)-childInRow*maxWidth)/(childInRow+1)
+        var curChildInRow = 0
 
         curLeft = contentLeft
         curTop = contentTop
@@ -46,27 +55,33 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         for (i in 0 until count) {
             val child: View = getChildAt(i)
 
-            if(child.visibility == View.GONE)
-                continue
-
+//            if(child.visibility == View.GONE)
+//                continue
             //Get the maximum size of the child
-            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
-            curWidth = child.measuredWidth
-            curHeight = child.measuredHeight
+//            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
+//            curWidth = maxWidth
+//            curHeight = maxHeight
             //wrap is reach to the end
-            if(curLeft + curWidth >= contentRight) {
-                curLeft = contentLeft
-                curTop += maxHeight
-                maxHeight = 0
-            }
-            curLeft += 8
-            //do the layout
-            child.layout(curLeft, curTop, curLeft + curWidth, curTop + curHeight)
-            //store the max height
-            if(maxHeight < curHeight)
-                maxHeight = curHeight
+//            if(curLeft + curWidth >= contentRight) {
+//                curLeft = contentLeft
+//                curTop += maxHeight
+//                maxHeight = 0
+//            }
 
-            curLeft += curWidth
+            curChildInRow++
+            if(curChildInRow > childInRow){
+                curLeft = contentLeft
+                curTop += maxHeight + 20
+                curChildInRow = 1
+            }
+            curLeft += childSpacing
+            //do the layout
+            child.layout(curLeft, curTop, curLeft + maxWidth, curTop + maxHeight)
+            //store the max height
+//            if(maxHeight < curHeight)
+//                maxHeight = curHeight
+
+            curLeft += maxWidth
         }
     }
 
@@ -83,6 +98,15 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
 
     override fun onChildViewRemoved(parent: View?, child: View?) {
 
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val childCount = childCount
+        for (i in 0 until childCount) {
+            val childAt = getChildAt(i)
+            measureChild(childAt, widthMeasureSpec, heightMeasureSpec)
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onClick(_view: View?) {
