@@ -121,6 +121,8 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
 
             curLeft += maxWidth
         }
+
+
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {

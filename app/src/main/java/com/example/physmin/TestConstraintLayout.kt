@@ -5,11 +5,13 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener {
     var pickableGroup: PickableGroup? = null
     var settableGroup: SettableGroup? = null
+    var nextTestButton: Button? = null
 
     init {
         setOnHierarchyChangeListener(this)
@@ -24,6 +26,9 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : Const
             settableGroup = p1
             settableGroup!!.setParent(this)
         }
+        else if(p1 is Button) {
+            nextTestButton = p1
+        }
     }
 
     override fun onChildViewRemoved(p0: View?, p1: View?) {
@@ -37,6 +42,11 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : Const
     fun resetPickedItem() {
         pickableGroup?.pickedItem?.unPick()
         pickableGroup?.pickedItem = null
+    }
+
+    fun testComplete() {
+        pickableGroup?.visibility = View.GONE
+        nextTestButton!!.visibility = View.VISIBLE
     }
 
 }

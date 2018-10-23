@@ -16,6 +16,14 @@ open class ImageSettableView(context: Context, attributeSet: AttributeSet?) : Im
 
     override var par: SettableGroup? = null
     override var answerView: Pickable? = null
+        set(value) {
+            field = value
+            if(par!!.isAllChecked())
+                par!!.par!!.testComplete()
+        }
+    override var correctAnswer: Short = -1
+
+
     var paint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
 
     init {

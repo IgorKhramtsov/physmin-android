@@ -14,6 +14,7 @@ class PickImageView(context: Context, attributeSet: AttributeSet?) : ImageView(c
     private var outlineColor: Int = Color.BLUE
     override var picked: Boolean = false
     override var par: PickableGroup? = null
+    override var answer: Short = -1
 
     init {
         if(attributeSet != null) {

@@ -32,6 +32,12 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
     val _paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override var par: SettableGroup? = null
     override var answerView: Pickable? = null
+        set(value) {
+            field = value
+            if(par!!.isAllChecked())
+                par!!.par!!.testComplete()
+        }
+    override var correctAnswer: Short = -1
 
     init {
        setOnClickListener(this)
@@ -77,7 +83,7 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
         var iWidth = (canvas.width/10f)
 
         val src = Rect(0, 0, bitmap!!.getWidth() - 1, bitmap!!.getHeight() - 1)
-        val dest = Rect(Math.round(iWidth*4),Math.round(iHeight*3),Math.round(iWidth*6),Math.round(iHeight*7))
+        val dest = Rect(Math.round(iWidth*4),Math.round(iHeight*2),Math.round(iWidth*6),Math.round(iHeight*8))
         canvas.drawBitmap(bitmap,src,dest,null)
 
     }

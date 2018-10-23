@@ -23,7 +23,7 @@ class PickTextView(context: Context, attrs: AttributeSet?) : TextView(context, a
     override var picked: Boolean = false
     override var par: PickableGroup? = null
     private var outlineColor: Int = Color.BLUE
-    private var answer: String = "NoAnswer"
+    override var answer: Short = -1
 
     init {
         if(attrs != null) {

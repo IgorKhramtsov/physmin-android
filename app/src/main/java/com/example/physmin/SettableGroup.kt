@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.*
 import android.widget.ImageView
 import android.widget.PopupWindow
+import java.util.*
 
 class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
@@ -155,5 +156,16 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
             }
             par?.resetPickedItem()
         }
+    }
+
+    fun isAllChecked(): Boolean {
+        var childCount = this.childCount
+        var child: View? = null
+        for(i in 0 until childCount) {
+            child = getChildAt(i)
+            if(child is Settable)
+                if(child.answerView == null) return false
+        }
+        return true
     }
 }

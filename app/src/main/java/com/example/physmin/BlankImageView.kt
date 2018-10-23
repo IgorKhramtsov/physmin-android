@@ -20,7 +20,11 @@ class BlankImageView(context: Context, attributeSet: AttributeSet?) : ImageView(
                 this.setImageDrawable((answerView as ImageView).drawable)
             else
                 this.setImageResource(R.color.transparent)
+            if(par!!.isAllChecked())
+                par!!.par!!.testComplete()
         }
+    override var correctAnswer: Short = -1
+
     var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
 
     init {

@@ -6,6 +6,7 @@ interface Pickable {
 
     var picked: Boolean
     var par: PickableGroup?
+    var answer: Short
 
     fun setParent(_parent: PickableGroup)
 
