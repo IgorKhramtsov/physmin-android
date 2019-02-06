@@ -1,4 +1,4 @@
-package com.example.physmin
+package com.example.physmin.views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -248,7 +248,7 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
         fun onPageChange(currentPage: Int)
     }
 
-    fun setOnPageChangeListener(onPageChangeListener: GroupScrollable.onPageChangeListener) {
+    fun setOnPageChangeListener(onPageChangeListener: onPageChangeListener) {
         this.onPageChangeListener2 = onPageChangeListener
     }
 

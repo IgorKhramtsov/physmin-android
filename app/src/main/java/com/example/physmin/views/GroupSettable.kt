@@ -1,9 +1,10 @@
-package com.example.physmin
+package com.example.physmin.views
 
 import android.content.Context
 import android.graphics.Point
 import android.util.AttributeSet
 import android.view.*
+import com.example.physmin.Settable
 
 class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
@@ -109,7 +110,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
 
     override fun onClick(_view: View?) {
 
-        if( _view is ImageViewSettable ) {
+        if( _view is ImageViewSettable) {
             val imageView = _view as ImageViewSettable
             (imageView.answerView as View?)?.visibility = View.VISIBLE
 

@@ -1,4 +1,4 @@
-package com.example.physmin
+package com.example.physmin.views
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -7,6 +7,8 @@ import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.widget.ImageView
+import com.example.physmin.Pickable
+import com.example.physmin.R
 
 class ImageViewPickable(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Pickable {
 

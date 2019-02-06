@@ -1,4 +1,4 @@
-package com.example.physmin
+package com.example.physmin.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,6 +6,9 @@ import android.graphics.Paint
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.widget.ImageView
+import com.example.physmin.Pickable
+import com.example.physmin.R
+import com.example.physmin.Settable
 
 class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
 

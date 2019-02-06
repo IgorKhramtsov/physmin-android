@@ -1,4 +1,4 @@
-package com.example.physmin
+package com.example.physmin.views
 
 import android.content.Context
 import android.graphics.Point
@@ -7,6 +7,8 @@ import android.view.Display
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.example.physmin.Pickable
+import com.example.physmin.R
 
 class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {

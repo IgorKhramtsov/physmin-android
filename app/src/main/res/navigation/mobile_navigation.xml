@@ -6,7 +6,7 @@
     app:startDestination="@id/topics">
     <fragment
         android:id="@+id/topics"
-        android:name="com.example.physmin.FragmentSubjects"
+        android:name="com.example.physmin.fragments.FragmentSubjects"
         android:label="fragment_topics"
         tools:layout="@layout/fragment_topics" >
         <action
@@ -15,12 +15,12 @@
     </fragment>
     <activity
         android:id="@+id/testActivity"
-        android:name="com.example.physmin.ActivityTest"
+        android:name="com.example.physmin.activities.TestActivity"
         android:label="activity_test"
         tools:layout="@layout/activity_test" />
     <fragment
         android:id="@+id/kinematic2"
-        android:name="com.example.physmin.FragmentSubjectKinematic"
+        android:name="com.example.physmin.fragments.FragmentSubjectKinematic"
         android:label="fragment_kinematic"
         tools:layout="@layout/fragment_subj_kinematic" >
         <action

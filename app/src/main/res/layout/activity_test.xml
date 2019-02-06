@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityTest">
+    tools:context=".activities.TestActivity">
 
     <fragment
         android:layout_width="match_parent"
@@ -73,7 +73,7 @@
 
     </RelativeLayout>
 
-    <com.example.physmin.TimerTask
+    <com.example.physmin.views.TimerTask
         android:id="@+id/Timer"
         style="?android:attr/progressBarStyle"
         android:layout_width="80dp"

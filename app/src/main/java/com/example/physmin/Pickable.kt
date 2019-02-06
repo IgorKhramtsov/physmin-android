@@ -1,5 +1,7 @@
 package com.example.physmin
 
+import com.example.physmin.views.GroupPickable
+
 interface Pickable {
 
     var picked: Boolean

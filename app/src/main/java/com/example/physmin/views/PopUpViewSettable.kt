@@ -1,4 +1,4 @@
-package com.example.physmin
+package com.example.physmin.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -12,6 +12,9 @@ import android.widget.PopupWindow
 import android.widget.FrameLayout
 import android.graphics.drawable.ColorDrawable
 import android.graphics.Rect
+import com.example.physmin.Pickable
+import com.example.physmin.R
+import com.example.physmin.Settable
 
 
 class PopUpViewSettable(context: Context, attrs: AttributeSet?) : ImageView(context, attrs), View.OnClickListener, Settable {

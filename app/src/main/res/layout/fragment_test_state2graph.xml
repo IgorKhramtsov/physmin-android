@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentTestGraph2State">
+    tools:context=".fragments.tests.FragmentTestGraph2State">
 
 
 
-    <com.example.physmin.TestConstraintLayout
+    <com.example.physmin.views.TestConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -46,7 +46,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.example.physmin.GroupSettable
+        <com.example.physmin.views.GroupSettable
             android:id="@+id/constraintLayout"
             android:layout_width="352dp"
             android:layout_height="311dp"
@@ -59,7 +59,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2">
 
-            <com.example.physmin.ImageViewSettable
+            <com.example.physmin.views.ImageViewSettable
                 android:id="@+id/imageView5"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
@@ -70,7 +70,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.example.physmin.ImageViewSettable
+            <com.example.physmin.views.ImageViewSettable
                 android:id="@+id/imageView6"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
@@ -81,7 +81,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.example.physmin.ImageViewSettable
+            <com.example.physmin.views.ImageViewSettable
                 android:id="@+id/imageView7"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
@@ -94,7 +94,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
-            <com.example.physmin.ImageViewSettable
+            <com.example.physmin.views.ImageViewSettable
                 android:id="@+id/imageView8"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
@@ -106,9 +106,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView6" />
-        </com.example.physmin.GroupSettable>
+        </com.example.physmin.views.GroupSettable>
 
-        <com.example.physmin.GroupPickable
+        <com.example.physmin.views.GroupPickable
             android:id="@+id/pickableGroup2"
             android:layout_width="wrap_content"
             android:layout_height="217dp"
@@ -123,7 +123,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
-            <com.example.physmin.TextViewPickable
+            <com.example.physmin.views.TextViewPickable
                 android:id="@+id/textView13"
                 android:layout_width="150dp"
                 android:layout_height="40dp"
@@ -136,7 +136,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
-            <com.example.physmin.TextViewPickable
+            <com.example.physmin.views.TextViewPickable
                 android:id="@+id/textView10"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
@@ -149,7 +149,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.example.physmin.TextViewPickable
+            <com.example.physmin.views.TextViewPickable
                 android:id="@+id/textView12"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
@@ -162,7 +162,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-            <com.example.physmin.TextViewPickable
+            <com.example.physmin.views.TextViewPickable
                 android:id="@+id/textView14"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
@@ -175,7 +175,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-            <com.example.physmin.TextViewPickable
+            <com.example.physmin.views.TextViewPickable
                 android:id="@+id/textView9"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
@@ -189,7 +189,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.example.physmin.TextViewPickable
+            <com.example.physmin.views.TextViewPickable
                 android:id="@+id/textView11"
                 android:layout_width="140dp"
                 android:layout_height="40dp"
@@ -201,11 +201,11 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
-        </com.example.physmin.GroupPickable>
+        </com.example.physmin.views.GroupPickable>
 
 
 
-    </com.example.physmin.TestConstraintLayout>
+    </com.example.physmin.views.TestConstraintLayout>
 
 
 </FrameLayout>

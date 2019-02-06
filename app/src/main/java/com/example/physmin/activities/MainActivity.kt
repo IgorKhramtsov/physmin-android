@@ -1,10 +1,13 @@
-package com.example.physmin
+package com.example.physmin.activities
 
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.physmin.R
+import com.example.physmin.fragments.FragmentSubjectKinematic
+import com.example.physmin.fragments.FragmentSubjects
 
-class ActivityMain : AppCompatActivity(), FragmentSubjects.OnFragmentInteractionListener, FragmentSubjectKinematic.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), FragmentSubjects.OnFragmentInteractionListener, FragmentSubjectKinematic.OnFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
