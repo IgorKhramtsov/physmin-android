@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TestFragment_relation_signs">
+    tools:context=".FragmentTestSign2Relation">
 
     <com.example.physmin.TestConstraintLayout
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settableGroup2" />
 
-        <com.example.physmin.SettableGroup
+        <com.example.physmin.GroupSettable
             android:id="@+id/settableGroup2"
             android:layout_width="375dp"
             android:layout_height="186dp"
@@ -54,37 +54,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView10">
 
-            <com.example.physmin.SettablePopUpView
+            <com.example.physmin.PopUpViewSettable
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:src="@drawable/screenshot_2" />
 
-            <com.example.physmin.SettablePopUpView
+            <com.example.physmin.PopUpViewSettable
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/screenshot_2" />
 
-            <com.example.physmin.SettablePopUpView
+            <com.example.physmin.PopUpViewSettable
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/screenshot_2" />
 
-            <com.example.physmin.SettablePopUpView
+            <com.example.physmin.PopUpViewSettable
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/screenshot_2" />
 
-            <com.example.physmin.SettablePopUpView
+            <com.example.physmin.PopUpViewSettable
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/screenshot_2" />
 
-            <com.example.physmin.SettablePopUpView
+            <com.example.physmin.PopUpViewSettable
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/screenshot_2" />
 
-        </com.example.physmin.SettableGroup>
+        </com.example.physmin.GroupSettable>
 
 
     </com.example.physmin.TestConstraintLayout>

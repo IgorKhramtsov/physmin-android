@@ -1,36 +1,24 @@
 package com.example.physmin
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.PopupWindow
-import java.lang.ClassCastException
 import android.widget.FrameLayout
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
-import android.R.attr.bitmap
 import android.graphics.Rect
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.view.Display
-import android.view.WindowManager
-import android.util.DisplayMetrics
 
 
+class PopUpViewSettable(context: Context, attrs: AttributeSet?) : ImageView(context, attrs), View.OnClickListener, Settable {
 
-
-class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(context, attrs), View.OnClickListener, Settable {
-
-    var picked_view: ImageView? = null
+    var pickedView: ImageView? = null
     val _paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    override var par: SettableGroup? = null
+    override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
@@ -55,7 +43,7 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
 
         var listener = OnClickListener { choosed_view ->
 
-            picked_view = if (picked_view == choosed_view) null else choosed_view as ImageView
+            pickedView = if (pickedView == choosed_view) null else choosed_view as ImageView
 
             popupWindow.dismiss()
             view?.invalidate()
@@ -73,10 +61,10 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if(picked_view == null)
+        if(pickedView == null)
             return
 
-        var bitmap = (picked_view!!.drawable as? BitmapDrawable)?.bitmap
+        var bitmap = (pickedView!!.drawable as? BitmapDrawable)?.bitmap
         var image_bitmap = (this!!.drawable as? BitmapDrawable)?.bitmap
 
         var iHeight = (canvas.height/10f)
@@ -88,7 +76,7 @@ class SettablePopUpView(context: Context, attrs: AttributeSet?) : ImageView(cont
 
     }
 
-    override fun setParent(_parent : SettableGroup) {
+    override fun setParent(_parent : GroupSettable) {
         this.par = _parent
     }
 

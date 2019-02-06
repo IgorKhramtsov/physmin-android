@@ -3,16 +3,13 @@ package com.example.physmin
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.text.Layout
-import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ImageView
 
-class BlankImageView(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
+class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
 
-    override var par: SettableGroup? = null
+    override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
@@ -31,7 +28,7 @@ class BlankImageView(context: Context, attributeSet: AttributeSet?) : ImageView(
 //        this.setImageResource(R.color.transparent)
     }
 
-    override fun setParent(_parent: SettableGroup) {
+    override fun setParent(_parent: GroupSettable) {
         this.par = _parent
     }
 

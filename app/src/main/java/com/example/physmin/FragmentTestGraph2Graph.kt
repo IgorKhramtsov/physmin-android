@@ -3,12 +3,10 @@ package com.example.physmin
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_test_fragment_graph_state.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -19,13 +17,13 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [TestFragment_graph_state.OnFragmentInteractionListener] interface
+ * [FragmentTestGraph2Graph.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [TestFragment_graph_state.newInstance] factory method to
+ * Use the [FragmentTestGraph2Graph.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class TestFragment_graph_state : Fragment() {
+class FragmentTestGraph2Graph : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -42,8 +40,7 @@ class TestFragment_graph_state : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view:View = inflater.inflate(R.layout.fragment_test_fragment_graph_state, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -88,12 +85,12 @@ class TestFragment_graph_state : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment TestFragment_graph_state.
+         * @return A new instance of fragment FragmentTestGraph2Graph.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                TestFragment_graph_state().apply {
+                FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)

@@ -1,18 +1,14 @@
 package com.example.physmin
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Point
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.util.DisplayMetrics
-import android.os.Bundle
-import android.widget.ScrollView
 
-class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(context, attrs),
+class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
     var deviceWidth: Int = 0
@@ -28,7 +24,7 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
 
         setOnHierarchyChangeListener(this)
 
-        val mScrollGroup = findViewById(R.id.pickableGroup) as? ScrollGroup
+        val mScrollGroup = findViewById(R.id.pickableGroup) as? GroupScrollable
         mScrollGroup?.setHorizontalOrVertical(false)
                 ?.setStartEndScroll(true)
                 ?.setDuration(300)
@@ -50,7 +46,7 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
                 continue
 
             if(child == item) {
-                child.Pick()
+                child.pick()
             }
             else
                 child.unPick()
@@ -127,8 +123,8 @@ class PickableGroup(context: Context, attrs: AttributeSet?) : ScrollGroup(contex
 
     override fun onChildViewAdded(parent: View?, child: View) {
         child.setOnClickListener(this)
-        (child as? PickTextView)?.setParent(this)
-        (child as? PickImageView)?.setParent(this)
+        (child as? TextViewPickable)?.setParent(this)
+        (child as? ImageViewPickable)?.setParent(this)
 
     }
 

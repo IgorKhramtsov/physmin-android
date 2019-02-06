@@ -4,12 +4,12 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 
-class TestActivity : AppCompatActivity(),
-        FragmentTest_hello.OnFragmentInteractionListener,
-        TestFragment_graph_state.OnFragmentInteractionListener,
-        TestFragment_graph_graph2.OnFragmentInteractionListener,
-        TestFragment_relation_signs.OnFragmentInteractionListener,
-        TestFragment_graph_graph.OnFragmentInteractionListener{
+class ActivityTest : AppCompatActivity(),
+        FragmentTestHello.OnFragmentInteractionListener,
+        FragmentTestGraph2State.OnFragmentInteractionListener,
+        FragmentTestGraph2Graph2.OnFragmentInteractionListener,
+        FragmentTestSign2Relation.OnFragmentInteractionListener,
+        FragmentTestGraph2Graph.OnFragmentInteractionListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

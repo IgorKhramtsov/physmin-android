@@ -4,11 +4,8 @@ import android.content.Context
 import android.graphics.Point
 import android.util.AttributeSet
 import android.view.*
-import android.widget.ImageView
-import android.widget.PopupWindow
-import java.util.*
 
-class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
+class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
     var deviceWidth: Int = 0
     var par: TestConstraintLayout? = null
@@ -87,13 +84,13 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {
-        (child as? ImageSettableView)?.setParent(this)
-        (child as? ImageSettableView)?.setOnClickListener(this)
+        (child as? ImageViewSettable)?.setParent(this)
+        (child as? ImageViewSettable)?.setOnClickListener(this)
 
-        (child as? BlankImageView)?.setParent(this)
-        (child as? BlankImageView)?.setOnClickListener(this)
+        (child as? ImageViewSettableBlank)?.setParent(this)
+        (child as? ImageViewSettableBlank)?.setOnClickListener(this)
 
-        (child as? SettablePopUpView)?.setParent(this)
+        (child as? PopUpViewSettable)?.setParent(this)
 
     }
 
@@ -112,8 +109,8 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
 
     override fun onClick(_view: View?) {
 
-        if( _view is ImageSettableView ) {
-            val imageView = _view as ImageSettableView
+        if( _view is ImageViewSettable ) {
+            val imageView = _view as ImageViewSettable
             (imageView.answerView as View?)?.visibility = View.VISIBLE
 
             imageView.answerView = par?.getPickedItem()
@@ -123,7 +120,7 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
             var child: View?
             for (i in 0 until childCount) {
                 child = getChildAt(i)
-                if (child !is ImageSettableView)
+                if (child !is ImageViewSettable)
                     continue
 
                 if (child != imageView)
@@ -134,8 +131,8 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
             }
             par?.resetPickedItem()
         }
-        else if(_view is BlankImageView) {
-            val imageView = _view as BlankImageView
+        else if(_view is ImageViewSettableBlank) {
+            val imageView = _view as ImageViewSettableBlank
             (imageView.answerView as View?)?.visibility = View.VISIBLE
 
             imageView.answerView = par?.getPickedItem()
@@ -145,7 +142,7 @@ class SettableGroup(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
             var child: View?
             for (i in 0 until childCount) {
                 child = getChildAt(i)
-                if (child !is ImageSettableView)
+                if (child !is ImageViewSettable)
                     continue
 
                 if (child != imageView)

@@ -3,7 +3,6 @@ package com.example.physmin
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Scroller
 
@@ -11,7 +10,7 @@ import android.widget.Scroller
     TODO: Make cleanup
  */
 
-open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
+open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
     //是否是水平滚动
     private var isHorizontalOrVertical = false
     //是否添加首位滑动阻尼效果
@@ -249,7 +248,7 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
         fun onPageChange(currentPage: Int)
     }
 
-    fun setOnPageChangeListener(onPageChangeListener: ScrollGroup.onPageChangeListener) {
+    fun setOnPageChangeListener(onPageChangeListener: GroupScrollable.onPageChangeListener) {
         this.onPageChangeListener2 = onPageChangeListener
     }
 
@@ -257,7 +256,7 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
      *
      * @param horizontalOrVertical 默认为水平滑动true，false为纵向滑动
      */
-    fun setHorizontalOrVertical(horizontalOrVertical: Boolean): ScrollGroup {
+    fun setHorizontalOrVertical(horizontalOrVertical: Boolean): GroupScrollable {
         isHorizontalOrVertical = horizontalOrVertical
         return this
     }
@@ -265,7 +264,7 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
     /**
      * 默认ture,边缘可以有滑动效果，false边缘没有滑动效果
      */
-    fun setStartEndScroll(startEndScroll: Boolean): ScrollGroup {
+    fun setStartEndScroll(startEndScroll: Boolean): GroupScrollable {
         isStartEndScroll = startEndScroll
         return this
     }
@@ -274,7 +273,7 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
      * 设置滑动翻页边界
      * @param scrollEdge
      */
-    fun setScrollEdge(scrollEdge: Int): ScrollGroup {
+    fun setScrollEdge(scrollEdge: Int): GroupScrollable {
         this.scrollEdge = scrollEdge
         return this
     }
@@ -282,7 +281,7 @@ open class ScrollGroup @JvmOverloads constructor(context: Context, attrs: Attrib
     /**
      * 设置滑动时间默认为800毫秒
      */
-    fun setDuration(duration: Int): ScrollGroup {
+    fun setDuration(duration: Int): GroupScrollable {
         this.duration = duration
         return this
     }

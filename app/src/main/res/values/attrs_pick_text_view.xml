@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="PickTextView">
+    <declare-styleable name="TextViewPickable">
         <attr name="outlineColor" format="color" />
         <attr name="answer" format="string" />
         <attr name="exampleColor" format="color" />

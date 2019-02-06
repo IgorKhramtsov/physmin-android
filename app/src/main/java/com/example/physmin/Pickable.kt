@@ -1,17 +1,15 @@
 package com.example.physmin
 
-import android.widget.ImageView
-
 interface Pickable {
 
     var picked: Boolean
-    var par: PickableGroup?
+    var par: GroupPickable?
     var answer: Short
 
-    fun setParent(_parent: PickableGroup)
+    fun setParent(_parent: GroupPickable)
 
     fun isPicked() : Boolean
 
-    fun Pick()
+    fun pick()
     fun unPick()
 }

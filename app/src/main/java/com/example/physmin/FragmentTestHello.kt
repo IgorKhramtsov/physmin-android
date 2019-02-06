@@ -1,7 +1,6 @@
 package com.example.physmin
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-import kotlinx.android.synthetic.main.fragment_kinematic.view.*
+import kotlinx.android.synthetic.main.fragment_test_hello.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -20,13 +19,13 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [Kinematic.OnFragmentInteractionListener] interface
+ * [FragmentTestHello.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [Kinematic.newInstance] factory method to
+ * Use the [FragmentTestHello.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class Kinematic : Fragment() {
+class FragmentTestHello : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -43,11 +42,25 @@ class Kinematic : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view : View = inflater.inflate(R.layout.fragment_kinematic, container, false)
-        view.button_concepts.setOnClickListener {view ->
-            val intent : Intent = Intent(view.context, TestActivity::class.java)
-            startActivity(intent)
+        val view: View = inflater.inflate(R.layout.fragment_test_hello, container, false)
+
+
+        view.button_start_test.setOnClickListener {
+            fragmentManager!!.beginTransaction().
+                    replace(R.id.my_nav_host_fragment, FragmentTestSign2Relation.newInstance("asd", "asd"))
+                    .commit()
+//            view -> view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_state)
         }
+        view.button_start_test_2.setOnClickListener { view ->
+            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph2)
+        }
+        view.button_start_test_3.setOnClickListener{ view ->
+            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_relation_signs2)
+        }
+        view.button_start_test_2_2.setOnClickListener{ view ->
+            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph)
+        }
+
         return view
     }
 
@@ -93,12 +106,12 @@ class Kinematic : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment Kinematic.
+         * @return A new instance of fragment FragmentTestHello.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                Kinematic().apply {
+                FragmentTestHello().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)

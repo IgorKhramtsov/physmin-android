@@ -2,19 +2,16 @@ package com.example.physmin
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
-open class ImageSettableView(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
+open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
 
-    override var par: SettableGroup? = null
+    override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
@@ -30,7 +27,7 @@ open class ImageSettableView(context: Context, attributeSet: AttributeSet?) : Im
         var a = 1
     }
 
-    override  fun setParent(_parent: SettableGroup) {
+    override  fun setParent(_parent: GroupSettable) {
         this.par = _parent
     }
 

@@ -9,8 +9,8 @@ import android.widget.Button
 
 class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener {
-    var pickableGroup: PickableGroup? = null
-    var settableGroup: SettableGroup? = null
+    var groupPickable: GroupPickable? = null
+    var groupSettable: GroupSettable? = null
     var nextTestButton: Button? = null
 
     init {
@@ -18,13 +18,13 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : Const
     }
 
     override fun onChildViewAdded(p0: View?, p1: View) {
-        if(p1 is PickableGroup) {
-            pickableGroup = p1
-            pickableGroup!!.setParent(this)
+        if(p1 is GroupPickable) {
+            groupPickable = p1
+            groupPickable!!.setParent(this)
         }
-        else if(p1 is SettableGroup) {
-            settableGroup = p1
-            settableGroup!!.setParent(this)
+        else if(p1 is GroupSettable) {
+            groupSettable = p1
+            groupSettable!!.setParent(this)
         }
         else if(p1 is Button) {
             nextTestButton = p1
@@ -36,16 +36,16 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : Const
     }
 
     fun getPickedItem(): Pickable? {
-        return pickableGroup?.pickedItem
+        return groupPickable?.pickedItem
     }
 
     fun resetPickedItem() {
-        pickableGroup?.pickedItem?.unPick()
-        pickableGroup?.pickedItem = null
+        groupPickable?.pickedItem?.unPick()
+        groupPickable?.pickedItem = null
     }
 
     fun testComplete() {
-        pickableGroup?.visibility = View.GONE
+        groupPickable?.visibility = View.GONE
         nextTestButton!!.visibility = View.VISIBLE
     }
 

@@ -14,7 +14,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 
-class CustomTimer(context: Context, attrs: AttributeSet?) : ImageView(context, attrs) {
+class TimerTask(context: Context, attrs: AttributeSet?) : ImageView(context, attrs) {
 
     var paintText = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
     var paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -23,9 +23,9 @@ class CustomTimer(context: Context, attrs: AttributeSet?) : ImageView(context, a
     var hsv  = floatArrayOf(120f, 0.4f, 0.75f)
 
     init {
-        var pb = this
+        val pb = this
         paint.strokeWidth = 5f
-        var density = context.getResources().getDisplayMetrics().density
+        val density = context.getResources().getDisplayMetrics().density
         paintText.textSize = 20f*density
 
         var cdt = object : CountDownTimer(60000,100) {

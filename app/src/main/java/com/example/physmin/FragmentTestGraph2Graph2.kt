@@ -7,9 +7,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
-import kotlinx.android.synthetic.main.fragment_fragment_test_hello.*
-import kotlinx.android.synthetic.main.fragment_fragment_test_hello.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -20,13 +17,13 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [FragmentTest_hello.OnFragmentInteractionListener] interface
+ * [FragmentTestGraph2Graph2.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [FragmentTest_hello.newInstance] factory method to
+ * Use the [FragmentTestGraph2Graph2.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class FragmentTest_hello : Fragment() {
+class FragmentTestGraph2Graph2 : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -43,21 +40,7 @@ class FragmentTest_hello : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_fragment_test_hello, container, false)
-        view.button_start_test.setOnClickListener {
-            view -> view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_state)
-        }
-        view.button_start_test_2.setOnClickListener { view ->
-            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph2)
-        }
-        view.button_start_test_3.setOnClickListener{ view ->
-            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_relation_signs2)
-        }
-        view.button_start_test_2_2.setOnClickListener{ view ->
-            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph)
-        }
-
-        return view
+        return inflater.inflate(R.layout.fragment_test_graph2graph_2, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -102,12 +85,12 @@ class FragmentTest_hello : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentTest_hello.
+         * @return A new instance of fragment FragmentTestGraph2Graph2.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                FragmentTest_hello().apply {
+                FragmentTestGraph2Graph2().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)

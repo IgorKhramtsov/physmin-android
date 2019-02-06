@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TestFragment_graph_graph2">
+    tools:context=".FragmentTestGraph2Graph2">
 
     <com.example.physmin.TestConstraintLayout
         android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteY="12dp" />
 
-        <com.example.physmin.SettableGroup
+        <com.example.physmin.GroupSettable
             android:id="@+id/settableGroup"
             android:layout_width="wrap_content"
             android:layout_height="119dp"
@@ -67,7 +67,7 @@
                 android:layout_height="115dp"
                 android:src="@drawable/graph1" />
 
-            <com.example.physmin.BlankImageView
+            <com.example.physmin.ImageViewSettableBlank
                 android:id="@+id/asd"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
@@ -75,16 +75,16 @@
                 android:minHeight="110dp"
                 android:padding="10dp" />
 
-            <com.example.physmin.BlankImageView
+            <com.example.physmin.ImageViewSettableBlank
                 android:id="@+id/sad"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:minWidth="110dp"
                 android:minHeight="110dp" />
 
-        </com.example.physmin.SettableGroup>
+        </com.example.physmin.GroupSettable>
 
-        <com.example.physmin.PickableGroup
+        <com.example.physmin.GroupPickable
             android:id="@+id/pickableGroup"
             android:layout_width="0dp"
             android:layout_height="374dp"
@@ -99,55 +99,55 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settableGroup">
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView12"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView2"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView3"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView11"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView14"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView15"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView16"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-            <com.example.physmin.PickImageView
+            <com.example.physmin.ImageViewPickable
                 android:id="@+id/imageView17"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/g2g1" />
 
-        </com.example.physmin.PickableGroup>
+        </com.example.physmin.GroupPickable>
 
     </com.example.physmin.TestConstraintLayout>
 

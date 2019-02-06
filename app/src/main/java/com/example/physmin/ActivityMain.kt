@@ -4,11 +4,11 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity(), Topics.OnFragmentInteractionListener, Kinematic.OnFragmentInteractionListener {
+class ActivityMain : AppCompatActivity(), FragmentSubjects.OnFragmentInteractionListener, FragmentSubjectKinematic.OnFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_tests_subjects)
     }
 
     override fun onFragmentInteraction(uri: Uri) {
