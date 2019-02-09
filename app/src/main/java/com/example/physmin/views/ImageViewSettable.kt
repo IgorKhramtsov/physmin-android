@@ -17,17 +17,14 @@ open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Im
     override var answerView: Pickable? = null
         set(value) {
             field = value
-            if(par!!.isAllChecked())
-                par!!.par!!.testComplete()
+            par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     override var correctAnswer: Short = -1
 
 
     var paint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
 
-    init {
-        var a = 1
-    }
+    init { }
 
     override  fun setParent(_parent: GroupSettable) {
         this.par = _parent

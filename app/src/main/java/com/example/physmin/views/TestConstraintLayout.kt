@@ -45,9 +45,14 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : Const
         groupPickable?.pickedItem = null
     }
 
-    fun testComplete() {
-        groupPickable?.visibility = View.GONE
-        nextTestButton!!.visibility = View.VISIBLE
+    fun checkTestComplete(isAllChecked: Boolean) {
+        if(isAllChecked) {
+            groupPickable?.visibility = View.GONE
+            nextTestButton!!.visibility = View.VISIBLE
+        }
+        else {
+            groupPickable?.visibility = View.VISIBLE
+            nextTestButton!!.visibility = View.GONE
+        }
     }
-
 }

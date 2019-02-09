@@ -16,17 +16,17 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 
-
 class PopUpViewSettable(context: Context, attrs: AttributeSet?) : ImageView(context, attrs), View.OnClickListener, Settable {
 
-    var pickedView: ImageView? = null
+    //var pickedView: ImageViewPickable? = null
     val _paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var popupWindow: PopupWindow? = null
+    val location = intArrayOf(0,0)
     override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
-            if(par!!.isAllChecked())
-                par!!.par!!.testComplete()
+            par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     override var correctAnswer: Short = -1
 
@@ -36,39 +36,43 @@ class PopUpViewSettable(context: Context, attrs: AttributeSet?) : ImageView(cont
 
 
     override fun onClick(view: View?) {
+        if(popupWindow != null) {
+            this.getLocationOnScreen(location)
+            popupWindow!!.showAtLocation(view,0,location[0]+Math.round(this.width*0.1f),location[1]-Math.round(this.height*0.4f))
+            return
+        }
 
         val inflater = LayoutInflater.from(context)
         val popupView = inflater.inflate(R.layout.pop_up_elements, null)
-        val popupWindow = PopupWindow(popupView, FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-        popupWindow.setBackgroundDrawable(ColorDrawable())
-        popupWindow.isOutsideTouchable = true
-        popupWindow.isTouchable = true
+        popupWindow = PopupWindow(popupView, FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        popupWindow!!.setBackgroundDrawable(ColorDrawable())
+        popupWindow!!.isOutsideTouchable = true
+        popupWindow!!.isTouchable = true
 
-        var listener = OnClickListener { choosed_view ->
+        val listener = OnClickListener { choosed_view ->
 
-            pickedView = if (pickedView == choosed_view) null else choosed_view as ImageView
+            answerView = if (answerView == choosed_view) null else (choosed_view as ImageViewPickable)
 
-            popupWindow.dismiss()
+            popupWindow!!.dismiss()
             view?.invalidate()
         }
 
-        popupView.findViewById<ImageView>(R.id.imageView_less).setOnClickListener(listener)
-        popupView.findViewById<ImageView>(R.id.imageView_equal).setOnClickListener(listener)
-        popupView.findViewById<ImageView>(R.id.imageView_more).setOnClickListener(listener)
+        popupView.findViewById<ImageViewPickable>(R.id.imageView_less).setOnClickListener(listener)
+        popupView.findViewById<ImageViewPickable>(R.id.imageView_equal).setOnClickListener(listener)
+        popupView.findViewById<ImageViewPickable>(R.id.imageView_more).setOnClickListener(listener)
 
-        var location = intArrayOf(0,0)
         this.getLocationOnScreen(location)
-        popupWindow.showAtLocation(view,0,location[0]+Math.round(this.width*0.1f),location[1]-Math.round(this.height*0.4f))
+        popupWindow!!.showAtLocation(view,0,location[0]+Math.round(this.width*0.1f),location[1]-Math.round(this.height*0.4f))
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if(pickedView == null)
+        if(answerView == null)
             return
 
-        var bitmap = (pickedView!!.drawable as? BitmapDrawable)?.bitmap
-        var image_bitmap = (this!!.drawable as? BitmapDrawable)?.bitmap
+        var bitmap = ((answerView as ImageViewPickable).drawable as? BitmapDrawable)?.bitmap
+        var image_bitmap = (this.drawable as? BitmapDrawable)?.bitmap
 
         var iHeight = (canvas.height/10f)
         var iWidth = (canvas.width/10f)

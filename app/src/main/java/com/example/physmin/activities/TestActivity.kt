@@ -12,7 +12,10 @@ class TestActivity : AppCompatActivity(),
         FragmentTestGraph2State.OnFragmentInteractionListener,
         FragmentTestGraph2Graph2.OnFragmentInteractionListener,
         FragmentTestSign2Relation.OnFragmentInteractionListener,
-        FragmentTestGraph2Graph.OnFragmentInteractionListener{
+        FragmentTestGraph2Graph.OnFragmentInteractionListener
+{
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

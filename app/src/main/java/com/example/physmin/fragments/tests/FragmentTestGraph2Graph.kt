@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
+import com.example.physmin.views.TestConstraintLayout
+import kotlinx.android.synthetic.main.fragment_test_graph2graph.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,6 +38,8 @@ class FragmentTestGraph2Graph : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

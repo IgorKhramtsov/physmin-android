@@ -20,8 +20,7 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Im
                 this.setImageDrawable((answerView as ImageView).drawable)
             else
                 this.setImageResource(R.color.transparent)
-            if(par!!.isAllChecked())
-                par!!.par!!.testComplete()
+            par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     override var correctAnswer: Short = -1
 

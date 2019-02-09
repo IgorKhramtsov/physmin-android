@@ -4,10 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
 
-    <ImageView
+    <com.example.physmin.views.ImageViewPickable
         android:id="@+id/imageView_equal"
         android:layout_width="28dp"
         android:layout_height="39dp"
@@ -17,9 +16,9 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/imageView_less"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/equal" />
+        android:src="@drawable/equal" />
 
-    <ImageView
+    <com.example.physmin.views.ImageViewPickable
         android:id="@+id/imageView_less"
         android:layout_width="28dp"
         android:layout_height="39dp"
@@ -28,9 +27,10 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/less" />
+        android:src="@drawable/less"
+        android:layout_marginLeft="8dp" />
 
-    <ImageView
+    <com.example.physmin.views.ImageViewPickable
         android:id="@+id/imageView_more"
         android:layout_width="28dp"
         android:layout_height="39dp"
@@ -40,6 +40,6 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/imageView_equal"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/more" />
+        android:src="@drawable/more" />
 
 </android.support.constraint.ConstraintLayout>
