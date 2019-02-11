@@ -1,6 +1,7 @@
 package com.example.physmin.fragments.tests
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -8,8 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
-import com.example.physmin.views.TestConstraintLayout
-import kotlinx.android.synthetic.main.fragment_test_graph2graph.*
+import com.example.physmin.views.GroupScrollable
+import com.example.physmin.views.ImageViewPickable
+import com.example.physmin.views.ImageViewSettable
+import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
+import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
+import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,24 +33,44 @@ private const val ARG_PARAM2 = "param2"
  */
 class FragmentTestGraph2Graph : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var questPicture: String? = null
+    private var answers: Array<String>? = null
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            questPicture = it.getString(ARG_PARAM1)
+            answers = it.getStringArray(ARG_PARAM2)
         }
-
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
+        val view:View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
+
+        var id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
+        view.settable_group_g2g.imageView_g2g_question.setImageDrawable(resources.getDrawable(id))
+
+        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+        var answerPic:ImageViewPickable
+        val picParams = ViewGroup.LayoutParams(width, width)
+        answers?.forEach {
+            answerPic = ImageViewPickable(this.context!!, null)
+            answerPic.layoutParams = picParams
+            id = resources.getIdentifier(it, "drawable", context!!.packageName)
+            answerPic.setImageDrawable(resources.getDrawable(id))
+            view.pickableGroup_g2g.addView(answerPic)
+        }
+
+        val mScrollGroup = view.pickableGroup_g2g as? GroupScrollable
+        mScrollGroup?.setHorizontalOrVertical(false)
+                ?.setStartEndScroll(true)
+                ?.setDuration(300)
+                ?.setInvalidate()
+
+        return view
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -94,11 +119,11 @@ class FragmentTestGraph2Graph : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String, param2: Array<String>) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+                        putStringArray(ARG_PARAM2, param2)
                     }
                 }
     }

@@ -26,11 +26,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 
         setOnHierarchyChangeListener(this)
 
-        val mScrollGroup = findViewById(R.id.pickableGroup) as? GroupScrollable
-        mScrollGroup?.setHorizontalOrVertical(false)
-                ?.setStartEndScroll(true)
-                ?.setDuration(300)
-                ?.setInvalidate()
+
     }
 
     public fun setParent(_par: TestConstraintLayout?) {

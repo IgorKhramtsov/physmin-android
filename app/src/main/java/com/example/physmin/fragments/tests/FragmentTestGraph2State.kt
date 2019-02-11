@@ -1,17 +1,27 @@
 package com.example.physmin.fragments.tests
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
+import com.example.physmin.views.ImageViewSettable
+import com.example.physmin.views.TextViewPickable
+import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
+
+fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private val DEF_QUEST_PICTURES = arrayOf("@drawable/graph1", "@drawable/graph2", "@drawable/graph3", "@drawable/graph4")
+private val DEF_ANSWERS = arrayOf("Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед",
+        "Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед")
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -26,22 +36,47 @@ private const val ARG_PARAM2 = "param2"
  */
 class FragmentTestGraph2State : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var questPictures: Array<String>? = null
+    private var answers: Array<String>? = null
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            questPictures = it.getStringArray(ARG_PARAM1)
+            answers = it.getStringArray(ARG_PARAM2)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
         val view:View = inflater.inflate(R.layout.fragment_test_state2graph, container, false)
+
+        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+        var questPic:ImageViewSettable
+        val picParams = ViewGroup.LayoutParams(width, width)
+        var id:Int
+        questPictures?.forEach {
+            questPic = ImageViewSettable(this.context!!, null)
+            questPic.layoutParams = picParams
+            id = resources.getIdentifier(it, "drawable", context!!.packageName)
+            questPic.setImageDrawable(resources.getDrawable(id))
+            view.settable_group.addView(questPic)
+        }
+
+        val textParams = ViewGroup.LayoutParams(150.toPx(), 40.toPx())
+        var textView: TextViewPickable
+        answers?.forEach {
+            textView = TextViewPickable(this.context!!, null)
+            textView.layoutParams = textParams
+            textView.text = it
+            textView.textSize = 16f
+            textView.gravity = Gravity.CENTER
+
+            view.pickable_group.addView(textView)
+        }
+
         return view
     }
 
@@ -91,11 +126,11 @@ class FragmentTestGraph2State : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: Array<String>, param2: Array<String>) =
                 FragmentTestGraph2State().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+                        putStringArray(ARG_PARAM1, param1)
+                        putStringArray(ARG_PARAM2, param2)
                     }
                 }
     }

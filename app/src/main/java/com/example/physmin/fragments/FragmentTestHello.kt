@@ -9,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.example.physmin.R
+import com.example.physmin.fragments.tests.FragmentTestGraph2Graph
+import com.example.physmin.fragments.tests.FragmentTestGraph2Graph2
+import com.example.physmin.fragments.tests.FragmentTestGraph2State
 import com.example.physmin.fragments.tests.FragmentTestSign2Relation
 import kotlinx.android.synthetic.main.fragment_test_hello.view.*
 
@@ -48,19 +51,40 @@ class FragmentTestHello : Fragment() {
 
 
         view.button_start_test.setOnClickListener {
-            fragmentManager!!.beginTransaction().
-                    replace(R.id.my_nav_host_fragment, FragmentTestSign2Relation.newInstance("asd", "asd"))
+            fragmentManager!!.beginTransaction()
+                    .replace(R.id.my_nav_host_fragment, FragmentTestGraph2State.newInstance(
+                            arrayOf("graph_x_1", "graph_x_2", "graph_x_3", "graph_x_4"),
+                            arrayOf("Назад, ускоряясь вперед", "Назад, ускоряясь назад", "Назад, ускоряясь вперед",
+                                    "Назад, ускоряясь вперед", "Назад, ускоряясь Назад", "Назад, ускоряясь Назад")
+                    ))
                     .commit()
-//            view -> view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_state)
         }
-        view.button_start_test_2.setOnClickListener { view ->
-            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph2)
+        view.button_start_test_2.setOnClickListener {
+            fragmentManager!!.beginTransaction()
+                    .replace(R.id.my_nav_host_fragment, FragmentTestGraph2Graph.newInstance(
+                            "graph_x_1",
+                            arrayOf("graph_v_1", "graph_v_2", "graph_v_3", "graph_v_4",
+                                    "graph_v_5", "graph_v_6", "graph_v_7", "graph_v_8")
+                    ))
+                    .commit()
         }
-        view.button_start_test_3.setOnClickListener{ view ->
-            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_relation_signs2)
+        view.button_start_test_2_2.setOnClickListener {
+            fragmentManager!!.beginTransaction()
+                    .replace(R.id.my_nav_host_fragment, FragmentTestGraph2Graph2.newInstance(
+                            "graph_x_1",
+                            arrayOf("graph_v_1", "graph_v_2", "graph_v_3", "graph_v_4",
+                                    "graph_v_5", "graph_v_6", "graph_v_7", "graph_v_8")
+                    ))
+                    .commit()
         }
-        view.button_start_test_2_2.setOnClickListener{ view ->
-            view.findNavController().navigate(R.id.action_fragmentTest_hello_to_testFragment_graph_graph)
+        view.button_start_test_3.setOnClickListener{
+            fragmentManager!!.beginTransaction()
+                    .replace(R.id.my_nav_host_fragment, FragmentTestSign2Relation.newInstance(
+                            "graph_x_1",
+                            arrayOf("graph_v_1", "graph_v_2", "graph_v_3", "graph_v_4",
+                                    "graph_v_5", "graph_v_6", "graph_v_7", "graph_v_8")
+                    ))
+                    .commit()
         }
 
         return view

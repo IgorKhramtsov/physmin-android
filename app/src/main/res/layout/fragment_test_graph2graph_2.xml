@@ -7,8 +7,8 @@
     tools:context=".fragments.tests.FragmentTestGraph2Graph2">
 
     <com.example.physmin.views.TestConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:isScrollContainer="false">
 
 
@@ -18,17 +18,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="8dp"
             android:text="Далее"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/settableGroup"
-            app:layout_constraintVertical_bias="0.493" />
+            app:layout_constraintTop_toBottomOf="@+id/settableGroup_g2g2" />
 
         <TextView
             android:id="@+id/textView"
@@ -48,7 +46,7 @@
             tools:layout_editor_absoluteY="12dp" />
 
         <com.example.physmin.views.GroupSettable
-            android:id="@+id/settableGroup"
+            android:id="@+id/settableGroup_g2g2"
             android:layout_width="wrap_content"
             android:layout_height="119dp"
             android:layout_marginStart="8dp"
@@ -62,7 +60,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imageView_g2g2_question"
                 android:layout_width="115dp"
                 android:layout_height="115dp"
                 android:src="@drawable/graph1" />
@@ -85,69 +83,19 @@
         </com.example.physmin.views.GroupSettable>
 
         <com.example.physmin.views.GroupPickable
-            android:id="@+id/pickableGroup"
+            android:id="@+id/pickableGroup_g2g2"
             android:layout_width="0dp"
-            android:layout_height="374dp"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
             android:layout_marginBottom="8dp"
             android:isScrollContainer="true"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/settableGroup">
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView12"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView2"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView3"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView11"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView14"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView15"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView16"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-            <com.example.physmin.views.ImageViewPickable
-                android:id="@+id/imageView17"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/g2g1" />
-
-        </com.example.physmin.views.GroupPickable>
+            app:layout_constraintTop_toBottomOf="@+id/settableGroup_g2g2"></com.example.physmin.views.GroupPickable>
 
     </com.example.physmin.views.TestConstraintLayout>
 

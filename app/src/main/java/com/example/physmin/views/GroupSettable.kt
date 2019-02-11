@@ -70,7 +70,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
             curChildInRow++
             if(curChildInRow > childInRow){
                 curLeft = contentLeft
-                curTop += maxHeight + 20
+                curTop += maxHeight
                 curChildInRow = 1
             }
             curLeft += childSpacing
