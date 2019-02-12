@@ -49,7 +49,6 @@ class FragmentTestHello : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_test_hello, container, false)
 
-
         view.button_start_test.setOnClickListener {
             fragmentManager!!.beginTransaction()
                     .replace(R.id.my_nav_host_fragment, FragmentTestGraph2State.newInstance(

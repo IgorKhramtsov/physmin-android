@@ -6,40 +6,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.physmin.views.ImageViewPickable
-        android:id="@+id/imageView_equal"
+    <com.example.physmin.views.TextViewPickable
+        android:id="@+id/textViewPickable_equal"
         android:layout_width="28dp"
         android:layout_height="39dp"
         android:layout_margin="10dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView_less"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/equal" />
+        android:text="@string/relation_sign_equal"
+        android:textSize="24sp"
+        android:gravity="center"
+        app:answer="0"
+        app:layout_constraintStart_toEndOf="@+id/textViewPickable_less"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.ImageViewPickable
-        android:id="@+id/imageView_less"
+    <com.example.physmin.views.TextViewPickable
+        android:id="@+id/textViewPickable_less"
         android:layout_width="28dp"
         android:layout_height="39dp"
         android:layout_margin="10dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:text="@string/relation_sign_less"
+        android:textSize="24sp"
+        android:gravity="center"
+        app:answer="-1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/less"
-        android:layout_marginLeft="8dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.ImageViewPickable
-        android:id="@+id/imageView_more"
+    <com.example.physmin.views.TextViewPickable
+        android:id="@+id/textViewPickable_more"
         android:layout_width="28dp"
         android:layout_height="39dp"
         android:layout_margin="10dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView_equal"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/more" />
+        android:text="@string/relation_sign_more"
+        android:textSize="24sp"
+        android:gravity="center"
+        app:answer="1"
+        app:layout_constraintStart_toEndOf="@+id/textViewPickable_equal"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

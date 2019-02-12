@@ -50,16 +50,15 @@ class PopUpViewSettable(context: Context, attrs: AttributeSet?) : ImageView(cont
         popupWindow!!.isTouchable = true
 
         val listener = OnClickListener { choosed_view ->
-
             answerView = if (answerView == choosed_view) null else (choosed_view as ImageViewPickable)
 
             popupWindow!!.dismiss()
             view?.invalidate()
         }
 
-        popupView.findViewById<ImageViewPickable>(R.id.imageView_less).setOnClickListener(listener)
-        popupView.findViewById<ImageViewPickable>(R.id.imageView_equal).setOnClickListener(listener)
-        popupView.findViewById<ImageViewPickable>(R.id.imageView_more).setOnClickListener(listener)
+        popupView.findViewById<TextViewPickable>(R.id.textViewPickable_less).setOnClickListener(listener)
+        popupView.findViewById<TextViewPickable>(R.id.textViewPickable_equal).setOnClickListener(listener)
+        popupView.findViewById<TextViewPickable>(R.id.textViewPickable_more).setOnClickListener(listener)
 
         this.getLocationOnScreen(location)
         popupWindow!!.showAtLocation(view,0,location[0]+Math.round(this.width*0.1f),location[1]-Math.round(this.height*0.4f))
