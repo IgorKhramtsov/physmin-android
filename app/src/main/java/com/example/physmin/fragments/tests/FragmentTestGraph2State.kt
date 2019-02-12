@@ -22,8 +22,11 @@ fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toIn
 private val DEF_QUEST_PICTURES = arrayOf("@drawable/graph1", "@drawable/graph2", "@drawable/graph3", "@drawable/graph4")
 private val DEF_ANSWERS = arrayOf("Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед",
         "Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед")
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_QUESTS = "param1"
+private const val ARG_CORR_ANSWS = "param3"
+private const val ARG_ANSW_IDS = "param3"
+private const val ARG_ANSW_STRS = "param4"
+
 
 /**
  * A simple [Fragment] subclass.
@@ -37,14 +40,25 @@ private const val ARG_PARAM2 = "param2"
 class FragmentTestGraph2State : Fragment() {
     // TODO: Rename and change types of parameters
     private var questPictures: Array<String>? = null
-    private var answers: Array<String>? = null
+//    private var answers: Array<String>? = null
     private var listener: OnFragmentInteractionListener? = null
+    private var correctAnswer: IntArray? = null
+    private var answers: HashMap<Int,String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            questPictures = it.getStringArray(ARG_PARAM1)
-            answers = it.getStringArray(ARG_PARAM2)
+            questPictures = it.getStringArray(ARG_QUESTS)
+            correctAnswer = it.getIntArray(ARG_CORR_ANSWS)
+            answers = HashMap()
+
+            var answersStrings = it.getStringArray(ARG_ANSW_STRS)
+            var answersInt = it.getIntArray(ARG_ANSW_IDS)
+
+            for (i in 0 until (answersStrings.count()))
+                answers?.put(answersInt[i], answersStrings[i])
+
+
         }
     }
 
@@ -70,7 +84,7 @@ class FragmentTestGraph2State : Fragment() {
         answers?.forEach {
             textView = TextViewPickable(this.context!!, null)
             textView.layoutParams = textParams
-            textView.text = it
+            textView.text = it.value
             textView.textSize = 16f
             textView.gravity = Gravity.CENTER
 
@@ -126,11 +140,14 @@ class FragmentTestGraph2State : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: Array<String>, param2: Array<String>) =
+        fun newInstance(param1: Array<String>, param2: IntArray,
+                        param3: IntArray, param4: Array<String>) =
                 FragmentTestGraph2State().apply {
                     arguments = Bundle().apply {
-                        putStringArray(ARG_PARAM1, param1)
-                        putStringArray(ARG_PARAM2, param2)
+                        putStringArray(ARG_QUESTS, param1)
+                        putIntArray(ARG_CORR_ANSWS, param2)
+                        putIntArray(ARG_ANSW_IDS, param3)
+                        putStringArray(ARG_ANSW_STRS, param4)
                     }
                 }
     }

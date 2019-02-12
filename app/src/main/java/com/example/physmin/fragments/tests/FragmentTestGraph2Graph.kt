@@ -15,12 +15,15 @@ import com.example.physmin.views.ImageViewSettable
 import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
 import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
 import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
+import kotlin.collections.HashMap
 
 
-// TODO: Rename parameter arguments, choose names that match
+// TODO: Rename parameter arguments, choose names which match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_QUEST = "param1"
+private const val ARG_CORR_ANSW = "param2"
+private const val ARG_ANSW_IDS = "param3"
+private const val ARG_ANSW_STRS = "param4"
 
 /**
  * A simple [Fragment] subclass.
@@ -35,32 +38,43 @@ class FragmentTestGraph2Graph : Fragment() {
     // TODO: Rename and change types of parameters
 
     private var questPicture: String? = null
-    private var answers: Array<String>? = null
+    //    private var answers: Array<String>? = null
     private var listener: OnFragmentInteractionListener? = null
+    private var correctAnswer: Int = 0
+    private var answers: HashMap<Int, String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            questPicture = it.getString(ARG_PARAM1)
-            answers = it.getStringArray(ARG_PARAM2)
+            questPicture = it.getString(ARG_QUEST)
+            correctAnswer = it.getInt(ARG_CORR_ANSW)
+            answers = HashMap()
+
+            var answersStrings = it.getStringArray(ARG_ANSW_STRS)
+            var answersInt = it.getIntArray(ARG_ANSW_IDS)
+
+            for (i in 0 until (answersStrings.count()))
+                answers?.put(answersInt[i], answersStrings[i])
+
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view:View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
 
         var id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
         view.settable_group_g2g.imageView_g2g_question.setImageDrawable(resources.getDrawable(id))
 
         val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
-        var answerPic:ImageViewPickable
+        var answerPic: ImageViewPickable
         val picParams = ViewGroup.LayoutParams(width, width)
         answers?.forEach {
             answerPic = ImageViewPickable(this.context!!, null)
             answerPic.layoutParams = picParams
-            id = resources.getIdentifier(it, "drawable", context!!.packageName)
+            id = resources.getIdentifier(it.value, "drawable", context!!.packageName)
             answerPic.setImageDrawable(resources.getDrawable(id))
+            answerPic.answer = it.key.toShort()
             view.pickableGroup_g2g.addView(answerPic)
         }
 
@@ -119,11 +133,13 @@ class FragmentTestGraph2Graph : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: Array<String>) =
+        fun newInstance(param1: String, param2: Int, param3: IntArray, param4: Array<String>) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putStringArray(ARG_PARAM2, param2)
+                        putString(ARG_QUEST, param1)
+                        putInt(ARG_CORR_ANSW, param2)
+                        putIntArray(ARG_ANSW_IDS, param3)
+                        putStringArray(ARG_ANSW_STRS, param4)
                     }
                 }
     }

@@ -12,8 +12,13 @@ import com.example.physmin.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_QUEST_PIC = "param1"
+private const val ARG_QUEST_LTR = "param2"
+private const val ARG_QUEST_LInd = "param3"
+private const val ARG_QUEST_RInd = "param4"
+private const val ARG_QUEST_SGN = "param5"
+
+data class Question(val letter: String, val leftIndex: String, val rightIndex: String, val sign: String)
 
 /**
  * A simple [Fragment] subclass.
@@ -27,14 +32,25 @@ private const val ARG_PARAM2 = "param2"
 class FragmentTestSign2Relation : Fragment() {
     // TODO: Rename and change types of parameters
     private var questPicture: String? = null
-    private var popUps: Array<String>? = null
     private var listener: OnFragmentInteractionListener? = null
+    private var questions: ArrayList<Question>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
-            questPicture = it.getString(ARG_PARAM1)
-            popUps = it.getStringArray(ARG_PARAM2)
+            questPicture = it.getString(ARG_QUEST_PIC)
+
+            val letters = it.getStringArray(ARG_QUEST_LTR)
+            val leftIndex = it.getStringArray(ARG_QUEST_LInd)
+            val rightIndex = it.getStringArray(ARG_QUEST_RInd)
+            val sign = it.getStringArray(ARG_QUEST_SGN)
+
+            questions = ArrayList()
+            for(i in 0 until letters.count()){
+                questions!![i] = Question(letters[i],leftIndex[i], rightIndex[i], sign[i])
+            }
+
         }
     }
 
@@ -90,11 +106,17 @@ class FragmentTestSign2Relation : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: Array<String>) =
+        fun newInstance(param1: String, param2: Array<String>,
+                        param3: Array<String>, param4: Array<String>,
+                        param5: Array<String>) =
                 FragmentTestSign2Relation().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putStringArray(ARG_PARAM2, param2)
+                        putString(ARG_QUEST_PIC, param1)
+                        putStringArray(ARG_QUEST_LTR, param2)
+                        putStringArray(ARG_QUEST_LInd, param3)
+                        putStringArray(ARG_QUEST_RInd, param4)
+                        putStringArray(ARG_QUEST_SGN, param5)
+
                     }
                 }
     }

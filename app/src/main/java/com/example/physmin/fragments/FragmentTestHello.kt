@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.example.physmin.R
+import com.example.physmin.activities.TestActivity
 import com.example.physmin.fragments.tests.FragmentTestGraph2Graph
 import com.example.physmin.fragments.tests.FragmentTestGraph2Graph2
 import com.example.physmin.fragments.tests.FragmentTestGraph2State
@@ -48,6 +49,8 @@ class FragmentTestHello : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_test_hello, container, false)
+
+        val tests = (activity as TestActivity).tests
 
         view.button_start_test.setOnClickListener {
             fragmentManager!!.beginTransaction()

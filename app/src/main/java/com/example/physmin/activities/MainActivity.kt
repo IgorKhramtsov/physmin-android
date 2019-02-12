@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.example.physmin.R
 import com.example.physmin.fragments.FragmentSubjectKinematic
 import com.example.physmin.fragments.FragmentSubjects
+import org.json.JSONArray
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity(), FragmentSubjects.OnFragmentInteractionListener, FragmentSubjectKinematic.OnFragmentInteractionListener {
 
