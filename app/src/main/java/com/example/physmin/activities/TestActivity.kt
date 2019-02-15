@@ -26,103 +26,101 @@ class TestActivity : AppCompatActivity(),
                 "  \"tests\": [\n" +
                 "    {\n" +
                 "      \"type\": \"graph2graph\",\n" +
-                "      \"test_id\": \"test_id\",\n" +
-                "      \"title\": \"Подберите пару для графа\",\n" +
+                "      \"test_id\": \"0\",\n" +
+                "      \"title\": \"Подберите пару для графика\",\n" +
                 "      \"question\": {\n" +
-                "        \"picture\": \"picture_name\",\n" +
-                "        \"answers\": [\n" +
-                "          \"id_1\"\n" +
-                "        ]\n" +
+                "        \"picture\": \"graph_x_1\",\n" +
+                "        \"correct_id\": \"1\"\n" +
                 "      },\n" +
                 "      \"answers\": [\n" +
                 "        {\n" +
                 "          \"id\": \"1\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_1\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"2\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_2\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"3\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_3\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"4\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_4\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"5\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_5\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"6\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_6\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"7\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_7\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"8\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_8\"\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    },\n" +
                 "    {\n" +
                 "      \"type\": \"state2graph\",\n" +
-                "      \"test_id\": \"test_id\",\n" +
+                "      \"test_id\": \"1\",\n" +
                 "      \"title\": \"Найдите соответсвите графиков и состояний\",\n" +
                 "      \"question\": [\n" +
                 "        {\n" +
-                "          \"answer_id\": \"1\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"correct_id\": \"1\",\n" +
+                "          \"picture_name\": \"graph_x_1\"\n" +
                 "        },\n" +
                 "        {\n" +
-                "          \"answer_id\": \"2\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"correct_id\": \"2\",\n" +
+                "          \"picture_name\": \"graph_x_2\"\n" +
                 "        },\n" +
                 "        {\n" +
-                "          \"answer_id\": \"3\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"correct_id\": \"3\",\n" +
+                "          \"picture_name\": \"graph_x_3\"\n" +
                 "        },\n" +
                 "        {\n" +
-                "          \"answer_id\": \"4\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"correct_id\": \"4\",\n" +
+                "          \"picture_name\": \"graph_x_4\"\n" +
                 "        }\n" +
                 "      ],\n" +
                 "      \"answers\": [\n" +
                 "        {\n" +
+                "          \"id\": \"0\",\n" +
+                "          \"state\": \"Движется вперед\"\n" +
+                "        },\n" +
+                "        {\n" +
                 "          \"id\": \"1\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
+                "          \"state\": \"Движется назад\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"2\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
+                "          \"state\": \"Движется назад\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"3\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
+                "          \"state\": \"Движется вперед\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"4\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
+                "          \"state\": \"Движется назад\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"5\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
+                "          \"state\": \"Движется вперед\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"6\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
+                "          \"state\": \"Движется вперед\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"7\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"id\": \"8\",\n" +
-                "          \"state\": \"Движется ВПЕРДЕ)\"\n" +
+                "          \"state\": \"Движется вперед\"\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    },\n" +
@@ -131,44 +129,43 @@ class TestActivity : AppCompatActivity(),
                 "      \"test_id\": \"test_id\",\n" +
                 "      \"title\": \"Найдите для графика два других\",\n" +
                 "      \"question\": {\n" +
-                "        \"picture\": \"picture_name\",\n" +
-                "        \"answers\": [\n" +
-                "          \"id_1\",\n" +
-                "          \"id_2\"\n" +
+                "        \"picture\": \"graph_x_1\",\n" +
+                "        \"correct_ids\": [\n" +
+                "          \"1\", \"2\"\n" +
                 "        ]\n" +
                 "      },\n" +
                 "      \"answers\": [\n" +
                 "        {\n" +
                 "          \"id\": \"1\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_1\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"2\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_2\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"3\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_3\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"4\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_4\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"5\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_5\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"6\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_6\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"7\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_7\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": \"8\",\n" +
-                "          \"picture_name\": \"picture_name\"\n" +
+                "          \"picture_name\": \"graph_v_8\"\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    },\n" +
@@ -176,52 +173,52 @@ class TestActivity : AppCompatActivity(),
                 "      \"type\": \"relationSings\",\n" +
                 "      \"test_id\": \"test_id\",\n" +
                 "      \"title\": \"Установите правильные неравенства\",\n" +
-                "      \"task_picture\": \"picture_name\",\n" +
+                "      \"task_picture\": \"screenshot1\",\n" +
                 "      \"questions\": [\n" +
                 "        {\n" +
                 "          \"letter\": \"S\",\n" +
                 "          \"left_index\": \"01\",\n" +
                 "          \"right_index\": \"12\",\n" +
-                "          \"sign\": \"equal\"\n" +
+                "          \"correct_sign\": \"equal\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"letter\": \"S\",\n" +
                 "          \"left_index\": \"01\",\n" +
                 "          \"right_index\": \"12\",\n" +
-                "          \"sign\": \"equal\"\n" +
+                "          \"correct_sign\": \"equal\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"letter\": \"S\",\n" +
                 "          \"left_index\": \"01\",\n" +
                 "          \"right_index\": \"12\",\n" +
-                "          \"sign\": \"equal\"\n" +
+                "          \"correct_sign\": \"equal\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"letter\": \"S\",\n" +
                 "          \"left_index\": \"01\",\n" +
                 "          \"right_index\": \"12\",\n" +
-                "          \"sign\": \"equal\"\n" +
+                "          \"correct_sign\": \"equal\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"letter\": \"S\",\n" +
                 "          \"left_index\": \"01\",\n" +
                 "          \"right_index\": \"12\",\n" +
-                "          \"sign\": \"equal\"\n" +
+                "          \"correct_sign\": \"equal\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"letter\": \"S\",\n" +
                 "          \"left_index\": \"01\",\n" +
                 "          \"right_index\": \"12\",\n" +
-                "          \"sign\": \"equal\"\n" +
+                "          \"correct_sign\": \"equal\"\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}"
         val data = JSONObject(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1)).optJSONArray("tests")
-        for(i in 0..data!!.length() - 1){
+        for(i in 0 until data!!.length())
             tests.add(data.getJSONObject(i))
-        }
+
     }
 
     override fun onFragmentInteraction(uri: Uri) {

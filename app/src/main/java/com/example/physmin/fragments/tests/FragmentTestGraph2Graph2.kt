@@ -11,16 +11,11 @@ import android.view.ViewGroup
 import com.example.physmin.R
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
-import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
 import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_QUEST = "param1"
 private const val ARG_CORR_ANSWS = "param2"
-private const val ARG_ANSW_IDS = "param3"
-private const val ARG_ANSW_STRS = "param4"
+private const val ARG_ANSWERS = "param3"
 
 /**
  * A simple [Fragment] subclass.
@@ -32,10 +27,8 @@ private const val ARG_ANSW_STRS = "param4"
  *
  */
 class FragmentTestGraph2Graph2 : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var questPicture: String? = null
-//    private var answers: Array<String>? = null
     private var listener: OnFragmentInteractionListener? = null
+    private var questPicture: String? = null
     private var correctAnswer: IntArray? = null
     private var answers: HashMap<Int,String>? = null
 
@@ -44,15 +37,8 @@ class FragmentTestGraph2Graph2 : Fragment() {
         arguments?.let {
             questPicture = it.getString(ARG_QUEST)
             correctAnswer = it.getIntArray(ARG_CORR_ANSWS)
-            answers = HashMap()
 
-            var answersStrings = it.getStringArray(ARG_ANSW_STRS)
-            var answersInt = it.getIntArray(ARG_ANSW_IDS)
-
-            for (i in 0 until (answersStrings.count()))
-                answers?.put(answersInt[i], answersStrings[i])
-
-
+            answers = it.getSerializable(ARG_ANSWERS) as HashMap<Int, String>
         }
     }
 
@@ -61,18 +47,24 @@ class FragmentTestGraph2Graph2 : Fragment() {
         val view = inflater.inflate(R.layout.fragment_test_graph2graph_2, container, false)
 
 
-        var id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
-        view.settableGroup_g2g2.imageView_g2g2_question.setImageDrawable(resources.getDrawable(id))
+        var picId = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
+        view.settableGroup_g2g2.imageView_g2g2_question.setImageDrawable(resources.getDrawable(picId))
 
         val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         var answerPic: ImageViewPickable
         val picParams = ViewGroup.LayoutParams(width, width)
+
+        view.imageView_g2g2_blank1.correctAnsw = correctAnswer
+        view.imageView_g2g2_blank2.correctAnsw = correctAnswer
+
         answers?.forEach {
             answerPic = ImageViewPickable(this.context!!, null)
-            answerPic.layoutParams = picParams
-            id = resources.getIdentifier(it.value, "drawable", context!!.packageName)
-            answerPic.answer = it.key.toShort()
-            answerPic.setImageDrawable(resources.getDrawable(id))
+            answerPic.apply {
+                layoutParams = picParams
+                picId = resources.getIdentifier(it.value, "drawable", context!!.packageName)
+                answer = it.key
+                setImageDrawable(resources.getDrawable(picId))
+            }
             view.pickableGroup_g2g2.addView(answerPic)
         }
 
@@ -131,13 +123,12 @@ class FragmentTestGraph2Graph2 : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: IntArray, param3: IntArray, param4: Array<String>) =
+        fun newInstance(questionPic: String, correctAnsw: IntArray, answers: HashMap<Int, String>) =
                 FragmentTestGraph2Graph2().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_QUEST, param1)
-                        putIntArray(ARG_CORR_ANSWS, param2)
-                        putIntArray(ARG_ANSW_IDS, param3)
-                        putStringArray(ARG_ANSW_STRS, param4)
+                        putString(ARG_QUEST, questionPic)
+                        putIntArray(ARG_CORR_ANSWS, correctAnsw)
+                        putSerializable(ARG_ANSWERS, answers)
                     }
                 }
     }

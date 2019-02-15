@@ -66,7 +66,7 @@
                 android:src="@drawable/graph1" />
 
             <com.example.physmin.views.ImageViewSettableBlank
-                android:id="@+id/asd"
+                android:id="@+id/imageView_g2g2_blank1"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:minWidth="110dp"
@@ -74,7 +74,7 @@
                 android:padding="10dp" />
 
             <com.example.physmin.views.ImageViewSettableBlank
-                android:id="@+id/sad"
+                android:id="@+id/imageView_g2g2_blank2"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:minWidth="110dp"
@@ -95,7 +95,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/settableGroup_g2g2"></com.example.physmin.views.GroupPickable>
+            app:layout_constraintTop_toBottomOf="@+id/settableGroup_g2g2"/>
 
     </com.example.physmin.views.TestConstraintLayout>
 

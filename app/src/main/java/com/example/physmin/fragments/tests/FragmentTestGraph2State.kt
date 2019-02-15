@@ -23,9 +23,10 @@ private val DEF_QUEST_PICTURES = arrayOf("@drawable/graph1", "@drawable/graph2",
 private val DEF_ANSWERS = arrayOf("Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед",
         "Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед")
 private const val ARG_QUESTS = "param1"
-private const val ARG_CORR_ANSWS = "param3"
-private const val ARG_ANSW_IDS = "param3"
-private const val ARG_ANSW_STRS = "param4"
+private const val ARG_ANSWERS = "param2"
+//private const val ARG_CORR_ANSWS = "param3"
+//private const val ARG_ANSW_IDS = "param3"
+//private const val ARG_ANSW_STRS = "param4"
 
 
 /**
@@ -38,44 +39,35 @@ private const val ARG_ANSW_STRS = "param4"
  *
  */
 class FragmentTestGraph2State : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var questPictures: Array<String>? = null
-//    private var answers: Array<String>? = null
     private var listener: OnFragmentInteractionListener? = null
-    private var correctAnswer: IntArray? = null
+    private var questions: HashMap<Int,String>? = null
     private var answers: HashMap<Int,String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            questPictures = it.getStringArray(ARG_QUESTS)
-            correctAnswer = it.getIntArray(ARG_CORR_ANSWS)
-            answers = HashMap()
-
-            var answersStrings = it.getStringArray(ARG_ANSW_STRS)
-            var answersInt = it.getIntArray(ARG_ANSW_IDS)
-
-            for (i in 0 until (answersStrings.count()))
-                answers?.put(answersInt[i], answersStrings[i])
-
-
+            answers = it.getSerializable(ARG_ANSWERS) as HashMap<Int, String>
+            questions = it.getSerializable(ARG_QUESTS) as HashMap<Int, String>
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
         val view:View = inflater.inflate(R.layout.fragment_test_state2graph, container, false)
 
         val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         var questPic:ImageViewSettable
         val picParams = ViewGroup.LayoutParams(width, width)
         var id:Int
-        questPictures?.forEach {
+
+        questions?.forEach {
             questPic = ImageViewSettable(this.context!!, null)
-            questPic.layoutParams = picParams
-            id = resources.getIdentifier(it, "drawable", context!!.packageName)
-            questPic.setImageDrawable(resources.getDrawable(id))
+            questPic.apply {
+                this.correctAnsw = it.key
+                this.layoutParams = picParams
+                id = resources.getIdentifier(it.value, "drawable", context!!.packageName)
+                this.setImageDrawable(resources.getDrawable(id))
+            }
             view.settable_group.addView(questPic)
         }
 
@@ -83,11 +75,13 @@ class FragmentTestGraph2State : Fragment() {
         var textView: TextViewPickable
         answers?.forEach {
             textView = TextViewPickable(this.context!!, null)
-            textView.layoutParams = textParams
-            textView.text = it.value
-            textView.textSize = 16f
-            textView.gravity = Gravity.CENTER
-
+            textView.apply {
+                this.answer = it.key
+                this.layoutParams = textParams
+                this.text = it.value
+                this.textSize = 16f
+                this.gravity = Gravity.CENTER
+            }
             view.pickable_group.addView(textView)
         }
 
@@ -134,20 +128,16 @@ class FragmentTestGraph2State : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
+         * @param questions Question dictionary.
+         * @param answers Answers dictionary.
          * @return A new instance of fragment FragmentTestGraph2State.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: Array<String>, param2: IntArray,
-                        param3: IntArray, param4: Array<String>) =
+        fun newInstance(questions: HashMap<Int, String>, answers: HashMap<Int, String>) =
                 FragmentTestGraph2State().apply {
                     arguments = Bundle().apply {
-                        putStringArray(ARG_QUESTS, param1)
-                        putIntArray(ARG_CORR_ANSWS, param2)
-                        putIntArray(ARG_ANSW_IDS, param3)
-                        putStringArray(ARG_ANSW_STRS, param4)
+                        putSerializable(ARG_QUESTS, questions)
+                        putSerializable(ARG_ANSWERS, answers)
                     }
                 }
     }

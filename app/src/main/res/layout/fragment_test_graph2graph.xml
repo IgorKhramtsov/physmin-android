@@ -69,7 +69,7 @@
                 android:src="@drawable/graph1" />
 
             <com.example.physmin.views.ImageViewSettableBlank
-                android:id="@+id/imageViewBlank"
+                android:id="@+id/imageView_g2g_blank1"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:minWidth="150dp"

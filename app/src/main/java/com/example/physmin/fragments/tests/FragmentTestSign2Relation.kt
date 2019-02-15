@@ -4,10 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
+import com.example.physmin.views.RelationSignView
+import kotlinx.android.synthetic.main.fragment_test_relation_signs.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -16,9 +19,9 @@ private const val ARG_QUEST_PIC = "param1"
 private const val ARG_QUEST_LTR = "param2"
 private const val ARG_QUEST_LInd = "param3"
 private const val ARG_QUEST_RInd = "param4"
-private const val ARG_QUEST_SGN = "param5"
+private const val ARG_QUEST_CORR_SGN = "param5"
 
-data class Question(val letter: String, val leftIndex: String, val rightIndex: String, val sign: String)
+data class Question(val letter: String, val leftIndex: String, val rightIndex: String, val corrSign: Int)
 
 /**
  * A simple [Fragment] subclass.
@@ -30,7 +33,6 @@ data class Question(val letter: String, val leftIndex: String, val rightIndex: S
  *
  */
 class FragmentTestSign2Relation : Fragment() {
-    // TODO: Rename and change types of parameters
     private var questPicture: String? = null
     private var listener: OnFragmentInteractionListener? = null
     private var questions: ArrayList<Question>? = null
@@ -44,20 +46,32 @@ class FragmentTestSign2Relation : Fragment() {
             val letters = it.getStringArray(ARG_QUEST_LTR)
             val leftIndex = it.getStringArray(ARG_QUEST_LInd)
             val rightIndex = it.getStringArray(ARG_QUEST_RInd)
-            val sign = it.getStringArray(ARG_QUEST_SGN)
+            val sign = it.getIntArray(ARG_QUEST_CORR_SGN)
 
             questions = ArrayList()
-            for(i in 0 until letters.count()){
-                questions!![i] = Question(letters[i],leftIndex[i], rightIndex[i], sign[i])
-            }
-
+            for(i in 0 until letters.count())
+                questions!!.add(Question(letters[i],leftIndex[i], rightIndex[i], sign[i]))
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test_relation_signs, container, false)
+        val view = inflater.inflate(R.layout.fragment_test_relation_signs, container, false)
+
+        view.imageView_rs_task.apply {
+            val id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
+            setImageDrawable(resources.getDrawable(id))
+        }
+
+        for (i in 0 until questions!!.size){
+            val relationSignView = RelationSignView(this.context!!, questions!![i].letter,
+                    questions!![i].leftIndex, questions!![i].rightIndex)
+            relationSignView.correctAnsw = questions!![i].corrSign
+            view.settableGroup_rs.addView(relationSignView)
+        }
+
+        return view
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -108,14 +122,14 @@ class FragmentTestSign2Relation : Fragment() {
         @JvmStatic
         fun newInstance(param1: String, param2: Array<String>,
                         param3: Array<String>, param4: Array<String>,
-                        param5: Array<String>) =
+                        param5: Array<Int>) =
                 FragmentTestSign2Relation().apply {
                     arguments = Bundle().apply {
                         putString(ARG_QUEST_PIC, param1)
                         putStringArray(ARG_QUEST_LTR, param2)
                         putStringArray(ARG_QUEST_LInd, param3)
                         putStringArray(ARG_QUEST_RInd, param4)
-                        putStringArray(ARG_QUEST_SGN, param5)
+                        putIntArray(ARG_QUEST_CORR_SGN, param5.toIntArray())
 
                     }
                 }

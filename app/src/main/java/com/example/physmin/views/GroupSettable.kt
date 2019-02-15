@@ -91,7 +91,6 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         (child as? ImageViewSettableBlank)?.setParent(this)
         (child as? ImageViewSettableBlank)?.setOnClickListener(this)
 
-        (child as? PopUpViewSettable)?.setParent(this)
         (child as? RelationSignView)?.setParent(this)
 
     }

@@ -12,6 +12,7 @@ import com.example.physmin.R
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
 import com.example.physmin.views.ImageViewSettable
+import kotlinx.android.synthetic.main.fragment_test_graph2graph.*
 import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
 import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
 import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
@@ -22,8 +23,7 @@ import kotlin.collections.HashMap
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_QUEST = "param1"
 private const val ARG_CORR_ANSW = "param2"
-private const val ARG_ANSW_IDS = "param3"
-private const val ARG_ANSW_STRS = "param4"
+private const val ARG_ANSWERS = "param3"
 
 /**
  * A simple [Fragment] subclass.
@@ -48,14 +48,8 @@ class FragmentTestGraph2Graph : Fragment() {
         arguments?.let {
             questPicture = it.getString(ARG_QUEST)
             correctAnswer = it.getInt(ARG_CORR_ANSW)
-            answers = HashMap()
 
-            var answersStrings = it.getStringArray(ARG_ANSW_STRS)
-            var answersInt = it.getIntArray(ARG_ANSW_IDS)
-
-            for (i in 0 until (answersStrings.count()))
-                answers?.put(answersInt[i], answersStrings[i])
-
+            answers = it.getSerializable(ARG_ANSWERS) as HashMap<Int, String>
         }
     }
 
@@ -66,15 +60,19 @@ class FragmentTestGraph2Graph : Fragment() {
         var id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
         view.settable_group_g2g.imageView_g2g_question.setImageDrawable(resources.getDrawable(id))
 
+        view.imageView_g2g_blank1.correctAnsw = arrayOf(correctAnswer).toIntArray()
+
         val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         var answerPic: ImageViewPickable
         val picParams = ViewGroup.LayoutParams(width, width)
         answers?.forEach {
             answerPic = ImageViewPickable(this.context!!, null)
-            answerPic.layoutParams = picParams
-            id = resources.getIdentifier(it.value, "drawable", context!!.packageName)
-            answerPic.setImageDrawable(resources.getDrawable(id))
-            answerPic.answer = it.key.toShort()
+            answerPic.apply {
+                this.layoutParams = picParams
+                id = resources.getIdentifier(it.value, "drawable", context!!.packageName)
+                this.setImageDrawable(resources.getDrawable(id))
+                this.answer = it.key
+            }
             view.pickableGroup_g2g.addView(answerPic)
         }
 
@@ -131,15 +129,13 @@ class FragmentTestGraph2Graph : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment FragmentTestGraph2Graph.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: Int, param3: IntArray, param4: Array<String>) =
+        fun newInstance(param1: String, param2: Int, answers: HashMap<Int, String>) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putString(ARG_QUEST, param1)
                         putInt(ARG_CORR_ANSW, param2)
-                        putIntArray(ARG_ANSW_IDS, param3)
-                        putStringArray(ARG_ANSW_STRS, param4)
+                        putSerializable(ARG_ANSWERS, answers)
                     }
                 }
     }

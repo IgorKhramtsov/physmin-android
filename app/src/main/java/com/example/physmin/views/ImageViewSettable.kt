@@ -19,7 +19,14 @@ open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Im
             field = value
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
-    override var correctAnswer: Short = -1
+    var correctAnsw: Int? = null
+
+    override fun isCorrect(): Boolean {
+        if(answerView == null || correctAnsw == null)
+            return false
+
+        return answerView?.answer == correctAnsw
+    }
 
 
     var paint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)

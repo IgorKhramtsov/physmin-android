@@ -6,7 +6,7 @@ interface Pickable {
 
     var picked: Boolean
     var par: GroupPickable?
-    var answer: Short
+    var answer: Int
 
     fun setParent(_parent: GroupPickable)
 

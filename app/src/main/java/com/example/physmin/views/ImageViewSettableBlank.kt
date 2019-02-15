@@ -22,13 +22,18 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Im
                 this.setImageResource(R.color.transparent)
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
-    override var correctAnswer: Short = -1
+    var correctAnsw: IntArray? = null
+
+    override fun isCorrect(): Boolean {
+        if(answerView == null || correctAnsw == null)
+            return false
+
+        return correctAnsw!!.contains(answerView!!.answer)
+    }
 
     var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
 
-    init {
-//        this.setImageResource(R.color.transparent)
-    }
+    init { }
 
     override fun setParent(_parent: GroupSettable) {
         this.par = _parent

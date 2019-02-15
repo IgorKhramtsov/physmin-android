@@ -9,18 +9,20 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
+import com.example.physmin.fragments.tests.toPx
 
 fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 
 class RelationSignView : View, View.OnClickListener, Settable {
     var popupWindow: PopupWindow? = null
     override var par: GroupSettable? = null
-    override var correctAnswer: Short = -1
+    var correctAnsw: Int? = null
 
     private var _letter: String? = null
     private var _leftIndex: String? = null
@@ -35,6 +37,13 @@ class RelationSignView : View, View.OnClickListener, Settable {
     private var indexWidth: Float = 0f
     private var indexHeight: Float = 0f
     private var signWidth: Float = 0f
+
+    override fun isCorrect(): Boolean {
+        if(answerView == null || correctAnsw == null)
+            return false
+
+        return answerView?.answer == correctAnsw
+    }
 
     var letter: String?
         get() = _letter
@@ -68,9 +77,9 @@ class RelationSignView : View, View.OnClickListener, Settable {
         set(value) {
             field = value
             when {
-                answerView?.answer?.toInt() == -1 -> currentSign = "<"
-                answerView?.answer?.toInt() == 0 -> currentSign = "="
-                answerView?.answer?.toInt() == 1 -> currentSign = ">"
+                answerView?.answer == -1 -> currentSign = "<"
+                answerView?.answer == 0 -> currentSign = "="
+                answerView?.answer == 1 -> currentSign = ">"
                 else -> currentSign = null
             }
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
@@ -89,16 +98,18 @@ class RelationSignView : View, View.OnClickListener, Settable {
     }
 
     private fun init(attrs: AttributeSet?, defStyle: Int) {
-        val a = context.obtainStyledAttributes(
-                attrs, R.styleable.RelationSignView, defStyle, 0)
+        if(attrs != null) {
+            val a = context.obtainStyledAttributes(
+                    attrs, R.styleable.RelationSignView, defStyle, 0)
 
-        _letter = a.getString(R.styleable.RelationSignView_letter)
-        _leftIndex = a.getString(R.styleable.RelationSignView_leftIndex)
-        _rightIndex = a.getString(R.styleable.RelationSignView_rightIndex)
-        //DEBUG
-        //_currentSign = "="
+            _letter = a.getString(R.styleable.RelationSignView_letter)
+            _leftIndex = a.getString(R.styleable.RelationSignView_leftIndex)
+            _rightIndex = a.getString(R.styleable.RelationSignView_rightIndex)
 
-        a.recycle()
+            a.recycle()
+        }
+
+        layoutParams = ViewGroup.LayoutParams(150.toPx(), 50.toPx())
 
         letterPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
@@ -113,6 +124,13 @@ class RelationSignView : View, View.OnClickListener, Settable {
 
         invalidateTextPaintAndMeasurements()
     }
+    constructor(context: Context, letter: String, lIndex: String, rIndex: String) : super(context) {
+        _letter = letter
+        _leftIndex = lIndex
+        _rightIndex = rIndex
+
+        init(null, 0)
+    }
 
     private fun invalidateTextPaintAndMeasurements() {
         letterPaint?.let {
@@ -126,7 +144,7 @@ class RelationSignView : View, View.OnClickListener, Settable {
         indexPaint?.let {
             it.textSize = 12.spToPx()
             it.color = resources.getColor(android.R.color.primary_text_light)
-            indexWidth = it.measureText(letter)
+            indexWidth = it.measureText(leftIndex)
         }
     }
 

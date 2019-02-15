@@ -15,7 +15,7 @@ class ImageViewPickable(context: Context, attributeSet: AttributeSet?) : ImageVi
     private var outlineColor: Int = Color.BLUE
     override var picked: Boolean = false
     override var par: GroupPickable? = null
-    override var answer: Short = -1
+    override var answer: Int = -1
 
     init {
         if(attributeSet != null) {

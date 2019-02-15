@@ -18,13 +18,13 @@ class TextViewPickable(context: Context, attrs: AttributeSet?) : TextView(contex
     override var picked: Boolean = false
     override var par: GroupPickable? = null
     private var outlineColor: Int = Color.BLUE
-    override var answer: Short = -1
+    override var answer: Int = -1
 
     init {
         if(attrs != null) {
             val ar: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.TextViewPickable)
             outlineColor = ar.getColor(R.styleable.TextViewPickable_outlineColor, ContextCompat.getColor(context, R.color.textview_pick_outline))
-            answer = ar.getInt(R.styleable.TextViewPickable_answer, 0).toShort()
+            answer = ar.getInt(R.styleable.TextViewPickable_answer, 0)
 
             ar.recycle()
             this.setTextColor(ContextCompat.getColor(context, R.color.half_black))
