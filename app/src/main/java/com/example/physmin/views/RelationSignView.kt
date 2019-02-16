@@ -16,6 +16,7 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.fragments.tests.toPx
+import kotlin.system.measureNanoTime
 
 fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 
@@ -151,7 +152,6 @@ class RelationSignView : View, View.OnClickListener, Settable {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-
         val contentWidth = width - paddingLeft - paddingRight
         val contentHeight = height - paddingTop - paddingBottom
 
@@ -188,6 +188,8 @@ class RelationSignView : View, View.OnClickListener, Settable {
     }
 
     override fun onClick(view: View?) {
+        // TODO: Adjust popUpWindow position (and size?)
+
         val location = intArrayOf(0,0)
         if(popupWindow != null) {
             this.getLocationOnScreen(location)
