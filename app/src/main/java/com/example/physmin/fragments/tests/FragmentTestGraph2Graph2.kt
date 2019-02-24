@@ -84,11 +84,11 @@ class FragmentTestGraph2Graph2 : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+//        }
     }
 
     override fun onDetach() {
@@ -111,7 +111,10 @@ class FragmentTestGraph2Graph2 : Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
-
+//    interface OnAllDoneListener {
+//        fun onAllDone()
+//        fun onResetPressed()
+//    }
     companion object {
         /**
          * Use this factory method to create a new instance of

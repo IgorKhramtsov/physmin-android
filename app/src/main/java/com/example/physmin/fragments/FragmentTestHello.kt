@@ -1,7 +1,6 @@
 package com.example.physmin.fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -34,13 +33,13 @@ private const val ARG_PARAM2 = "param2"
 class FragmentTestHello : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+//    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+//            param1 = it.getString(ARG_PARAM1)
+//            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -49,28 +48,31 @@ class FragmentTestHello : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_test_hello, container, false)
 
-        val tests = (activity as TestActivity).tests
+        val activity = activity as TestActivity
+        val tests = (activity).tests
 
-        view.button_start_test.setOnClickListener {
-            fragmentManager!!.beginTransaction()
-                    .replace(R.id.my_nav_host_fragment, parseTest(tests[0]))
-                    .commit()
-        }
-        view.button_start_test_2.setOnClickListener {
-            fragmentManager!!.beginTransaction()
-                    .replace(R.id.my_nav_host_fragment, parseTest(tests[1]))
-                    .commit()
-        }
-        view.button_start_test_2_2.setOnClickListener {
-            fragmentManager!!.beginTransaction()
-                    .replace(R.id.my_nav_host_fragment, parseTest(tests[2]))
-                    .commit()
-        }
-        view.button_start_test_3.setOnClickListener {
-            fragmentManager!!.beginTransaction()
-                    .replace(R.id.my_nav_host_fragment, parseTest(tests[3]))
-                    .commit()
-        }
+
+        activity.showButtonNext()
+//        view.button_start_test.setOnClickListener {
+//            fragmentManager!!.beginTransaction()
+//                    .replace(R.id.test_host_fragment, parseTest(tests[0]))
+//                    .commit()
+//        }
+//        view.button_start_test_2.setOnClickListener {
+//            fragmentManager!!.beginTransaction()
+//                    .replace(R.id.my_nav_host_fragment, parseTest(tests[1]))
+//                    .commit()
+//        }
+//        view.button_start_test_2_2.setOnClickListener {
+//            fragmentManager!!.beginTransaction()
+//                    .replace(R.id.my_nav_host_fragment, parseTest(tests[2]))
+//                    .commit()
+//        }
+//        view.button_start_test_3.setOnClickListener {
+//            fragmentManager!!.beginTransaction()
+//                    .replace(R.id.my_nav_host_fragment, parseTest(tests[3]))
+//                    .commit()
+//        }
         return view
     }
 
@@ -170,22 +172,22 @@ class FragmentTestHello : Fragment() {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+//    fun onButtonPressed(uri: Uri) {
+//        listener?.onFragmentInteraction(uri)
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+//        }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+//        listener = null
     }
 
     /**
@@ -199,10 +201,10 @@ class FragmentTestHello : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
+//    interface OnFragmentInteractionListener {
+//        // TODO: Update argument type and name
+//        fun onFragmentInteraction(uri: Uri)
+//    }
 
     companion object {
         /**
@@ -215,11 +217,11 @@ class FragmentTestHello : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
                 FragmentTestHello().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+//                        putString(ARG_PARAM1, param1)
+//                        putString(ARG_PARAM2, param2)
                     }
                 }
     }

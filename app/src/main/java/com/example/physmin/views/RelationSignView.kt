@@ -9,6 +9,7 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
@@ -16,7 +17,6 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.fragments.tests.toPx
-import kotlin.system.measureNanoTime
 
 fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 
@@ -152,6 +152,7 @@ class RelationSignView : View, View.OnClickListener, Settable {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        // TODO: optimize vars
         val contentWidth = width - paddingLeft - paddingRight
         val contentHeight = height - paddingTop - paddingBottom
 

@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.example.physmin.Pickable
+import com.example.physmin.activities.TestActivity
 
 class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener {
+
+
     var groupPickable: GroupPickable? = null
     var groupSettable: GroupSettable? = null
     var nextTestButton: Button? = null
@@ -47,12 +50,14 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : Const
 
     fun checkTestComplete(isAllChecked: Boolean) {
         if(isAllChecked) {
+            (context as TestActivity).showButtonNext()
             groupPickable?.visibility = View.GONE
-            nextTestButton!!.visibility = View.VISIBLE
+//            nextTestButton!!.visibility = View.VISIBLE
         }
         else {
+            (context as TestActivity).hideButtonNext()
             groupPickable?.visibility = View.VISIBLE
-            nextTestButton!!.visibility = View.GONE
+//            nextTestButton!!.visibility = View.GONE
         }
     }
 }

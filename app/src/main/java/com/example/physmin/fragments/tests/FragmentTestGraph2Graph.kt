@@ -39,7 +39,7 @@ class FragmentTestGraph2Graph : Fragment() {
 
     private var questPicture: String? = null
     //    private var answers: Array<String>? = null
-    private var listener: OnFragmentInteractionListener? = null
+//    private var listener: OnAllDoneListener? = null
     private var correctAnswer: Int = 0
     private var answers: HashMap<Int, String>? = null
 
@@ -86,22 +86,22 @@ class FragmentTestGraph2Graph : Fragment() {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+//    fun onButtonPressed(uri: Uri) {
+//        listener?.onFragmentInteraction(uri)
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+//        if (context is OnAllDoneListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+//        }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+//        listener = null
     }
 
     /**
@@ -119,7 +119,10 @@ class FragmentTestGraph2Graph : Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
-
+//    interface OnAllDoneListener {
+//        fun onAllDone()
+//        fun onResetPressed()
+//    }
     companion object {
         /**
          * Use this factory method to create a new instance of

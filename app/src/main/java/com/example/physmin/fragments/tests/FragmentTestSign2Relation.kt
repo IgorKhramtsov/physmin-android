@@ -50,7 +50,7 @@ class FragmentTestSign2Relation : Fragment() {
 
             questions = ArrayList()
             for(i in 0 until letters.count())
-                questions!!.add(Question(letters[i],leftIndex[i], rightIndex[i], sign[i]))
+                questions!!.add(Question(letters[i], leftIndex[i], rightIndex[i], sign[i]))
         }
     }
 
@@ -81,11 +81,11 @@ class FragmentTestSign2Relation : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+//        }
     }
 
     override fun onDetach() {
@@ -108,7 +108,10 @@ class FragmentTestSign2Relation : Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
-
+//    interface OnAllDoneListener {
+//        fun onAllDone()
+//        fun onResetPressed()
+//    }
     companion object {
         /**
          * Use this factory method to create a new instance of

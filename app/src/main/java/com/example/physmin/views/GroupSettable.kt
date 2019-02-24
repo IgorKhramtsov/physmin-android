@@ -3,7 +3,10 @@ package com.example.physmin.views
 import android.content.Context
 import android.graphics.Point
 import android.util.AttributeSet
-import android.view.*
+import android.view.Display
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import com.example.physmin.Settable
 
 class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
@@ -109,7 +112,6 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
     }
 
     override fun onClick(_view: View?) {
-
         if( _view is ImageViewSettable) {
             val imageView = _view as ImageViewSettable
             (imageView.answerView as View?)?.visibility = View.VISIBLE
@@ -157,13 +159,21 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
     }
 
     fun isAllChecked(): Boolean {
-        var childCount = this.childCount
-        var child: View? = null
+        val childCount = this.childCount
+        var child: View
         for(i in 0 until childCount) {
             child = getChildAt(i)
             if(child is Settable)
                 if(child.answerView == null) return false
         }
         return true
+
     }
+
+
+
+
+
+
+
 }
