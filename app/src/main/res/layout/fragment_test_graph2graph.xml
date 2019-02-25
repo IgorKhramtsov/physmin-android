@@ -54,7 +54,7 @@
                 android:layout_height="150dp"
                 android:minWidth="150dp"
                 android:minHeight="150dp"
-                android:padding="10dp" />
+                android:padding="2dp" />
 
         </com.example.physmin.views.GroupSettable>
 

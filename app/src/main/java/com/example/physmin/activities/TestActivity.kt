@@ -19,16 +19,15 @@ class TestActivity : AppCompatActivity()//,
 //        FragmentTestSign2Relation.OnAllDoneListener,
 //        FragmentTestGraph2Graph.OnAllDoneListener
 {
-
     var tests = arrayListOf<JSONObject>()
     //var listener: FragmentTestHello.OnAllDoneListener? = null
     var buttonNext: Button? = null
     var currentTestIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_test)
-    buttonNext = findViewById(R.id.button_test_next)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_test)
+        buttonNext = findViewById(R.id.button_test_next)
 
 
 

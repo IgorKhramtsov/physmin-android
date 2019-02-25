@@ -167,13 +167,6 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
                 if(child.answerView == null) return false
         }
         return true
-
     }
-
-
-
-
-
-
 
 }

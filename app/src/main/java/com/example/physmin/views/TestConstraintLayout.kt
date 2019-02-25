@@ -11,8 +11,6 @@ import com.example.physmin.activities.TestActivity
 
 class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener {
-
-
     var groupPickable: GroupPickable? = null
     var groupSettable: GroupSettable? = null
     var nextTestButton: Button? = null

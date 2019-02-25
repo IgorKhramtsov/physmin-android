@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -22,6 +23,8 @@ fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 
 class RelationSignView : View, View.OnClickListener, Settable {
     var popupWindow: PopupWindow? = null
+    var padding: Int = 0
+    var location = intArrayOf(0, 0)
     override var par: GroupSettable? = null
     var correctAnsw: Int? = null
 
@@ -38,6 +41,9 @@ class RelationSignView : View, View.OnClickListener, Settable {
     private var indexWidth: Float = 0f
     private var indexHeight: Float = 0f
     private var signWidth: Float = 0f
+
+    var contentWidth = width
+    var contentHeight = height
 
     override fun isCorrect(): Boolean {
         if(answerView == null || correctAnsw == null)
@@ -133,6 +139,7 @@ class RelationSignView : View, View.OnClickListener, Settable {
         init(null, 0)
     }
 
+    // TODO: find correct color from theme
     private fun invalidateTextPaintAndMeasurements() {
         letterPaint?.let {
             it.textSize = 28.spToPx()
@@ -149,39 +156,48 @@ class RelationSignView : View, View.OnClickListener, Settable {
         }
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+
+        contentWidth = width
+        contentHeight = height
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // TODO: optimize vars
-        val contentWidth = width - paddingLeft - paddingRight
-        val contentHeight = height - paddingTop - paddingBottom
-
         letter?.let {
             canvas.drawText(it,
-                    paddingLeft.toFloat(),
+                    letterWidth,
                     (contentHeight / 2) + letterHeight,
                     letterPaint)
             canvas.drawText(it,
-                    contentWidth - paddingRight - letterWidth - indexWidth*2 ,
+                    contentWidth - letterWidth - indexWidth*2 ,
                     (contentHeight / 2) + letterHeight,
                     letterPaint)
         }
         leftIndex?.let {
             canvas.drawText(it,
-                    paddingLeft + letterWidth,
+                    letterWidth * 2,
                     (contentHeight / 2) + letterHeight + indexHeight,
                     indexPaint)
         }
         rightIndex?.let {
             canvas.drawText(it,
-                    contentWidth - paddingRight - (indexWidth*2),
+                    contentWidth - (indexWidth*2),
                     (contentHeight / 2) + letterHeight + indexHeight,
                     indexPaint)
         }
 
         currentSign?.let {
             canvas.drawText(it,
-                    (contentWidth / 2) - signWidth ,
+                    (contentWidth / 2) - signWidth  + letterWidth / 2,
                     (contentHeight / 2) + letterHeight,
                     letterPaint)
         }
@@ -189,17 +205,20 @@ class RelationSignView : View, View.OnClickListener, Settable {
     }
 
     override fun onClick(view: View?) {
-        // TODO: Adjust popUpWindow position (and size?)
-
-        val location = intArrayOf(0,0)
         if(popupWindow != null) {
-            this.getLocationOnScreen(location)
-            popupWindow!!.showAtLocation(view,0,location[0]+Math.round(this.width*0.1f),location[1]-Math.round(this.height*0.4f))
+            popupWindow!!.showAtLocation(view, 0,
+                    location[0] + padding,
+                    location[1] - Math.round(this.height * 0.7f))
             return
         }
 
         val inflater = LayoutInflater.from(context)
         val popupView = inflater.inflate(R.layout.pop_up_elements, null)
+
+        popupView.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+        padding = (this.width - popupView.measuredWidth) / 2
+
         popupWindow = PopupWindow(popupView, FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         popupWindow!!.setBackgroundDrawable(ColorDrawable())
         popupWindow!!.isOutsideTouchable = true
@@ -217,7 +236,8 @@ class RelationSignView : View, View.OnClickListener, Settable {
         popupView.findViewById<TextViewPickable>(R.id.textViewPickable_more).setOnClickListener(listener)
 
         this.getLocationOnScreen(location)
-        popupWindow!!.showAtLocation(view,0,location[0]+Math.round(this.width*0.1f),location[1]-Math.round(this.height*0.4f))
+
+        onClick(view)
     }
 
     override fun setParent(_parent : GroupSettable) {

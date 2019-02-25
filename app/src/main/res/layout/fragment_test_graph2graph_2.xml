@@ -50,14 +50,15 @@
                 android:layout_height="110dp"
                 android:minWidth="110dp"
                 android:minHeight="110dp"
-                android:padding="10dp" />
+                android:padding="2dp"/>
 
             <com.example.physmin.views.ImageViewSettableBlank
                 android:id="@+id/imageView_g2g2_blank2"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:minWidth="110dp"
-                android:minHeight="110dp" />
+                android:minHeight="110dp"
+                android:padding="2dp"/>
 
         </com.example.physmin.views.GroupSettable>
 
