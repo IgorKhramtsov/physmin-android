@@ -235,7 +235,7 @@ class TestActivity : AppCompatActivity()//,
 
 
         buttonNext?.setOnClickListener {
-            if(currentTestIndex >= tests.size)
+            if (currentTestIndex >= tests.size)
                 return@setOnClickListener
 
             supportFragmentManager!!.beginTransaction()
@@ -348,4 +348,14 @@ class TestActivity : AppCompatActivity()//,
     fun hideButtonNext() {
         buttonNext?.visibility = View.GONE
     }
+
+//    class Answers {
+//        var test_id: Int
+//        var answers = List<Answer>()
+//    }
+//    class Answer {
+//        var question_id: Int
+//        var answer_id: Int
+//        var correct_answer_id: Int
+//    }
 }
