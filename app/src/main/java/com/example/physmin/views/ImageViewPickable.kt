@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.os.Build
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.widget.ImageView
 import com.example.physmin.Pickable

@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +26,7 @@ private const val ARG_ANSWERS = "param3"
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2Graph2 : Fragment() {
+class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private var questPicture: String? = null
     private var correctAnswer: IntArray? = null

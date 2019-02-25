@@ -1,7 +1,7 @@
 package com.example.physmin.activities
 
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.physmin.R
 import com.example.physmin.fragments.FragmentSubjectKinematic

@@ -2,10 +2,11 @@ package com.example.physmin.activities
 
 import android.app.Fragment
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import androidx.fragment.app.transaction
 import com.example.physmin.R
 import com.example.physmin.fragments.FragmentTestHello
 import com.example.physmin.fragments.tests.*
@@ -229,7 +230,7 @@ class TestActivity : AppCompatActivity()//,
         tests.add(data.getJSONObject(i))
 
         // Greeting
-        supportFragmentManager!!.beginTransaction()
+        supportFragmentManager.beginTransaction()
                 .replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
                 .commit()
 
@@ -238,15 +239,19 @@ class TestActivity : AppCompatActivity()//,
             if (currentTestIndex >= tests.size)
                 return@setOnClickListener
 
-            supportFragmentManager!!.beginTransaction()
-                    .replace(R.id.test_host_fragment, parseTest(tests[currentTestIndex++]))
-                    .commit()
+            supportFragmentManager.transaction {
+                replace(R.id.test_host_fragment, parseTest(tests[currentTestIndex++]))
+            }
             hideButtonNext()
+
+//            supportFragmentManager.beginTransaction()
+//                    .replace(R.id.test_host_fragment, parseTest(tests[currentTestIndex++]))
+//                    .commit()
         }
 }
 
 
-    fun parseTest(test: JSONObject): android.support.v4.app.Fragment {
+    fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
         return when(test.getString("type")) {
             "relationSings" -> parseRS(test)
             "graph2graph2" -> parseG2G2(test)
@@ -257,7 +262,7 @@ class TestActivity : AppCompatActivity()//,
         }
     }
 
-    fun parseRS(test: JSONObject): android.support.v4.app.Fragment {
+    fun parseRS(test: JSONObject): androidx.fragment.app.Fragment {
         var cacheObj: JSONObject
         val taskPic = test.getString("task_picture")
         val questions = test.getJSONArray("questions")
@@ -286,7 +291,7 @@ class TestActivity : AppCompatActivity()//,
                 letters.toTypedArray(), lIndex.toTypedArray(), rIndex.toTypedArray(), corrSign.toTypedArray())
     }
 
-    fun parseG2G2(test: JSONObject): android.support.v4.app.Fragment {
+    fun parseG2G2(test: JSONObject): androidx.fragment.app.Fragment {
         var cacheObj: JSONObject
         val question = test.getJSONObject("question")
         val answersDict = HashMap<Int, String>()
@@ -307,7 +312,7 @@ class TestActivity : AppCompatActivity()//,
                 correctAnsws.toIntArray(), answersDict)
     }
 
-    fun parseG2G(test: JSONObject): android.support.v4.app.Fragment {
+    fun parseG2G(test: JSONObject): androidx.fragment.app.Fragment {
         var _cacheObj: JSONObject
         val answersDict = HashMap<Int, String>()
         val question = test.getJSONObject("question")
@@ -321,7 +326,7 @@ class TestActivity : AppCompatActivity()//,
                 question.getInt("correct_id"), answersDict)
     }
 
-    fun parseS2G(test: JSONObject): android.support.v4.app.Fragment {
+    fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
         var _cacheObj: JSONObject
         val questionDict = HashMap<Int, String>()
         val answersDict = HashMap<Int, String>()

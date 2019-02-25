@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +38,7 @@ private const val ARG_ANSWERS = "param2"
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2State : Fragment() {
+class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private var questions: HashMap<Int,String>? = null
     private var answers: HashMap<Int,String>? = null

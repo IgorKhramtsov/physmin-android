@@ -2,7 +2,7 @@ package com.example.physmin.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +30,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class FragmentTestHello : Fragment() {
+class FragmentTestHello : androidx.fragment.app.Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 //    private var listener: OnFragmentInteractionListener? = null
@@ -76,7 +76,7 @@ class FragmentTestHello : Fragment() {
         return view
     }
 
-    fun parseTest(test: JSONObject): Fragment {
+    fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
         return when(test.getString("type")) {
             "relationSings" -> parseRS(test)
             "graph2graph2" -> parseG2G2(test)
@@ -87,7 +87,7 @@ class FragmentTestHello : Fragment() {
         }
     }
 
-    fun parseRS(test: JSONObject): Fragment {
+    fun parseRS(test: JSONObject): androidx.fragment.app.Fragment {
         var cacheObj: JSONObject
         val taskPic = test.getString("task_picture")
         val questions = test.getJSONArray("questions")
@@ -116,7 +116,7 @@ class FragmentTestHello : Fragment() {
                 letters.toTypedArray(), lIndex.toTypedArray(), rIndex.toTypedArray(), corrSign.toTypedArray())
     }
 
-    fun parseG2G2(test: JSONObject): Fragment {
+    fun parseG2G2(test: JSONObject): androidx.fragment.app.Fragment {
         var cacheObj: JSONObject
         val question = test.getJSONObject("question")
         val answersDict = HashMap<Int, String>()
@@ -137,7 +137,7 @@ class FragmentTestHello : Fragment() {
                 correctAnsws.toIntArray(), answersDict)
     }
 
-    fun parseG2G(test: JSONObject): Fragment {
+    fun parseG2G(test: JSONObject): androidx.fragment.app.Fragment {
         var _cacheObj: JSONObject
         val answersDict = HashMap<Int, String>()
         val question = test.getJSONObject("question")
@@ -151,7 +151,7 @@ class FragmentTestHello : Fragment() {
                 question.getInt("correct_id"), answersDict)
     }
 
-    fun parseS2G(test: JSONObject): Fragment {
+    fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
         var _cacheObj: JSONObject
         val questionDict = HashMap<Int, String>()
         val answersDict = HashMap<Int, String>()

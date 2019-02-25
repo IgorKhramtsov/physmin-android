@@ -3,7 +3,7 @@ package com.example.physmin.fragments.tests
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +32,7 @@ data class Question(val letter: String, val leftIndex: String, val rightIndex: S
  * create an instance of this fragment.
  *
  */
-class FragmentTestSign2Relation : Fragment() {
+class FragmentTestSign2Relation : androidx.fragment.app.Fragment() {
     private var questPicture: String? = null
     private var listener: OnFragmentInteractionListener? = null
     private var questions: ArrayList<Question>? = null
