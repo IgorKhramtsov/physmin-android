@@ -30,8 +30,6 @@ class TestActivity : AppCompatActivity()//,
         setContentView(R.layout.activity_test)
         buttonNext = findViewById(R.id.button_test_next)
 
-
-
     val text = "{\n" +
             "  \"tests\": [\n" +
             "    {\n" +
@@ -225,15 +223,14 @@ class TestActivity : AppCompatActivity()//,
             "    }\n" +
             "  ]\n" +
             "}"
-    val data = JSONObject(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1)).optJSONArray("tests")
-    for(i in 0 until data!!.length())
-        tests.add(data.getJSONObject(i))
+        val data = JSONObject(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1)).optJSONArray("tests")
+        for (i in 0 until data!!.length())
+            tests.add(data.getJSONObject(i))
 
         // Greeting
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
-                .commit()
-
+        supportFragmentManager.transaction {
+            replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
+        }
 
         buttonNext?.setOnClickListener {
             if (currentTestIndex >= tests.size)
@@ -243,11 +240,8 @@ class TestActivity : AppCompatActivity()//,
                 replace(R.id.test_host_fragment, parseTest(tests[currentTestIndex++]))
             }
             hideButtonNext()
-
-//            supportFragmentManager.beginTransaction()
-//                    .replace(R.id.test_host_fragment, parseTest(tests[currentTestIndex++]))
-//                    .commit()
         }
+
 }
 
 
@@ -354,13 +348,13 @@ class TestActivity : AppCompatActivity()//,
         buttonNext?.visibility = View.GONE
     }
 
-//    class Answers {
+//    class TestResult {
 //        var test_id: Int
 //        var answers = List<Answer>()
 //    }
 //    class Answer {
-//        var question_id: Int
 //        var answer_id: Int
-//        var correct_answer_id: Int
+//        var question_id: Int?
+//        var correct_answer_id: Int?
 //    }
 }

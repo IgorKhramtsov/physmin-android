@@ -19,6 +19,7 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet) : Const
         setOnHierarchyChangeListener(this)
     }
 
+
     override fun onChildViewAdded(p0: View?, p1: View) {
         if(p1 is GroupPickable) {
             groupPickable = p1
