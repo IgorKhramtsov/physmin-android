@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="RelationSignView">
+        <attr name="letter" format="string" />
+        <attr name="leftIndex" format="string" />
+        <attr name="rightIndex" format="string" />
+    </declare-styleable>
+</resources>

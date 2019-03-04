@@ -1,11 +1,12 @@
 package com.example.physmin
 
-import android.graphics.Paint
-import android.text.TextPaint
+import com.example.physmin.views.GroupSettable
 
 interface Settable {
-    var par: SettableGroup?
+    var par: GroupSettable?
     var answerView: Pickable?
 
-    fun setParent(_parent : SettableGroup)
+    fun setParent(_parent : GroupSettable)
+
+    fun isCorrect(): Boolean
 }

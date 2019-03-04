@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/fragmentTest_hello"
-        android:name="com.example.physmin.FragmentTest_hello"
+        android:name="com.example.physmin.fragments.FragmentTestHello"
         android:label="fragment_fragment_test_hello"
-        tools:layout="@layout/fragment_fragment_test_hello" >
+        tools:layout="@layout/fragment_test_hello" >
         <action
             android:id="@+id/action_fragmentTest_hello_to_testFragment_graph_graph"
             app:destination="@id/testFragment_graph_graph" />
@@ -28,9 +28,9 @@
     </fragment>
     <fragment
         android:id="@+id/testFragment_graph_graph"
-        android:name="com.example.physmin.TestFragment_graph_graph"
+        android:name="com.example.physmin.fragments.tests.FragmentTestGraph2Graph"
         android:label="fragment_test_fragment_graph_graph"
-        tools:layout="@layout/fragment_test_fragment_graph_graph" >
+        tools:layout="@layout/fragment_test_graph2graph" >
         <action
             android:id="@+id/action_testFragment_graph_graph_to_testFragment_graph_state"
             app:destination="@id/testFragment_graph_state" />
@@ -43,9 +43,9 @@
     </fragment>
     <fragment
         android:id="@+id/testFragment_graph_state"
-        android:name="com.example.physmin.TestFragment_graph_state"
+        android:name="com.example.physmin.fragments.tests.FragmentTestGraph2State"
         android:label="fragment_test_fragment_graph_state"
-        tools:layout="@layout/fragment_test_fragment_graph_state" >
+        tools:layout="@layout/fragment_test_state2graph" >
         <action
             android:id="@+id/action_testFragment_graph_state_self"
             app:destination="@id/testFragment_graph_state" />
@@ -58,9 +58,9 @@
     </fragment>
     <fragment
         android:id="@+id/testFragment_graph_graph2"
-        android:name="com.example.physmin.TestFragment_graph_graph2"
+        android:name="com.example.physmin.fragments.tests.FragmentTestGraph2Graph2"
         android:label="fragment_test_fragment_graph_graph2"
-        tools:layout="@layout/fragment_test_fragment_graph_graph2" >
+        tools:layout="@layout/fragment_test_graph2graph_2" >
         <action
             android:id="@+id/action_testFragment_graph_graph2_to_testFragment_graph_state"
             app:destination="@id/testFragment_graph_state" />
@@ -70,12 +70,12 @@
     </fragment>
     <fragment
         android:id="@+id/testFragment_relation_signs2"
-        android:name="com.example.physmin.TestFragment_relation_signs"
+        android:name="com.example.physmin.fragments.tests.FragmentTestSign2Relation"
         android:label="fragment_test_fragment_relation_signs"
-        tools:layout="@layout/fragment_test_fragment_relation_signs" />
+        tools:layout="@layout/fragment_test_relation_signs" />
     <fragment
         android:id="@+id/testFragment_graph_graph3"
-        android:name="com.example.physmin.TestFragment_graph_graph"
+        android:name="com.example.physmin.fragments.tests.FragmentTestGraph2Graph"
         android:label="fragment_test_fragment_graph_graph"
-        tools:layout="@layout/fragment_test_fragment_graph_graph" />
+        tools:layout="@layout/fragment_test_graph2graph" />
 </navigation>
