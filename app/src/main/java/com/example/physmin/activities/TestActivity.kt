@@ -4,17 +4,21 @@ import android.app.Fragment
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.fragment.app.transaction
 import com.example.physmin.R
 import com.example.physmin.fragments.FragmentTestHello
 import com.example.physmin.fragments.tests.*
+import com.google.android.gms.tasks.Task
+import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.android.synthetic.main.activity_test.*
 import org.json.JSONObject
+import java.net.SocketTimeoutException
 
-class TestActivity : AppCompatActivity()//,
-        //FragmentTestHello.OnFragmentInteractionListener,
+class TestActivity: AppCompatActivity()//,
+//FragmentTestHello.OnFragmentInteractionListener,
 //        FragmentTestGraph2State.OnAllDoneListener,
 //        FragmentTestGraph2Graph2.OnAllDoneListener,
 //        FragmentTestSign2Relation.OnAllDoneListener,
@@ -24,229 +28,227 @@ class TestActivity : AppCompatActivity()//,
     //var listener: FragmentTestHello.OnAllDoneListener? = null
     var buttonNext: Button? = null
     var currentTestIndex = 0
+    private lateinit var functions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
         buttonNext = findViewById(R.id.button_test_next)
+        functions = FirebaseFunctions.getInstance("europe-west1")
+        hideButtonNext()
 
-    val text = "{\n" +
-            "  \"tests\": [\n" +
-            "    {\n" +
-            "      \"type\": \"graph2graph\",\n" +
-            "      \"test_id\": \"0\",\n" +
-            "      \"title\": \"Подберите пару для графика\",\n" +
-            "      \"question\": {\n" +
-            "        \"picture\": \"graph_x_1\",\n" +
-            "        \"correct_id\": \"1\"\n" +
-            "      },\n" +
-            "      \"answers\": [\n" +
-            "        {\n" +
-            "          \"id\": \"1\",\n" +
-            "          \"picture_name\": \"graph_v_1\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"2\",\n" +
-            "          \"picture_name\": \"graph_v_2\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"3\",\n" +
-            "          \"picture_name\": \"graph_v_3\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"4\",\n" +
-            "          \"picture_name\": \"graph_v_4\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"5\",\n" +
-            "          \"picture_name\": \"graph_v_5\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"6\",\n" +
-            "          \"picture_name\": \"graph_v_6\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"7\",\n" +
-            "          \"picture_name\": \"graph_v_7\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"8\",\n" +
-            "          \"picture_name\": \"graph_v_8\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"type\": \"state2graph\",\n" +
-            "      \"test_id\": \"1\",\n" +
-            "      \"title\": \"Найдите соответсвите графиков и состояний\",\n" +
-            "      \"question\": [\n" +
-            "        {\n" +
-            "          \"correct_id\": \"1\",\n" +
-            "          \"picture_name\": \"graph_x_1\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"correct_id\": \"2\",\n" +
-            "          \"picture_name\": \"graph_x_2\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"correct_id\": \"3\",\n" +
-            "          \"picture_name\": \"graph_x_3\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"correct_id\": \"4\",\n" +
-            "          \"picture_name\": \"graph_x_4\"\n" +
-            "        }\n" +
-            "      ],\n" +
-            "      \"answers\": [\n" +
-            "        {\n" +
-            "          \"id\": \"0\",\n" +
-            "          \"state\": \"Движется вперед\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"1\",\n" +
-            "          \"state\": \"Движется назад\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"2\",\n" +
-            "          \"state\": \"Движется назад\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"3\",\n" +
-            "          \"state\": \"Движется вперед\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"4\",\n" +
-            "          \"state\": \"Движется назад\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"5\",\n" +
-            "          \"state\": \"Движется вперед\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"6\",\n" +
-            "          \"state\": \"Движется вперед\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"7\",\n" +
-            "          \"state\": \"Движется вперед\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"type\": \"graph2graph2\",\n" +
-            "      \"test_id\": \"test_id\",\n" +
-            "      \"title\": \"Найдите для графика два других\",\n" +
-            "      \"question\": {\n" +
-            "        \"picture\": \"graph_x_1\",\n" +
-            "        \"correct_ids\": [\n" +
-            "          \"1\", \"2\"\n" +
-            "        ]\n" +
-            "      },\n" +
-            "      \"answers\": [\n" +
-            "        {\n" +
-            "          \"id\": \"1\",\n" +
-            "          \"picture_name\": \"graph_v_1\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"2\",\n" +
-            "          \"picture_name\": \"graph_v_2\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"3\",\n" +
-            "          \"picture_name\": \"graph_v_3\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"4\",\n" +
-            "          \"picture_name\": \"graph_v_4\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"5\",\n" +
-            "          \"picture_name\": \"graph_v_5\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"6\",\n" +
-            "          \"picture_name\": \"graph_v_6\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"7\",\n" +
-            "          \"picture_name\": \"graph_v_7\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"8\",\n" +
-            "          \"picture_name\": \"graph_v_8\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"type\": \"relationSings\",\n" +
-            "      \"test_id\": \"test_id\",\n" +
-            "      \"title\": \"Установите правильные неравенства\",\n" +
-            "      \"task_picture\": \"screenshot1\",\n" +
-            "      \"questions\": [\n" +
-            "        {\n" +
-            "          \"letter\": \"S\",\n" +
-            "          \"left_index\": \"01\",\n" +
-            "          \"right_index\": \"12\",\n" +
-            "          \"correct_sign\": \"equal\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"letter\": \"S\",\n" +
-            "          \"left_index\": \"01\",\n" +
-            "          \"right_index\": \"12\",\n" +
-            "          \"correct_sign\": \"equal\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"letter\": \"S\",\n" +
-            "          \"left_index\": \"01\",\n" +
-            "          \"right_index\": \"12\",\n" +
-            "          \"correct_sign\": \"equal\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"letter\": \"S\",\n" +
-            "          \"left_index\": \"01\",\n" +
-            "          \"right_index\": \"12\",\n" +
-            "          \"correct_sign\": \"equal\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"letter\": \"S\",\n" +
-            "          \"left_index\": \"01\",\n" +
-            "          \"right_index\": \"12\",\n" +
-            "          \"correct_sign\": \"equal\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"letter\": \"S\",\n" +
-            "          \"left_index\": \"01\",\n" +
-            "          \"right_index\": \"12\",\n" +
-            "          \"correct_sign\": \"equal\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}"
-        val data = JSONObject(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1)).optJSONArray("tests")
-        for (i in 0 until data!!.length())
-            tests.add(data.getJSONObject(i))
+        var text: String
+        getTest().addOnCompleteListener {
+            if (!it.isSuccessful)
+                return@addOnCompleteListener
+
+            text = it.result!!
+            proccessTests(text)
+        }
+
+//    val text = "{\n" +
+//            "  \"tests\": [\n" +
+//            "    {\n" +
+//            "      \"type\": \"graph2graph\",\n" +
+//            "      \"test_id\": \"0\",\n" +
+//            "      \"title\": \"Подберите пару для графика\",\n" +
+//            "      \"question\": {\n" +
+//            "        \"picture\": \"graph_x_1\",\n" +
+//            "        \"correct_id\": \"1\"\n" +
+//            "      },\n" +
+//            "      \"answers\": [\n" +
+//            "        {\n" +
+//            "          \"id\": \"1\",\n" +
+//            "          \"picture_name\": \"graph_v_1\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"2\",\n" +
+//            "          \"picture_name\": \"graph_v_2\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"3\",\n" +
+//            "          \"picture_name\": \"graph_v_3\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"4\",\n" +
+//            "          \"picture_name\": \"graph_v_4\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"5\",\n" +
+//            "          \"picture_name\": \"graph_v_5\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"6\",\n" +
+//            "          \"picture_name\": \"graph_v_6\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"7\",\n" +
+//            "          \"picture_name\": \"graph_v_7\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"8\",\n" +
+//            "          \"picture_name\": \"graph_v_8\"\n" +
+//            "        }\n" +
+//            "      ]\n" +
+//            "    },\n" +
+//            "    {\n" +
+//            "      \"type\": \"state2graph\",\n" +
+//            "      \"test_id\": \"1\",\n" +
+//            "      \"title\": \"Найдите соответсвите графиков и состояний\",\n" +
+//            "      \"question\": [\n" +
+//            "        {\n" +
+//            "          \"correct_id\": \"1\",\n" +
+//            "          \"picture_name\": \"graph_x_1\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"correct_id\": \"2\",\n" +
+//            "          \"picture_name\": \"graph_x_2\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"correct_id\": \"3\",\n" +
+//            "          \"picture_name\": \"graph_x_3\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"correct_id\": \"4\",\n" +
+//            "          \"picture_name\": \"graph_x_4\"\n" +
+//            "        }\n" +
+//            "      ],\n" +
+//            "      \"answers\": [\n" +
+//            "        {\n" +
+//            "          \"id\": \"0\",\n" +
+//            "          \"state\": \"Движется вперед\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"1\",\n" +
+//            "          \"state\": \"Движется назад\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"2\",\n" +
+//            "          \"state\": \"Движется назад\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"3\",\n" +
+//            "          \"state\": \"Движется вперед\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"4\",\n" +
+//            "          \"state\": \"Движется назад\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"5\",\n" +
+//            "          \"state\": \"Движется вперед\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"6\",\n" +
+//            "          \"state\": \"Движется вперед\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"7\",\n" +
+//            "          \"state\": \"Движется вперед\"\n" +
+//            "        }\n" +
+//            "      ]\n" +
+//            "    },\n" +
+//            "    {\n" +
+//            "      \"type\": \"graph2graph2\",\n" +
+//            "      \"test_id\": \"test_id\",\n" +
+//            "      \"title\": \"Найдите для графика два других\",\n" +
+//            "      \"question\": {\n" +
+//            "        \"picture\": \"graph_x_1\",\n" +
+//            "        \"correct_ids\": [\n" +
+//            "          \"1\", \"2\"\n" +
+//            "        ]\n" +
+//            "      },\n" +
+//            "      \"answers\": [\n" +
+//            "        {\n" +
+//            "          \"id\": \"1\",\n" +
+//            "          \"picture_name\": \"graph_v_1\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"2\",\n" +
+//            "          \"picture_name\": \"graph_v_2\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"3\",\n" +
+//            "          \"picture_name\": \"graph_v_3\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"4\",\n" +
+//            "          \"picture_name\": \"graph_v_4\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"5\",\n" +
+//            "          \"picture_name\": \"graph_v_5\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"6\",\n" +
+//            "          \"picture_name\": \"graph_v_6\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"7\",\n" +
+//            "          \"picture_name\": \"graph_v_7\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"id\": \"8\",\n" +
+//            "          \"picture_name\": \"graph_v_8\"\n" +
+//            "        }\n" +
+//            "      ]\n" +
+//            "    },\n" +
+//            "    {\n" +
+//            "      \"type\": \"relationSings\",\n" +
+//            "      \"test_id\": \"test_id\",\n" +
+//            "      \"title\": \"Установите правильные неравенства\",\n" +
+//            "      \"task_picture\": \"screenshot1\",\n" +
+//            "      \"questions\": [\n" +
+//            "        {\n" +
+//            "          \"letter\": \"S\",\n" +
+//            "          \"left_index\": \"01\",\n" +
+//            "          \"right_index\": \"12\",\n" +
+//            "          \"correct_sign\": \"equal\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"letter\": \"S\",\n" +
+//            "          \"left_index\": \"01\",\n" +
+//            "          \"right_index\": \"12\",\n" +
+//            "          \"correct_sign\": \"equal\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"letter\": \"S\",\n" +
+//            "          \"left_index\": \"01\",\n" +
+//            "          \"right_index\": \"12\",\n" +
+//            "          \"correct_sign\": \"equal\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"letter\": \"S\",\n" +
+//            "          \"left_index\": \"01\",\n" +
+//            "          \"right_index\": \"12\",\n" +
+//            "          \"correct_sign\": \"equal\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"letter\": \"S\",\n" +
+//            "          \"left_index\": \"01\",\n" +
+//            "          \"right_index\": \"12\",\n" +
+//            "          \"correct_sign\": \"equal\"\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "          \"letter\": \"S\",\n" +
+//            "          \"left_index\": \"01\",\n" +
+//            "          \"right_index\": \"12\",\n" +
+//            "          \"correct_sign\": \"equal\"\n" +
+//            "        }\n" +
+//            "      ]\n" +
+//            "    }\n" +
+//            "  ]\n" +
+//            "}"
 
         // Greeting
         supportFragmentManager.transaction {
             replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
         }
-
-        buttonNext?.setOnClickListener {
-            if (currentTestIndex >= tests.size)
-                return@setOnClickListener
-
-            supportFragmentManager.transaction {
-                replace(R.id.test_host_fragment, parseTest(tests[currentTestIndex++]))
-            }
-            hideButtonNext()
-        }
-
-}
+    }
 
 
     fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
-        return when(test.getString("type")) {
+        return when (test.getString("type")) {
             "relationSings" -> parseRS(test)
             "graph2graph2" -> parseG2G2(test)
             "state2graph" -> parseS2G(test)
@@ -310,6 +312,12 @@ class TestActivity : AppCompatActivity()//,
         var _cacheObj: JSONObject
         val answersDict = HashMap<Int, String>()
         val question = test.getJSONObject("question")
+        val correctAnsws = ArrayList<Int>()
+
+        question.getJSONArray("correct_ids").let {
+            for (i in 0 until it.length())
+                correctAnsws.add(it.getInt(i))
+        }
 
         val answers = test.getJSONArray("answers")
         for (i in 0 until answers.length()) {
@@ -317,7 +325,7 @@ class TestActivity : AppCompatActivity()//,
             answersDict.put(_cacheObj.getInt("id"), _cacheObj.getString("picture_name"))
         }
         return FragmentTestGraph2Graph.newInstance(question.getString("picture"),
-                question.getInt("correct_id"), answersDict)
+                correctAnsws.toIntArray(), answersDict)
     }
 
     fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
@@ -338,6 +346,38 @@ class TestActivity : AppCompatActivity()//,
         }
 
         return FragmentTestGraph2State.newInstance(questionDict, answersDict)
+    }
+
+    fun getTest(): Task<String> {
+        return functions
+                .getHttpsCallable("getTest")
+                .call()
+                .continueWith { task ->
+                    // TODO: Proccess timeout exception
+                    if(task.exception is SocketTimeoutException)
+                        Log.e("TestActivity", "getTest() - Timeout!")
+
+                    val result = task.result?.data as String
+                    result
+                }
+    }
+
+    fun proccessTests(test: String) {
+        showButtonNext()
+
+        val data = JSONObject(test.substring(test.indexOf("{"), test.lastIndexOf("}") + 1)).optJSONArray("tests")
+        for (i in 0 until data!!.length())
+            tests.add(data.getJSONObject(i))
+
+        buttonNext?.setOnClickListener {
+            if (currentTestIndex >= tests.size)
+                return@setOnClickListener
+
+            supportFragmentManager.transaction {
+                replace(R.id.test_host_fragment, parseTest(tests[currentTestIndex++]))
+                hideButtonNext()
+            }
+        }
     }
 
     fun showButtonNext() {

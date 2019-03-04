@@ -42,6 +42,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.1'
     implementation 'androidx.fragment:fragment-ktx:1.0.0'
     implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-functions:16.2.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'

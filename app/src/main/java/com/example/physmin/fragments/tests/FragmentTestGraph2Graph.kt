@@ -22,7 +22,7 @@ import kotlin.collections.HashMap
 // TODO: Rename parameter arguments, choose names which match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_QUEST = "param1"
-private const val ARG_CORR_ANSW = "param2"
+private const val ARG_CORR_ANSWS = "param2"
 private const val ARG_ANSWERS = "param3"
 
 /**
@@ -40,14 +40,14 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
     private var questPicture: String? = null
     //    private var answers: Array<String>? = null
 //    private var listener: OnAllDoneListener? = null
-    private var correctAnswer: Int = 0
+    private var correctAnswer: IntArray? = null
     private var answers: HashMap<Int, String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             questPicture = it.getString(ARG_QUEST)
-            correctAnswer = it.getInt(ARG_CORR_ANSW)
+            correctAnswer = it.getIntArray(ARG_CORR_ANSWS)
 
             answers = it.getSerializable(ARG_ANSWERS) as HashMap<Int, String>
         }
@@ -60,7 +60,7 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
         var id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
         view.settable_group_g2g.imageView_g2g_question.setImageDrawable(resources.getDrawable(id))
 
-        view.imageView_g2g_blank1.correctAnsw = arrayOf(correctAnswer).toIntArray()
+        view.imageView_g2g_blank1.correctAnsw = correctAnswer
 
         val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         var answerPic: ImageViewPickable
@@ -133,11 +133,11 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
          * @return A new instance of fragment FragmentTestGraph2Graph.
          */
         @JvmStatic
-        fun newInstance(param1: String, param2: Int, answers: HashMap<Int, String>) =
+        fun newInstance(param1: String, correctAnsw: IntArray, answers: HashMap<Int, String>) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putString(ARG_QUEST, param1)
-                        putInt(ARG_CORR_ANSW, param2)
+                        putIntArray(ARG_CORR_ANSWS, correctAnsw)
                         putSerializable(ARG_ANSWERS, answers)
                     }
                 }

@@ -43,6 +43,9 @@ class FragmentTestHello : androidx.fragment.app.Fragment() {
         }
     }
 
+    var arr = arrayOf(arrayOf("asd", "asd"),
+            arrayOf("asd", "asd"))
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -52,7 +55,7 @@ class FragmentTestHello : androidx.fragment.app.Fragment() {
         val tests = (activity).tests
 
 
-        activity.showButtonNext()
+//        activity.showButtonNext()
 //        view.button_start_test.setOnClickListener {
 //            fragmentManager!!.beginTransaction()
 //                    .replace(R.id.test_host_fragment, parseTest(tests[0]))
@@ -74,101 +77,6 @@ class FragmentTestHello : androidx.fragment.app.Fragment() {
 //                    .commit()
 //        }
         return view
-    }
-
-    fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
-        return when(test.getString("type")) {
-            "relationSings" -> parseRS(test)
-            "graph2graph2" -> parseG2G2(test)
-            "state2graph" -> parseS2G(test)
-            "graph2graph" -> parseG2G(test)
-            // TODO: Log error
-            else -> parseG2G2(test)
-        }
-    }
-
-    fun parseRS(test: JSONObject): androidx.fragment.app.Fragment {
-        var cacheObj: JSONObject
-        val taskPic = test.getString("task_picture")
-        val questions = test.getJSONArray("questions")
-        val letters = ArrayList<String>()
-        val rIndex = ArrayList<String>()
-        val lIndex = ArrayList<String>()
-        val corrSign = ArrayList<Int>()
-
-        var cacheSign: String
-        questions.let {
-            for (i in 0 until it.length()) {
-                cacheObj = it.getJSONObject(i)
-                letters.add(cacheObj.getString("letter"))
-                lIndex.add(cacheObj.getString("left_index"))
-                rIndex.add(cacheObj.getString("right_index"))
-                cacheSign = cacheObj.getString("correct_sign")
-                when (cacheSign) {
-                    "equal" -> corrSign.add(0)
-                    "more" -> corrSign.add(1)
-                    "less" -> corrSign.add(-1)
-                }
-            }
-        }
-
-        return FragmentTestSign2Relation.newInstance(taskPic,
-                letters.toTypedArray(), lIndex.toTypedArray(), rIndex.toTypedArray(), corrSign.toTypedArray())
-    }
-
-    fun parseG2G2(test: JSONObject): androidx.fragment.app.Fragment {
-        var cacheObj: JSONObject
-        val question = test.getJSONObject("question")
-        val answersDict = HashMap<Int, String>()
-        val correctAnsws = ArrayList<Int>()
-
-        question.getJSONArray("correct_ids").let {
-            for (i in 0 until it.length())
-                correctAnsws.add(it.getInt(i))
-        }
-
-        val answers = test.getJSONArray("answers")
-        for (i in 0 until answers.length()) {
-            cacheObj = answers.getJSONObject(i)
-            answersDict.put(cacheObj.getInt("id"), cacheObj.getString("picture_name"))
-        }
-
-        return FragmentTestGraph2Graph2.newInstance(question.getString("picture"),
-                correctAnsws.toIntArray(), answersDict)
-    }
-
-    fun parseG2G(test: JSONObject): androidx.fragment.app.Fragment {
-        var _cacheObj: JSONObject
-        val answersDict = HashMap<Int, String>()
-        val question = test.getJSONObject("question")
-
-        val answers = test.getJSONArray("answers")
-        for (i in 0 until answers.length()) {
-            _cacheObj = answers.getJSONObject(i)
-            answersDict.put(_cacheObj.getInt("id"), _cacheObj.getString("picture_name"))
-        }
-        return FragmentTestGraph2Graph.newInstance(question.getString("picture"),
-                question.getInt("correct_id"), answersDict)
-    }
-
-    fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
-        var _cacheObj: JSONObject
-        val questionDict = HashMap<Int, String>()
-        val answersDict = HashMap<Int, String>()
-
-        val questions = test.getJSONArray("question")
-        for (i in 0 until questions.length()) {
-            _cacheObj = questions.getJSONObject(i)
-            questionDict.put(_cacheObj.getInt("correct_id"), _cacheObj.getString("picture_name"))
-        }
-
-        val answers = test.getJSONArray("answers")
-        for (i in 0 until answers.length()) {
-            _cacheObj = answers.getJSONObject(i)
-            answersDict.put(_cacheObj.getInt("id"), _cacheObj.getString("state"))
-        }
-
-        return FragmentTestGraph2State.newInstance(questionDict, answersDict)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
