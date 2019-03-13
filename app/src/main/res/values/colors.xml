@@ -11,6 +11,8 @@
     <color name="pink">#e91e63</color>
     <color name="pink_pressed">#ec407a</color>
 
+    <color name="graphic_back_gray">#F3F3F3</color>
+
     <!--FABs-->
     <color name="primary_transparent">#8000574B</color>
     <color name="primary_transparent_pressed">#80008577</color>

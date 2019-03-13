@@ -241,9 +241,9 @@ class TestActivity: AppCompatActivity()//,
 //            "}"
 
         // Greeting
-        supportFragmentManager.transaction {
-            replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
-        }
+//        supportFragmentManager.transaction {
+//            replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
+//        }
     }
 
 
