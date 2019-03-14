@@ -12,6 +12,9 @@
     <color name="pink_pressed">#ec407a</color>
 
     <color name="graphic_back_gray">#F3F3F3</color>
+    <color name="icon_back">#90C4C4C4</color>
+
+    <color name="textColor">#DE000000</color>
 
     <!--FABs-->
     <color name="primary_transparent">#8000574B</color>

@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="MenuItemView">
+        <attr name="itemTitle" format="string" />
+        <attr name="itemIcon" format="color|reference" />
+    </declare-styleable>
+</resources>

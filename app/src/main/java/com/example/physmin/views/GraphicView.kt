@@ -12,6 +12,8 @@ import com.example.physmin.R
 import org.json.JSONArray
 import org.json.JSONObject
 
+// TODO: Make arrows on axis
+
 //fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 fun Int.pxToDp(): Float = this / Resources.getSystem().displayMetrics.density;
 fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
