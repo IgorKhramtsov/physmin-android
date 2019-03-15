@@ -7,10 +7,9 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.withScale
+import androidx.core.graphics.withTranslation
 import com.example.physmin.R
-import org.json.JSONArray
-import org.json.JSONObject
+import com.example.physmin.activities.FunctionParcelable
 
 // TODO: Make arrows on axis
 
@@ -18,17 +17,17 @@ import org.json.JSONObject
 fun Int.pxToDp(): Float = this / Resources.getSystem().displayMetrics.density;
 fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
 
-class GraphicView: View {
+open class GraphicView: View {
 
     // Y: -3 to 3
     // X: 0 to 12(excluding)
 
-    private var _axisColor: Int = Color.BLACK
+    private var _function: FunctionParcelable? = null
+    private var _axisColor: Int = ResourcesCompat.getColor(resources, R.color.textColor, null)
     private var _functionColor: Int = Color.RED
     private var _textColor: Int = Color.BLACK
     private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
     private var _vertAxisLetter: String = "x"
-    private var _function: JSONArray? = null
     private var _horAxisLetter: String = "t"
     private var zeroAxisLetter: String = "0"
 
@@ -88,18 +87,18 @@ class GraphicView: View {
             _horAxisLetter = value
             invalidateTextPaintAndMeasurements()
         }
-    var function: JSONArray?
+    var function: FunctionParcelable?
         get() = _function
         set(value) {
             _function = value
-            invalidateTextPaintAndMeasurements()
+            regeneratePath()
         }
 
     constructor(context: Context): super(context) {
         init(null, 0)
     }
 
-    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet?): super(context, attrs) {
         init(attrs, 0)
     }
 
@@ -130,21 +129,12 @@ class GraphicView: View {
         functionPaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
         }
+        this.post {
+            contentWidth = width - axisPaddingLeft - axisPaddingRight
+            contentHeight = height - axisPaddingTop - axisPaddingBottom
+            regeneratePath()
+        }
 
-        val functions = "{function: [\n" +
-                "    {\n" +
-                "\t\tfuncType: \"x\",\n" +
-                "\t\tparams: {\n" +
-                "            x: 5,        \n" +
-                "            v: 3,\n" +
-                "            a: 1\t\n" +
-                "        }\n" +
-                "\t}\n" +
-                "]}"
-        _function = JSONObject(functions.substring(functions.indexOf("{"), functions.lastIndexOf("}") + 1)).
-                optJSONArray("function")
-
-        // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements()
     }
 
@@ -163,7 +153,7 @@ class GraphicView: View {
         axisPaint.let {
             it.color = axisColor
             it.strokeWidth = 3.pxToDp()
-            it.strokeCap = Paint.Cap.ROUND
+            it.strokeCap = Paint.Cap.BUTT
         }
         functionPaint.let {
             it.color = functionColor
@@ -172,64 +162,47 @@ class GraphicView: View {
             it.pathEffect = DashPathEffect(arrayOf(10f,10f).toFloatArray(), 0f)
         }
 
+        regeneratePath()
+    }
+
+    fun regeneratePath() {
+        if(height <= 0)
+            return
+
+        functionPath.reset()
         function?.let {
-            functionPath.reset()
-            var from: Array<Float>
-            var to: Array<Float>
-            var type: String
 
-            for(i in 0 until it.length()) {
+            var funcType = it.funcType
+            var x = it.x
+            var a = it.a
+            var v = it.v
 
-                var funcType = ""
-                var x = 0
-                var a = 0
-                var v = 0
-                it.getJSONObject(i).apply {
-                    funcType = getString("funcType")
-                    x = getJSONObject("params").getInt("x")
-                    v = getJSONObject("params").getInt("v")
-                    a = getJSONObject("params").getInt("a")
+            var maxT = x + v * 12 + (a * 12*12) / 2f
+            var minT = x
+            var funcHeight = Math.abs(maxT) + Math.abs(minT)
+            var scaleFactor = -300 / funcHeight // TODO: get height
+
+
+            when(funcType) {
+                "x" -> {
+                    functionPath.moveTo(0f, x * scaleFactor)
+                    for (t in 0 until 12)
+                        functionPath.lineTo(t * 20f, (x + v * t + (a * t * t) / 2f) * scaleFactor)
                 }
-                var maxT = x + v * 12 + (a * 12*12) / 2f
-                var minT = x
-                var funcHeight = Math.abs(maxT) + Math.abs(minT)
-                var scaleFactor = -300 / funcHeight // TODO: get height
-
-
-                when(funcType) {
-                    "x" -> {
-                        functionPath.moveTo(0f, x * scaleFactor)
-                        for (t in 0 until 12)
-                            functionPath.lineTo(t * 10f, (x + v * t + (a * t * t) / 2f) * scaleFactor)
-                    }
-                    "v" -> {
-                        functionPath.moveTo(0f, v * scaleFactor)
-                        for (t in 0 until 12)
-                            functionPath.lineTo(t * 10f, (v  + a * t ) * scaleFactor)
-                    }
-                    "a" -> {
-                        functionPath.moveTo(0f, a * scaleFactor)
-                        for (t in 0 until 12)
-                            functionPath.lineTo(t * 10f, (a) * scaleFactor)
-                    }
+                "v" -> {
+                    functionPath.moveTo(0f, v * scaleFactor)
+                    for (t in 0 until 12)
+                        functionPath.lineTo(t * 20f, (v  + a * t ) * scaleFactor)
                 }
-
-
+                "a" -> {
+                    functionPath.moveTo(0f, a * scaleFactor)
+                    for (t in 0 until 12)
+                        functionPath.lineTo(t * 20f, (a) * scaleFactor)
+                }
             }
         }
 
-
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        contentWidth = MeasureSpec.getSize(measuredWidth) - axisPaddingLeft - axisPaddingRight
-        contentHeight = height - axisPaddingTop - axisPaddingBottom
-
-
-
-
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -241,8 +214,8 @@ class GraphicView: View {
         canvas.drawLine(axisPaddingLeft, height / 2f,
                 width - axisPaddingRight, height / 2f,
                 axisPaint)
-        vertAxisLetter.let {
-            canvas.drawText(it,
+        function?.let {
+            canvas.drawText(it.funcType,
                     axisPaddingLeft + indexWidth ,
                     axisPaddingTop + indexHeight * 3,
                     textPaint)
@@ -260,9 +233,10 @@ class GraphicView: View {
                     smallTextPaint)
         }
 
-        canvas.translate(axisPaddingLeft, height / 2f)
-        functionPath.let {
-            canvas.drawPath(it, functionPaint)
+        canvas.withTranslation(axisPaddingLeft, height / 2f) {
+            functionPath.let {
+                canvas.drawPath(it, functionPaint)
+            }
         }
     }
 }

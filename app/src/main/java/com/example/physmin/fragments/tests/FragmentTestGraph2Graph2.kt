@@ -9,13 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
+import com.example.physmin.activities.AnswerParcelable
+import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
 import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
 
-private const val ARG_QUEST = "param1"
-private const val ARG_CORR_ANSWS = "param2"
-private const val ARG_ANSWERS = "param3"
+private const val ARG_QUESTION = "param1"
+private const val ARG_ANSWERS = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -28,17 +29,14 @@ private const val ARG_ANSWERS = "param3"
  */
 class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
     private var listener: OnFragmentInteractionListener? = null
-    private var questPicture: String? = null
-    private var correctAnswer: IntArray? = null
-    private var answers: HashMap<Int,String>? = null
+    private var question: QuestionParcelable? = null
+    private var answers: ArrayList<AnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            questPicture = it.getString(ARG_QUEST)
-            correctAnswer = it.getIntArray(ARG_CORR_ANSWS)
-
-            answers = it.getSerializable(ARG_ANSWERS) as HashMap<Int, String>
+            question = it.getParcelable<QuestionParcelable>(ARG_QUESTION)
+            answers = it.getParcelableArrayList<AnswerParcelable>(ARG_ANSWERS)
         }
     }
 
@@ -46,24 +44,21 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_test_graph2graph_2, container, false)
 
-
-        var picId = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
-        view.settableGroup_g2g2.imageView_g2g2_question.setImageDrawable(resources.getDrawable(picId))
+        view.settableGroup_g2g2.GraphicView_g2g2_question.function = question!!.function
 
         val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         var answerPic: ImageViewPickable
         val picParams = ViewGroup.LayoutParams(width, width)
 
-        view.imageView_g2g2_blank1.correctAnsw = correctAnswer
-        view.imageView_g2g2_blank2.correctAnsw = correctAnswer
+        view.imageView_g2g2_blank1.correctAnsw = question!!.correctIDs.toIntArray()
+        view.imageView_g2g2_blank2.correctAnsw = question!!.correctIDs.toIntArray()
 
         answers?.forEach {
             answerPic = ImageViewPickable(this.context!!, null)
             answerPic.apply {
                 layoutParams = picParams
-                picId = resources.getIdentifier(it.value, "drawable", context!!.packageName)
-                answer = it.key
-                setImageDrawable(resources.getDrawable(picId))
+                answerPic.function = it.function
+                answer = it.id
             }
             view.pickableGroup_g2g2.addView(answerPic)
         }
@@ -126,12 +121,11 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(questionPic: String, correctAnsw: IntArray, answers: HashMap<Int, String>) =
+        fun newInstance(question: QuestionParcelable, answers: ArrayList<AnswerParcelable>) =
                 FragmentTestGraph2Graph2().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_QUEST, questionPic)
-                        putIntArray(ARG_CORR_ANSWS, correctAnsw)
-                        putSerializable(ARG_ANSWERS, answers)
+                        putParcelable(ARG_QUESTION, question)
+                        putParcelableArrayList(ARG_ANSWERS, answers)
                     }
                 }
     }

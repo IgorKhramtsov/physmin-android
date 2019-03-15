@@ -6,20 +6,23 @@ import android.graphics.Paint
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 
-class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
+class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : GraphicView(context, attributeSet), Settable {
 
     override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
             if(answerView != null)
-                this.setImageDrawable((answerView as ImageView).drawable)
+                this.function = (answerView as GraphicView).function
+//                this.setImageDrawable((answerView as ImageView).drawable)
             else
-                this.setImageResource(R.color.transparent)
+                this.function = null
+//                this.setImageResource(R.color.transparent)
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     var correctAnsw: IntArray? = null
@@ -33,16 +36,16 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Im
 
     var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
 
-    init { }
-
     override fun setParent(_parent: GroupSettable) {
         this.par = _parent
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
+        if(function != null)
+            super.onDraw(canvas)
 
-        paint.strokeWidth = 10f
+        paint.strokeWidth = 5f
+        paint.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
 
         canvas.drawLine(0f, 0f, width * 1f, 0f, paint)
         canvas.drawLine(0f, 0f, 0f, height * 1f, paint)

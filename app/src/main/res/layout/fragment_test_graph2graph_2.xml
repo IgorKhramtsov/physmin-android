@@ -38,8 +38,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <ImageView
-                android:id="@+id/imageView_g2g2_question"
+            <com.example.physmin.views.GraphicView
+                android:id="@+id/GraphicView_g2g2_question"
                 android:layout_width="115dp"
                 android:layout_height="115dp"
                 android:src="@drawable/graph1" />

@@ -1,19 +1,17 @@
 package com.example.physmin.activities
 
-import android.app.Fragment
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.fragment.app.transaction
 import com.example.physmin.R
-import com.example.physmin.fragments.FragmentTestHello
 import com.example.physmin.fragments.tests.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
-import kotlinx.android.synthetic.main.activity_test.*
 import org.json.JSONObject
 import java.net.SocketTimeoutException
 
@@ -288,44 +286,33 @@ class TestActivity: AppCompatActivity()//,
     }
 
     fun parseG2G2(test: JSONObject): androidx.fragment.app.Fragment {
-        var cacheObj: JSONObject
-        val question = test.getJSONObject("question")
-        val answersDict = HashMap<Int, String>()
-        val correctAnsws = ArrayList<Int>()
 
-        question.getJSONArray("correct_ids").let {
-            for (i in 0 until it.length())
-                correctAnsws.add(it.getInt(i))
+        val questionJson = test.getJSONObject("question")
+        val answersJson = test.getJSONArray("answers")
+
+        var question = QuestionParcelable(questionJson)
+        var answers = ArrayList<AnswerParcelable>()
+
+        for (i in 0 until answersJson.length()){
+            answers.add(AnswerParcelable(answersJson.getJSONObject(i)))
         }
 
-        val answers = test.getJSONArray("answers")
-        for (i in 0 until answers.length()) {
-            cacheObj = answers.getJSONObject(i)
-            answersDict.put(cacheObj.getInt("id"), cacheObj.getString("picture_name"))
-        }
-
-        return FragmentTestGraph2Graph2.newInstance(question.getString("picture"),
-                correctAnsws.toIntArray(), answersDict)
+        return FragmentTestGraph2Graph2.newInstance(question, answers)
     }
 
     fun parseG2G(test: JSONObject): androidx.fragment.app.Fragment {
-        var _cacheObj: JSONObject
-        val answersDict = HashMap<Int, String>()
-        val question = test.getJSONObject("question")
-        val correctAnsws = ArrayList<Int>()
 
-        question.getJSONArray("correct_ids").let {
-            for (i in 0 until it.length())
-                correctAnsws.add(it.getInt(i))
+        val questionJson = test.getJSONObject("question")
+        val answersJson = test.getJSONArray("answers")
+
+        var question = QuestionParcelable(questionJson)
+        var answers = ArrayList<AnswerParcelable>()
+
+        for (i in 0 until answersJson.length()){
+            answers.add(AnswerParcelable(answersJson.getJSONObject(i)))
         }
 
-        val answers = test.getJSONArray("answers")
-        for (i in 0 until answers.length()) {
-            _cacheObj = answers.getJSONObject(i)
-            answersDict.put(_cacheObj.getInt("id"), _cacheObj.getString("picture_name"))
-        }
-        return FragmentTestGraph2Graph.newInstance(question.getString("picture"),
-                correctAnsws.toIntArray(), answersDict)
+        return FragmentTestGraph2Graph.newInstance(question, answers)
     }
 
     fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
@@ -350,7 +337,7 @@ class TestActivity: AppCompatActivity()//,
 
     fun getTest(): Task<String> {
         return functions
-                .getHttpsCallable("getTest")
+                .getHttpsCallable("getTestNew")
                 .call()
                 .continueWith { task ->
                     // TODO: Proccess timeout exception
@@ -397,4 +384,133 @@ class TestActivity: AppCompatActivity()//,
 //        var question_id: Int?
 //        var correct_answer_id: Int?
 //    }
+}
+
+class FunctionParcelable() : Parcelable {
+    var x: Int = 0
+    var v: Int = 0
+    var a: Int = 0
+    var funcType: String = ""
+
+    constructor(jsonObject: JSONObject): this() {
+        jsonObject.getJSONObject("params").let {
+            this.x = it.getInt("x")
+            this.v = it.getInt("v")
+            this.a = it.getInt("a")
+        }
+        this.funcType = jsonObject.getString("funcType")
+    }
+    constructor(parcel: Parcel?) : this() {
+        parcel?.apply {
+            x = readInt()
+            v = readInt()
+            a = readInt()
+            funcType = readString()
+        }
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.apply {
+            writeInt(x)
+            writeInt(v)
+            writeInt(a)
+            writeString(funcType)
+        }
+    }
+
+    companion object CREATOR: Parcelable.Creator<FunctionParcelable> {
+        override fun createFromParcel(source: Parcel?): FunctionParcelable {
+            return FunctionParcelable(source)
+        }
+
+        override fun newArray(size: Int): Array<FunctionParcelable?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+}
+
+class QuestionParcelable(): Parcelable {
+    var correctIDs = ArrayList<Int>()
+    var function = FunctionParcelable()
+
+    constructor(jsonObject: JSONObject): this() {
+        jsonObject.getJSONArray("correctID").let {
+            for (i in 0 until it.length())
+                correctIDs.add(it.getInt(i))
+
+            function = FunctionParcelable(jsonObject)
+        }
+    }
+
+    constructor(parcel: Parcel?): this() {
+        parcel?.apply {
+            val intArray = createIntArray()
+//            readIntArray(intArray)
+            correctIDs = intArray.toCollection(ArrayList())
+            function = readParcelable(FunctionParcelable.javaClass.classLoader)
+        }
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.apply {
+            writeIntArray(correctIDs.toIntArray())
+            writeParcelable(function, flags)
+        }
+    }
+
+    companion object CREATOR: Parcelable.Creator<QuestionParcelable> {
+        override fun createFromParcel(source: Parcel?): QuestionParcelable {
+            return QuestionParcelable(source)
+        }
+
+        override fun newArray(size: Int): Array<QuestionParcelable?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+class AnswerParcelable(): Parcelable {
+    var id = 0
+    var function = FunctionParcelable()
+
+    constructor(jsonObject: JSONObject): this(){
+        id = jsonObject.getInt("id")
+        function = FunctionParcelable(jsonObject)
+    }
+    constructor(parcel: Parcel?): this(){
+        parcel?.apply {
+            id = readInt()
+            function = readParcelable(FunctionParcelable.javaClass.classLoader)
+        }
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.apply {
+            writeInt(id)
+            writeParcelable(function, flags)
+        }
+    }
+
+    companion object CREATOR: Parcelable.Creator<QuestionParcelable> {
+        override fun createFromParcel(source: Parcel?): QuestionParcelable {
+            return QuestionParcelable(source)
+        }
+
+        override fun newArray(size: Int): Array<QuestionParcelable?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

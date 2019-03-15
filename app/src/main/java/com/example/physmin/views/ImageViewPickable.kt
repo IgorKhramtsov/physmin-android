@@ -10,7 +10,7 @@ import android.widget.ImageView
 import com.example.physmin.Pickable
 import com.example.physmin.R
 
-class ImageViewPickable(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Pickable {
+class ImageViewPickable(context: Context, attributeSet: AttributeSet?) : GraphicView(context, attributeSet), Pickable {
 
     private var outlineColor: Int = Color.BLUE
     override var picked: Boolean = false
