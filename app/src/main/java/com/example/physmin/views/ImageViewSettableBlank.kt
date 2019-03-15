@@ -5,20 +5,19 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 
-class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : GraphicView(context, attributeSet), Settable {
+class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : GraphView(context, attributeSet), Settable {
 
     override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
             if(answerView != null)
-                this.function = (answerView as GraphicView).function
+                this.function = (answerView as GraphView).function
 //                this.setImageDrawable((answerView as ImageView).drawable)
             else
                 this.function = null

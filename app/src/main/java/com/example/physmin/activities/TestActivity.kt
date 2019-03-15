@@ -337,7 +337,7 @@ class TestActivity: AppCompatActivity()//,
 
     fun getTest(): Task<String> {
         return functions
-                .getHttpsCallable("getTestNew")
+                .getHttpsCallable("getTest")
                 .call()
                 .continueWith { task ->
                     // TODO: Proccess timeout exception
@@ -387,24 +387,26 @@ class TestActivity: AppCompatActivity()//,
 }
 
 class FunctionParcelable() : Parcelable {
-    var x: Int = 0
-    var v: Int = 0
-    var a: Int = 0
+    var x: Float = 0f
+    var v: Float = 0f
+    var a: Float = 0f
     var funcType: String = ""
 
     constructor(jsonObject: JSONObject): this() {
         jsonObject.getJSONObject("params").let {
-            this.x = it.getInt("x")
-            this.v = it.getInt("v")
-            this.a = it.getInt("a")
+            if (it.has("x"))
+                this.x = it.getDouble("x").toFloat()
+            if (it.has("v"))
+                this.v = it.getDouble("v").toFloat()
+            this.a = it.getDouble("a").toFloat()
         }
         this.funcType = jsonObject.getString("funcType")
     }
     constructor(parcel: Parcel?) : this() {
         parcel?.apply {
-            x = readInt()
-            v = readInt()
-            a = readInt()
+            x = readFloat()
+            v = readFloat()
+            a = readFloat()
             funcType = readString()
         }
     }
@@ -415,9 +417,9 @@ class FunctionParcelable() : Parcelable {
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.apply {
-            writeInt(x)
-            writeInt(v)
-            writeInt(a)
+            writeFloat(x)
+            writeFloat(v)
+            writeFloat(a)
             writeString(funcType)
         }
     }
@@ -443,7 +445,7 @@ class QuestionParcelable(): Parcelable {
             for (i in 0 until it.length())
                 correctIDs.add(it.getInt(i))
 
-            function = FunctionParcelable(jsonObject)
+            function = FunctionParcelable(jsonObject.getJSONObject("graph"))
         }
     }
 
@@ -484,7 +486,7 @@ class AnswerParcelable(): Parcelable {
 
     constructor(jsonObject: JSONObject): this(){
         id = jsonObject.getInt("id")
-        function = FunctionParcelable(jsonObject)
+        function = FunctionParcelable(jsonObject.getJSONObject("graph"))
     }
     constructor(parcel: Parcel?): this(){
         parcel?.apply {

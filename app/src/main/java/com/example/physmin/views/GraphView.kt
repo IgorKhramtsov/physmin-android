@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.*
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
@@ -17,10 +18,11 @@ import com.example.physmin.activities.FunctionParcelable
 fun Int.pxToDp(): Float = this / Resources.getSystem().displayMetrics.density;
 fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
 
-open class GraphicView: View {
+open class GraphView: View {
 
-    // Y: -3 to 3
-    // X: 0 to 12(excluding)
+    // x - > green
+    // v -> blue
+    // a -> yellow
 
     private var _function: FunctionParcelable? = null
     private var _axisColor: Int = ResourcesCompat.getColor(resources, R.color.textColor, null)
@@ -67,7 +69,7 @@ open class GraphicView: View {
         get() = _backColor
         set(value) {
             _backColor = value
-            invalidateTextPaintAndMeasurements()
+            setBackgroundColor(value)
         }
     var functionColor: Int
         get() = _functionColor
@@ -109,7 +111,7 @@ open class GraphicView: View {
     private fun init(attrs: AttributeSet?, defStyle: Int) {
         // Load attributes
 //        val a = context.obtainStyledAttributes(
-//                attrs, R.styleable.GraphicView, defStyle, 0)
+//                attrs, R.styleable.GraphView, defStyle, 0)
 //        a.recycle()
 
         // Set up a default TextPaint object
@@ -171,33 +173,53 @@ open class GraphicView: View {
 
         functionPath.reset()
         function?.let {
+            Log.i("GraphView","funcType: ${it.funcType}\r\n" +
+                    "coords: ${it.x}, ${it.v}, ${it.a}")
+            val funcType = it.funcType
+            val x = it.x
+            val a = it.a
+            val v = it.v
 
-            var funcType = it.funcType
-            var x = it.x
-            var a = it.a
-            var v = it.v
+            val xAxisLength = 12
+            val yAxisLength = 12
+            val graphFreqFactor = 2
 
-            var maxT = x + v * 12 + (a * 12*12) / 2f
-            var minT = x
-            var funcHeight = Math.abs(maxT) + Math.abs(minT)
-            var scaleFactor = -300 / funcHeight // TODO: get height
+            val widthScaleFactor = contentWidth / xAxisLength
+            val heightScaleFactor = -contentHeight / yAxisLength
 
+            val widthStretchFactor = 3
 
+            var calculatedPoint: Float
             when(funcType) {
                 "x" -> {
-                    functionPath.moveTo(0f, x * scaleFactor)
-                    for (t in 0 until 12)
-                        functionPath.lineTo(t * 20f, (x + v * t + (a * t * t) / 2f) * scaleFactor)
+                    functionPath.moveTo(0f, x * heightScaleFactor)
+                    for (t in 0 until xAxisLength * graphFreqFactor) {
+                        calculatedPoint = (x + v * t + (a * t * t) / 2f) * heightScaleFactor
+                        if(calculatedPoint > contentHeight /2f || calculatedPoint < contentHeight / -2f)
+                            break
+
+                        functionPath.lineTo(t * widthScaleFactor / graphFreqFactor * widthStretchFactor, calculatedPoint)
+                    }
                 }
                 "v" -> {
-                    functionPath.moveTo(0f, v * scaleFactor)
-                    for (t in 0 until 12)
-                        functionPath.lineTo(t * 20f, (v  + a * t ) * scaleFactor)
+                    functionPath.moveTo(0f, v * heightScaleFactor)
+                    for (t in 0 until xAxisLength) {
+                        calculatedPoint = (v + a * t) * heightScaleFactor
+                        if(calculatedPoint > contentHeight /2f || calculatedPoint < contentHeight / -2f)
+                            break
+
+                        functionPath.lineTo(t * widthScaleFactor, calculatedPoint)
+                    }
                 }
                 "a" -> {
-                    functionPath.moveTo(0f, a * scaleFactor)
-                    for (t in 0 until 12)
-                        functionPath.lineTo(t * 20f, (a) * scaleFactor)
+                    functionPath.moveTo(0f, a * heightScaleFactor)
+                    for (t in 0 until xAxisLength) {
+                        calculatedPoint = a * heightScaleFactor
+                        if(calculatedPoint > contentHeight /2f || calculatedPoint < contentHeight / -2f)
+                            break
+
+                        functionPath.lineTo(t * widthScaleFactor, calculatedPoint)
+                    }
                 }
             }
         }

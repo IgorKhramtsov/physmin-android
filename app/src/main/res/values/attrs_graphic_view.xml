@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="GraphicView">
+    <declare-styleable name="GraphView">
         <attr name="axisColor" format="color" />
         <attr name="textColor" format="color" />
         <attr name="backColor" format="color" />

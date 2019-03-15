@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
 import com.example.physmin.activities.AnswerParcelable
 import com.example.physmin.activities.QuestionParcelable
@@ -59,6 +60,9 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
                 layoutParams = picParams
                 answerPic.function = it.function
                 answer = it.id
+
+                if(question!!.correctIDs.contains(it.id))
+                    backColor = ResourcesCompat.getColor(resources, R.color.alpha_green, null) // TODO: DEBUG ONLY
             }
             view.pickableGroup_g2g2.addView(answerPic)
         }

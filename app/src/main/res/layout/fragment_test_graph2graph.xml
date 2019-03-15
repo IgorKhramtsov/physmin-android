@@ -42,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <com.example.physmin.views.GraphicView
+            <com.example.physmin.views.GraphView
                 android:id="@+id/GraphicView_g2g_question"
                 android:layout_width="150dp"
                 android:layout_height="150dp" />
@@ -57,19 +57,20 @@
 
         </com.example.physmin.views.GroupSettable>
 
-        <com.example.physmin.views.GroupPickable
-            android:id="@+id/pickableGroup_g2g"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:isScrollContainer="true"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/settable_group_g2g" />
+    <com.example.physmin.views.GroupPickable
+        android:id="@+id/pickableGroup_g2g"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settable_group_g2g"
+        tools:layout_editor_absoluteY="234dp" />
 
     </com.example.physmin.views.TestConstraintLayout>
