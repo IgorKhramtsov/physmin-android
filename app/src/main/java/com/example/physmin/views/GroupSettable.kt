@@ -78,26 +78,6 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         for (i in 0 until count) {
             val child = getChildAt(i)
 
-//            if(child.visibility == View.GONE)
-//                continue
-            //Get the maximum size of the child
-//            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
-//            curWidth = maxWidth
-//            curHeight = maxHeight
-            //wrap is reach to the end
-//            if(curLeft + curWidth >= contentRight) {
-//                curLeft = contentLeft
-//                curTop += maxHeight
-//                maxHeight = 0
-//            }
-
-//            curChildInRow++
-//            if(curChildInRow > childInRow){
-//                curLeft = contentLeft
-//                curTop += maxHeight
-//                curChildInRow = 1
-//            }
-//            curLeft += childSpacing
             if(count < 3) {
                 if(curChildInRow == 1)
                     curLeft -= (child.measuredWidth + inRowSpacing / 2)
@@ -110,7 +90,22 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
                 curLeft += (child.measuredWidth + inRowSpacing / 2)
             }
             else {
-                curLeft = (wdh / 2) - (child.measuredWidth - inRowSpacing / 2) * curChildInRow
+                if(i == 0) {
+                    curLeft -= child.measuredWidth / 2
+                    child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + child.measuredHeight)
+                    curLeft += child.measuredWidth / 2
+                    curTop += child.measuredHeight + paddingBottom
+                    continue
+                }
+
+                if(curChildInRow == 1)
+                    curLeft -= (child.measuredWidth + inRowSpacing / 2)
+                else if(curChildInRow == 2)
+                    curLeft += inRowSpacing / 2
+
+                curChildInRow++
+                child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + child.measuredHeight)
+                curLeft += (child.measuredWidth + inRowSpacing / 2)
             }
 
 
@@ -149,7 +144,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
                 height = childAt.measuredHeight
         }
         if(childCount > 2)
-            height += getChildAt(childCount).measuredHeight + paddingBottom * 4 // childHeight * 2 + paddings
+            height += getChildAt(childCount - 1).measuredHeight + paddingBottom // childHeight * 2 + paddings
 
         height += paddingTop + paddingBottom
 

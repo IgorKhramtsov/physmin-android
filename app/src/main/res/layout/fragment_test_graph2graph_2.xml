@@ -7,73 +7,89 @@
         android:layout_height="match_parent"
         tools:context=".fragments.tests.FragmentTestGraph2Graph2">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="260dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center"
-            android:text="Подберите пару графику"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteY="12dp" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.example.physmin.views.GroupSettable
-            android:id="@+id/settableGroup_g2g2"
-            android:layout_width="wrap_content"
-            android:layout_height="119dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.312"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="355dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center"
+        android:text="Подберите пары графику"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
-            <com.example.physmin.views.GraphView
-                android:id="@+id/GraphicView_g2g2_question"
-                android:layout_width="115dp"
-                android:layout_height="115dp"/>
+    <com.example.physmin.views.GroupSettable
+        android:id="@+id/settableGroup_g2g2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <com.example.physmin.views.ImageViewSettableBlank
-                android:id="@+id/imageView_g2g2_blank1"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:minWidth="110dp"
-                android:minHeight="110dp"
-                android:padding="2dp"/>
+        <com.example.physmin.views.GraphView
+            android:id="@+id/GraphicView_g2g2_question"
+            android:layout_width="140dp"
+            android:layout_height="85dp" />
 
-            <com.example.physmin.views.ImageViewSettableBlank
-                android:id="@+id/imageView_g2g2_blank2"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:minWidth="110dp"
-                android:minHeight="110dp"
-                android:padding="2dp"/>
+        <com.example.physmin.views.ImageViewSettableBlank
+            android:id="@+id/imageView_g2g2_blank1"
+            android:layout_width="140dp"
+            android:layout_height="85dp" />
 
-        </com.example.physmin.views.GroupSettable>
+        <com.example.physmin.views.ImageViewSettableBlank
+            android:id="@+id/imageView_g2g2_blank2"
+            android:layout_width="140dp"
+            android:layout_height="85dp" />
 
-        <com.example.physmin.views.GroupPickable
-            android:id="@+id/pickableGroup_g2g2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="8dp"
-            android:isScrollContainer="true"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/settableGroup_g2g2"/>
+    </com.example.physmin.views.GroupSettable>
+
+    <com.example.physmin.views.GroupPickable
+        android:id="@+id/pickableGroup_g2g2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:horizontalSpacing="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settableGroup_g2g2"
+        app:layout_constraintVertical_bias="0.0"
+        app:verticalSpacing="12dp" />
 
     </com.example.physmin.views.TestConstraintLayout>

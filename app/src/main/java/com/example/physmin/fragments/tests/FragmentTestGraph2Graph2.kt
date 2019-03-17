@@ -14,6 +14,7 @@ import com.example.physmin.activities.AnswerParcelable
 import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
+import com.example.physmin.views.dpToPx
 import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
 
 private const val ARG_QUESTION = "param1"
@@ -47,9 +48,11 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
 
         view.settableGroup_g2g2.GraphicView_g2g2_question.function = question!!.function
 
-        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+//        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+        val height = 85.dpToPx().toInt()
+        val width = 140.dpToPx().toInt()
         var answerPic: ImageViewPickable
-        val picParams = ViewGroup.LayoutParams(width, width)
+        val picParams = ViewGroup.LayoutParams(width, height)
 
         view.imageView_g2g2_blank1.correctAnsw = question!!.correctIDs.toIntArray()
         view.imageView_g2g2_blank2.correctAnsw = question!!.correctIDs.toIntArray()

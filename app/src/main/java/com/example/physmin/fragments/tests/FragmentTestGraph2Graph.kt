@@ -55,9 +55,10 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
 
         view.GraphicView_g2g_blank1.correctAnsw = question!!.correctIDs.toIntArray()
 
-        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+//        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         Resources.getSystem().displayMetrics.density
         val height = 110.dpToPx().toInt()
+        val width = 150.dpToPx().toInt()
         var answerPic: ImageViewPickable
         val picParams = ViewGroup.LayoutParams(width, height)
         answers?.forEach {

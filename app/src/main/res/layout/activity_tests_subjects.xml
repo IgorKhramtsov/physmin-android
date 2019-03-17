@@ -6,13 +6,73 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/test_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/mobile_navigation"
-        app:defaultNavHost="true"
-        />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Кинематика"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.physmin.views.MenuItemView
+        android:id="@+id/menuItemView_concept"
+        android:layout_width="127dp"
+        android:layout_height="113dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:itemBack_icon="@drawable/ic_menuitem_back"
+        app:itemIcon="@drawable/ic_concept_icon"
+        app:itemTitle="Понятия"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.64"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <com.example.physmin.views.MenuItemView
+        android:id="@+id/menuItemView_graphics"
+        android:layout_width="127dp"
+        android:layout_height="113dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:itemBack_icon="@drawable/ic_menuitem_back"
+        app:itemIcon="@drawable/ic_concept_icon"
+        app:itemTitle="Графики"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.36"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <com.example.physmin.views.MenuItemView
+        android:id="@+id/menuItemView_rotation"
+        android:layout_width="127dp"
+        android:layout_height="113dp"
+        android:layout_marginTop="24dp"
+        app:itemBack_icon="@drawable/ic_menuitem_back"
+        app:itemIcon="@drawable/ic_concept_icon"
+        app:itemTitle="Вращение"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menuItemView_graphics" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
