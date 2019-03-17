@@ -1,10 +1,13 @@
 package com.example.physmin.views
 
 import android.content.Context
+import android.graphics.Point
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Scroller
+import androidx.core.content.getSystemService
 
 /*
     TODO: Make cleanup
@@ -70,9 +73,17 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
 
-        if(this.getChildAt(this.childCount-1).bottom <= this.bottom)
-            return false
+//        if(this.getChildAt(this.childCount-1).bottom <= this.bottom)
+//            return false
+        val location = IntArray(2)
+        this.getChildAt(this.childCount-1).getLocationOnScreen(location)
 
+        if(this.getChildAt(this.childCount-1).height + location[1] <= this.bottom) {
+//            return false
+            this.getChildAt(0).getLocationOnScreen(location)
+            if (location[1] >= this.top)
+                return false
+        }
         var isIntercept = false//判断是否拦截
         val interceptX = ev.x//获取X坐标
         val interceptY = ev.y//获取Y坐标
@@ -109,8 +120,18 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if(this.getChildAt(this.childCount-1).bottom <= this.bottom)
-            return false
+//        if(this.getChildAt(this.childCount-1).bottom <= this.bottom)
+//            return false
+        val location = IntArray(2)
+        this.getChildAt(this.childCount-1).getLocationOnScreen(location)
+
+        if(this.getChildAt(this.childCount-1).height + location[1] <= this.bottom) {
+//            return false
+
+            this.getChildAt(0).getLocationOnScreen(location)
+            if (location[1] >= this.top)
+                return false
+        }
         val touchX = event.x
         val touchY = event.y
 
@@ -252,35 +273,21 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
         this.onPageChangeListener2 = onPageChangeListener
     }
 
-    /**
-     *
-     * @param horizontalOrVertical 默认为水平滑动true，false为纵向滑动
-     */
     fun setHorizontalOrVertical(horizontalOrVertical: Boolean): GroupScrollable {
         isHorizontalOrVertical = horizontalOrVertical
         return this
     }
 
-    /**
-     * 默认ture,边缘可以有滑动效果，false边缘没有滑动效果
-     */
     fun setStartEndScroll(startEndScroll: Boolean): GroupScrollable {
         isStartEndScroll = startEndScroll
         return this
     }
 
-    /**
-     * 设置滑动翻页边界
-     * @param scrollEdge
-     */
     fun setScrollEdge(scrollEdge: Int): GroupScrollable {
         this.scrollEdge = scrollEdge
         return this
     }
 
-    /**
-     * 设置滑动时间默认为800毫秒
-     */
     fun setDuration(duration: Int): GroupScrollable {
         this.duration = duration
         return this

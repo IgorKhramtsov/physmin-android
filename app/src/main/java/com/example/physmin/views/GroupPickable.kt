@@ -1,12 +1,13 @@
 package com.example.physmin.views
 
 import android.content.Context
-import android.graphics.Point
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 
@@ -17,16 +18,38 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
     var pickedItem: Pickable? = null
     var par: TestConstraintLayout? = null
 
+    var horizontalSpacing = 0
+    var verticalSpacing = 0
+
+    private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
+    private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+    var blurRadius = 2.dpToPx()
+    var cornerRadius = 2.dpToPx()
+
+    var backPanelBitmap: Bitmap? = null
+
     init {
+        val a = context.obtainStyledAttributes(
+                attrs, R.styleable.GroupPickable, 0, 0)
+
+        horizontalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_horizontalSpacing, 0)
+        verticalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_verticalSpacing, 0)
+
+        a.recycle()
+
         val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displaySize = Point()
-
         display.getSize(displaySize)
         deviceWidth = displaySize.x
 
+        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
+
         setOnHierarchyChangeListener(this)
 
-
+        this.post {
+            backPanelBitmap = generateBackPanel(width, height,
+                    cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+        }
     }
 
     public fun setParent(_par: TestConstraintLayout?) {
@@ -57,68 +80,6 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         }
     }
 
-    override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
-        if(this.childCount <= 0)
-            return
-
-        val count: Int = childCount
-        var curWidth = 0
-        var curHeight = 0
-        var curLeft = 0
-        var curTop = 20
-
-        var maxWidth = this.getChildAt(0).measuredWidth
-        var maxHeight = this.getChildAt(0).measuredHeight
-
-        val contentLeft = this.paddingLeft
-        val contentTop = this.paddingTop
-        val contentRight = this.measuredWidth - this.paddingRight
-        val contentBottom = this.measuredHeight - this.paddingBottom
-        val childWidth = if (count > 0 ) getChildAt(0).layoutParams.width else contentRight - contentLeft
-        val childHeight = if(count > 0) getChildAt(0).layoutParams.height else contentBottom - contentTop
-
-        var childInRow = Math.floor((contentRight - contentLeft)*1.0/maxWidth*1.0).toInt()
-        var childSpacing = ((contentRight - contentLeft)-childInRow*maxWidth)/(childInRow+1)
-        var curChildInRow = 0
-
-        curLeft = contentLeft
-        curTop = contentTop
-
-        for (i in 0 until count) {
-            val child: View = getChildAt(i)
-
-//            if(child.visibility == View.GONE)
-//                continue
-            //Get the maximum size of the child
-//            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
-//            curWidth = maxWidth
-//            curHeight = maxHeight
-            //wrap is reach to the end
-//            if(curLeft + curWidth >= contentRight) {
-//                curLeft = contentLeft
-//                curTop += maxHeight
-//                maxHeight = 0
-//            }
-
-            curChildInRow++
-            if(curChildInRow > childInRow){
-                curLeft = contentLeft
-                curTop += maxHeight + 20
-                curChildInRow = 1
-            }
-            curLeft += childSpacing
-            //do the layout
-            child.layout(curLeft, curTop, curLeft + maxWidth, curTop + maxHeight)
-            //store the max height
-//            if(maxHeight < curHeight)
-//                maxHeight = curHeight
-
-            curLeft += maxWidth
-        }
-
-
-    }
-
     override fun onChildViewAdded(parent: View?, child: View) {
         child.setOnClickListener(this)
         (child as? TextViewPickable)?.setParent(this)
@@ -130,41 +91,87 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 
     }
 
-//
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        val count = childCount
-//        // Measurement will ultimately be computing these values.
-//        var maxHeight = 0
-//        var maxWidth = 0
-//        var childState = 0
-//        var mLeftWidth = 0
-//        var rowCount = 0
-//        // Iterate through all children, measuring them and computing our dimensions
-//        // from their size.
-//        for (i in 0 until count) {
-//            val child = getChildAt(i)
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        if(this.childCount <= 0)
+            return
+
+        val count: Int = childCount
+        var curWidth = 0
+        var curHeight = 0
+        var center = 0
+        var curTop = 20
+
+        var maxWidth = this.getChildAt(0).measuredWidth
+        var maxHeight = this.getChildAt(0).measuredHeight
+
+        val contentLeft = this.paddingLeft
+        val contentTop = this.paddingTop + blurRadius.toInt()
+        val contentRight = this.measuredWidth - this.paddingRight
+        val contentBottom = this.measuredHeight - this.paddingBottom
+        val childWidth = if (count > 0 ) getChildAt(0).layoutParams.width else contentRight - contentLeft
+        val childHeight = if(count > 0) getChildAt(0).layoutParams.height else contentBottom - contentTop
+
+
+        var childInRow = Math.floor((contentRight - contentLeft)*1.0/maxWidth*1.0).toInt()
+//        var childSpacing = ((contentRight - contentLeft)-childInRow*maxWidth)/(childInRow+1)
+        var curChildInRow = 0
+
+        center = width / 2 //- childSpacing / 2
+        curTop = contentTop
+        var centerOffset = 0
+
+        var curLeft = 0
+        var curRight = 0
+        for (i in 0 until count) {
+            val child = getChildAt(i)
+
+            curChildInRow++
+            if(curChildInRow > childInRow) {
+                curChildInRow = 1
+                curTop += child.measuredHeight + verticalSpacing
+            }
+            curLeft = if (curChildInRow == 1) center - child.measuredWidth - horizontalSpacing / 2 else center + horizontalSpacing / 2
+
+            child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + maxHeight)
+        }
+
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val count = childCount
+        var height = 0
+        var width = 0
+        var itemsInRowWidth = 0
+
+        for (i in 0 until count) {
+            val child = getChildAt(i)
+            measureChild(child, widthMeasureSpec, heightMeasureSpec)
 //            if (child.visibility == View.GONE)
 //                continue
-//            // Measure the child.
-//            measureChild(child, widthMeasureSpec, heightMeasureSpec)
-//            maxWidth += Math.max(maxWidth, child.measuredWidth)
-//            mLeftWidth += child.measuredWidth
-//            if (mLeftWidth / deviceWidth > rowCount) {
-//                maxHeight += child.measuredHeight
-//                rowCount++
-//            } else {
-//                maxHeight = Math.max(maxHeight, child.measuredHeight)
-//            }
-//            childState = View.combineMeasuredStates(childState, child.measuredState)
-//        }
-//        // Check against our minimum height and width
-//        maxHeight = Math.max(maxHeight, suggestedMinimumHeight)
-//        maxWidth = Math.max(maxWidth, suggestedMinimumWidth)
-//        // Report our final dimensions.
-//        setMeasuredDimension(View.resolveSizeAndState(maxWidth, widthMeasureSpec, childState),
-//                View.resolveSizeAndState(maxHeight, heightMeasureSpec, childState shl View.MEASURED_HEIGHT_STATE_SHIFT))
-//
-////        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//    }
+
+            itemsInRowWidth += child.measuredWidth
+            if(itemsInRowWidth > deviceWidth) {
+                width = Math.max(width, itemsInRowWidth)
+                height += child.measuredHeight + verticalSpacing
+                itemsInRowWidth = 0
+            }
+            else
+                height = Math.max(height, child.measuredHeight)
+        }
+        height += paddingTop + paddingBottom + blurRadius.toInt() * 2
+        width += blurRadius.toInt() * 2
+
+        height = View.resolveSizeAndState(height, heightMeasureSpec, 0)
+        width = View.resolveSizeAndState(width, widthMeasureSpec, 0)
+
+        setMeasuredDimension(width, height)
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        backPanelBitmap?.let {
+            canvas.drawBitmap(it, 0f, scrollY.toFloat(), null)
+        }
+    }
 
 }

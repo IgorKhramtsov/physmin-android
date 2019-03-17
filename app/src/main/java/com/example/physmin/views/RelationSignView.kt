@@ -19,7 +19,8 @@ import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.fragments.tests.toPx
 
-fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
+fun Int.spToPx(): Float = this * Resources.getSystem().displayMetrics.scaledDensity
+fun Int.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
 
 class RelationSignView : View, View.OnClickListener, Settable {
     var popupWindow: PopupWindow? = null

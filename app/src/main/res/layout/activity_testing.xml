@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context="com.example.physmin.activities.TestingActivity">
 
     <TextView
         android:id="@+id/textView5"
@@ -74,5 +74,4 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent=".5" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

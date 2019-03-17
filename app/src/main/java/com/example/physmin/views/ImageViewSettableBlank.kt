@@ -1,28 +1,36 @@
 package com.example.physmin.views
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 
-class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
+class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : GraphView(context, attributeSet), Settable {
 
     override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
             if(answerView != null)
-                this.setImageDrawable((answerView as ImageView).drawable)
+                this.function = (answerView as GraphView).function
             else
-                this.setImageResource(R.color.transparent)
+                this.function = null
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     var correctAnsw: IntArray? = null
+
+    private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
+    private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+    var blurRadius = 4.dpToPx()
+    var cornerRadius = 2.dpToPx()
+
+    var generatedPanel: Bitmap? = null
 
     override fun isCorrect(): Boolean {
         if(answerView == null || correctAnsw == null)
@@ -33,21 +41,24 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Im
 
     var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
 
-    init { }
-
     override fun setParent(_parent: GroupSettable) {
         this.par = _parent
     }
 
+    init {
+        this.post {
+            generatedPanel = generateInsideShadowPanel(width, height,
+                    cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        paint.strokeWidth = 10f
-
-        canvas.drawLine(0f, 0f, width * 1f, 0f, paint)
-        canvas.drawLine(0f, 0f, 0f, height * 1f, paint)
-        canvas.drawLine(width * 1f, 0f, width * 1f, height * 1f, paint)
-        canvas.drawLine(0f, height * 1f, width * 1f, height * 1f, paint)
+        if(function != null)
+            super.onDraw(canvas)
+        else
+            generatedPanel?.let {
+                canvas.drawBitmap(it, 0f, 0f, null)
+            }
     }
 
 }

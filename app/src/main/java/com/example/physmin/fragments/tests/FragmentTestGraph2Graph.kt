@@ -8,22 +8,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
+import com.example.physmin.activities.AnswerParcelable
+import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
-import com.example.physmin.views.ImageViewSettable
-import kotlinx.android.synthetic.main.fragment_test_graph2graph.*
+import com.example.physmin.views.dpToPx
 import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
-import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
-import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
-import kotlin.collections.HashMap
 
 
 // TODO: Rename parameter arguments, choose names which match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_QUEST = "param1"
-private const val ARG_CORR_ANSWS = "param2"
-private const val ARG_ANSWERS = "param3"
+private const val ARG_QUESTION = "param1"
+private const val ARG_ANSWERS = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -37,19 +35,15 @@ private const val ARG_ANSWERS = "param3"
 class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
     // TODO: Rename and change types of parameters
 
-    private var questPicture: String? = null
-    //    private var answers: Array<String>? = null
-//    private var listener: OnAllDoneListener? = null
-    private var correctAnswer: IntArray? = null
-    private var answers: HashMap<Int, String>? = null
+    private var question: QuestionParcelable? = null
+
+    private var answers: ArrayList<AnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            questPicture = it.getString(ARG_QUEST)
-            correctAnswer = it.getIntArray(ARG_CORR_ANSWS)
-
-            answers = it.getSerializable(ARG_ANSWERS) as HashMap<Int, String>
+            question = it.getParcelable(ARG_QUESTION)
+            answers = it.getParcelableArrayList(ARG_ANSWERS)
         }
     }
 
@@ -57,21 +51,27 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
 
-        var id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
-        view.settable_group_g2g.imageView_g2g_question.setImageDrawable(resources.getDrawable(id))
+        view.settableGroup_g2g.GraphicView_g2g_question.function = question!!.function
 
-        view.imageView_g2g_blank1.correctAnsw = correctAnswer
+        view.GraphicView_g2g_blank1.correctAnsw = question!!.correctIDs.toIntArray()
 
-        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+//        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+        Resources.getSystem().displayMetrics.density
+        val height = 110.dpToPx().toInt()
+        val width = 150.dpToPx().toInt()
         var answerPic: ImageViewPickable
-        val picParams = ViewGroup.LayoutParams(width, width)
+        val picParams = ViewGroup.LayoutParams(width, height)
         answers?.forEach {
+
             answerPic = ImageViewPickable(this.context!!, null)
             answerPic.apply {
-                this.layoutParams = picParams
-                id = resources.getIdentifier(it.value, "drawable", context!!.packageName)
-                this.setImageDrawable(resources.getDrawable(id))
-                this.answer = it.key
+                layoutParams = picParams
+                function = it.function
+                answer = it.id
+
+
+                if(question!!.correctIDs.contains(it.id))
+                    backColor = ResourcesCompat.getColor(resources, R.color.alpha_green, null) // TODO: DEBUG ONLY
             }
             view.pickableGroup_g2g.addView(answerPic)
         }
@@ -133,12 +133,11 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
          * @return A new instance of fragment FragmentTestGraph2Graph.
          */
         @JvmStatic
-        fun newInstance(param1: String, correctAnsw: IntArray, answers: HashMap<Int, String>) =
+        fun newInstance(question: QuestionParcelable, answers: ArrayList<AnswerParcelable>) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_QUEST, param1)
-                        putIntArray(ARG_CORR_ANSWS, correctAnsw)
-                        putSerializable(ARG_ANSWERS, answers)
+                        putParcelable(ARG_QUESTION, question)
+                        putParcelableArrayList(ARG_ANSWERS, answers)
                     }
                 }
     }

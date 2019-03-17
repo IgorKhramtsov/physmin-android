@@ -1,12 +1,15 @@
 package com.example.physmin.views
 
 import android.content.Context
-import android.graphics.Point
+import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.content.res.ResourcesCompat
+import com.example.physmin.R
 import com.example.physmin.Settable
 
 class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
@@ -14,20 +17,36 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
     var deviceWidth: Int = 0
     var par: TestConstraintLayout? = null
 
+    private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
+    private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+    var blurRadius = 2.dpToPx()
+    var cornerRadius = 2.dpToPx()
+
+//    var backPaint: Paint? = null
+//    var shadowPaint: Paint? = null
+    var backPanelBitmap: Bitmap? = null
+
+    val inRowSpacing = 8.dpToPx().toInt()
+//    val secondRowMarging = 16.dpToPx().toInt()
+
     init {
         val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displaySize = Point()
 
         display.getSize(displaySize)
         deviceWidth = displaySize.x
+
+        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
         setOnHierarchyChangeListener(this)
+
+        this.post { backPanelBitmap = generateBackPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this) }
     }
 
     public fun setParent(_par: TestConstraintLayout?) {
         this.par = _par
     }
 
-    override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
+    override fun onLayout(p0: Boolean, p1: Int, p2: Int, _width: Int, p4: Int) {
         if(this.childCount <= 0)
             return
 
@@ -35,11 +54,13 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         var curWidth = 0
         var curHeight = 0
         var curLeft = 0
-        var curTop: Int = 20
+        var curTop: Int
 
         var maxWidth = this.getChildAt(0).measuredWidth
         var maxHeight = this.getChildAt(0).measuredHeight
 
+        val wdh = _width
+        val hgh = this.measuredHeight
         val contentLeft = this.paddingLeft
         val contentTop = this.paddingTop
         val contentRight = this.measuredWidth - this.paddingRight
@@ -47,43 +68,49 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         val childWidth = if (count > 0 ) getChildAt(0).layoutParams.width else contentRight - contentLeft
         val childHeight = if(count > 0) getChildAt(0).layoutParams.height else contentBottom - contentTop
 
-        var childInRow = Math.floor((contentRight - contentLeft)*1.0/maxWidth*1.0).toInt()
+        var childInRow = (contentRight - contentLeft) / maxWidth
         var childSpacing = ((contentRight - contentLeft)-childInRow*maxWidth)/(childInRow+1)
-        var curChildInRow = 0
+        var curChildInRow = 1
 
-        curLeft = contentLeft
+        curLeft = wdh / 2
         curTop = contentTop
 
         for (i in 0 until count) {
-            val child: View = getChildAt(i)
+            val child = getChildAt(i)
 
-//            if(child.visibility == View.GONE)
-//                continue
-            //Get the maximum size of the child
-//            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
-//            curWidth = maxWidth
-//            curHeight = maxHeight
-            //wrap is reach to the end
-//            if(curLeft + curWidth >= contentRight) {
-//                curLeft = contentLeft
-//                curTop += maxHeight
-//                maxHeight = 0
-//            }
+            if(count < 3) {
+                if(curChildInRow == 1)
+                    curLeft -= (child.measuredWidth + inRowSpacing / 2)
+                else if(curChildInRow == 2)
+                    curLeft += inRowSpacing / 2
 
-            curChildInRow++
-            if(curChildInRow > childInRow){
-                curLeft = contentLeft
-                curTop += maxHeight
-                curChildInRow = 1
+                curTop = contentTop
+                curChildInRow++
+                child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + child.measuredHeight)
+                curLeft += (child.measuredWidth + inRowSpacing / 2)
             }
-            curLeft += childSpacing
-            //do the layout
-            child.layout(curLeft, curTop, curLeft + maxWidth, curTop + maxHeight)
-            //store the max height
-//            if(maxHeight < curHeight)
-//                maxHeight = curHeight
+            else {
+                if(i == 0) {
+                    curLeft -= child.measuredWidth / 2
+                    child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + child.measuredHeight)
+                    curLeft += child.measuredWidth / 2
+                    curTop += child.measuredHeight + paddingBottom
+                    continue
+                }
 
-            curLeft += maxWidth
+                if(curChildInRow == 1)
+                    curLeft -= (child.measuredWidth + inRowSpacing / 2)
+                else if(curChildInRow == 2)
+                    curLeft += inRowSpacing / 2
+
+                curChildInRow++
+                child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + child.measuredHeight)
+                curLeft += (child.measuredWidth + inRowSpacing / 2)
+            }
+
+
+//            curLeft += maxWidth
+//            curTop += child.height + paddingBottom * 2
         }
     }
 
@@ -103,12 +130,29 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
         val childCount = childCount
+        var width = 0
+        var height = 0
         for (i in 0 until childCount) {
             val childAt = getChildAt(i)
             measureChild(childAt, widthMeasureSpec, heightMeasureSpec)
+
+            width += childAt.measuredWidth
+            if(height < childAt.measuredHeight)
+                height = childAt.measuredHeight
         }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        if(childCount > 2)
+            height += getChildAt(childCount - 1).measuredHeight + paddingBottom // childHeight * 2 + paddings
+
+        height += paddingTop + paddingBottom
+
+        height = View.resolveSizeAndState(height, heightMeasureSpec, 0)
+//        width = View.resolveSizeAndState(width, widthMeasureSpec, 0)
+        width = Math.round(deviceWidth * 1.1f)
+
+        setMeasuredDimension(width, height)
     }
 
     override fun onClick(_view: View?) {
@@ -169,4 +213,10 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         return true
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        backPanelBitmap?.let {
+            canvas.drawBitmap(it, -5f, 0f, null)
+        }
+    }
 }
