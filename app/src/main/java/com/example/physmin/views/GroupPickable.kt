@@ -7,6 +7,7 @@ import android.view.Display
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 
@@ -17,6 +18,8 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
     var pickedItem: Pickable? = null
     var par: TestConstraintLayout? = null
 
+    var itemsPadding = 8.dpToPx().toInt()
+
     init {
         val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displaySize = Point()
@@ -24,9 +27,9 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         display.getSize(displaySize)
         deviceWidth = displaySize.x
 
+        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.ui_panel, null))
+
         setOnHierarchyChangeListener(this)
-
-
     }
 
     public fun setParent(_par: TestConstraintLayout?) {
@@ -130,41 +133,34 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 
     }
 
-//
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        val count = childCount
-//        // Measurement will ultimately be computing these values.
-//        var maxHeight = 0
-//        var maxWidth = 0
-//        var childState = 0
-//        var mLeftWidth = 0
-//        var rowCount = 0
-//        // Iterate through all children, measuring them and computing our dimensions
-//        // from their size.
-//        for (i in 0 until count) {
-//            val child = getChildAt(i)
-//            if (child.visibility == View.GONE)
-//                continue
-//            // Measure the child.
-//            measureChild(child, widthMeasureSpec, heightMeasureSpec)
-//            maxWidth += Math.max(maxWidth, child.measuredWidth)
-//            mLeftWidth += child.measuredWidth
-//            if (mLeftWidth / deviceWidth > rowCount) {
-//                maxHeight += child.measuredHeight
-//                rowCount++
-//            } else {
-//                maxHeight = Math.max(maxHeight, child.measuredHeight)
-//            }
-//            childState = View.combineMeasuredStates(childState, child.measuredState)
-//        }
-//        // Check against our minimum height and width
-//        maxHeight = Math.max(maxHeight, suggestedMinimumHeight)
-//        maxWidth = Math.max(maxWidth, suggestedMinimumWidth)
-//        // Report our final dimensions.
-//        setMeasuredDimension(View.resolveSizeAndState(maxWidth, widthMeasureSpec, childState),
-//                View.resolveSizeAndState(maxHeight, heightMeasureSpec, childState shl View.MEASURED_HEIGHT_STATE_SHIFT))
-//
-////        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val count = childCount
+        // Measurement will ultimately be computing these values.
+        var height = 0
+        var width = 0
+        var itemsInRowWidth = 0
+        // Iterate through all children, measuring them and computing our dimensions
+        // from their size.
+        for (i in 0 until count) {
+            val child = getChildAt(i)
+            measureChild(child, widthMeasureSpec, heightMeasureSpec)
+            if (child.visibility == View.GONE)
+                continue
+
+            itemsInRowWidth += child.measuredWidth
+            if(itemsInRowWidth > deviceWidth) {
+                width = Math.max(width, itemsInRowWidth)
+                height += child.measuredHeight + itemsPadding
+                itemsInRowWidth = 0
+            }
+            else
+                height = Math.max(height, child.measuredHeight)
+        }
+        height += paddingTop + paddingBottom
+        height = View.resolveSizeAndState(height, heightMeasureSpec, 0)
+        width = View.resolveSizeAndState(width, widthMeasureSpec, 0)
+        setMeasuredDimension(width, height)
+    }
 
 }

@@ -2,7 +2,6 @@ package com.example.physmin.views
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -16,6 +15,7 @@ import com.example.physmin.R
 class MenuItemView: View {
 
     private var _itemTitle: String? = null
+    private var _itemBack_icon: Drawable? = null
     private var _itemIcon: Drawable? = null
 
     private var iconBackPaint: Paint? = null
@@ -23,10 +23,21 @@ class MenuItemView: View {
     private var textWidth: Float = 0f
     private var textHeight: Float = 0f
 
+    private val iconWidth = 31
+    private val iconHeight = 73
+    private val iconBackWidth = 73
+    private val iconBackHeight = 82
+
     var itemTitle: String?
         get() = _itemTitle
         set(value) {
             _itemTitle = value
+            invalidateTextPaintAndMeasurements()
+        }
+    var itemBack_icon: Drawable?
+        get() = _itemBack_icon
+        set(value) {
+            _itemBack_icon = value
             invalidateTextPaintAndMeasurements()
         }
     var itemIcon: Drawable?
@@ -57,6 +68,11 @@ class MenuItemView: View {
                 R.styleable.MenuItemView_itemTitle)
 
 
+        if (a.hasValue(R.styleable.MenuItemView_itemBack_icon)) {
+            _itemBack_icon = a.getDrawable(
+                    R.styleable.MenuItemView_itemBack_icon)
+            _itemBack_icon?.callback = this
+        }
         if (a.hasValue(R.styleable.MenuItemView_itemIcon)) {
             _itemIcon = a.getDrawable(
                     R.styleable.MenuItemView_itemIcon)
@@ -104,20 +120,23 @@ class MenuItemView: View {
         val contentHeight = height - paddingTop - paddingBottom
 
         itemTitle?.let {
-            canvas.withTranslation(contentWidth / 2f, contentHeight - textHeight) {
+            canvas.withTranslation(contentWidth / 2f, height - textHeight) {
                 canvas.drawText(it, 0f, 0f, textPaint)
             }
         }
 
+        itemBack_icon?.let {
+            canvas.withTranslation(width / 2f, 0f) {
+                it.setBounds(-Math.round((iconBackWidth/2).dpToPx()),0,
+                        Math.round((iconBackWidth/2).dpToPx()), Math.round((iconBackHeight).dpToPx()))
+                it.draw(canvas)
+            }
+        }
+        itemBack_icon?.minimumHeight
         itemIcon?.let {
-            canvas.withTranslation(contentWidth / 2f, 0f) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // TODO: check this out
-                    canvas.drawOval(-(25.dpToPx()), 0f,
-                            35.dpToPx(), 60.dpToPx(), iconBackPaint)
-                }
-
-                it.setBounds(-Math.round(10.dpToPx()), Math.round(12.dpToPx()),
-                        Math.round(25.dpToPx()), Math.round(48.dpToPx()))
+            canvas.withTranslation(width / 2f, 0f) {
+                it.setBounds(-Math.round((iconWidth / 2).dpToPx()), Math.round((10).dpToPx()),
+                        Math.round((iconWidth / 2).dpToPx()), Math.round((10 + iconHeight).dpToPx()))
                 it.draw(canvas)
             }
         }

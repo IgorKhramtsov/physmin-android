@@ -12,6 +12,8 @@ class TestingActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_testing)
 
+
+
         menuItemView_concept.setOnClickListener {
             var intent = Intent(this, TestActivity::class.java)
             startActivity(intent)

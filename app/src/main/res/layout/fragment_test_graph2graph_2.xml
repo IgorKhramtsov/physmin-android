@@ -41,8 +41,7 @@
             <com.example.physmin.views.GraphView
                 android:id="@+id/GraphicView_g2g2_question"
                 android:layout_width="115dp"
-                android:layout_height="115dp"
-                android:src="@drawable/graph1" />
+                android:layout_height="115dp"/>
 
             <com.example.physmin.views.ImageViewSettableBlank
                 android:id="@+id/imageView_g2g2_blank1"

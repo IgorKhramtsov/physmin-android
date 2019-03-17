@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.os.Debug
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,8 @@ import com.example.physmin.activities.AnswerParcelable
 import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
-import com.example.physmin.views.ImageViewSettable
-import kotlinx.android.synthetic.main.fragment_test_graph2graph.*
+import com.example.physmin.views.dpToPx
 import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
-import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
-import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
-import kotlin.collections.HashMap
 
 
 // TODO: Rename parameter arguments, choose names which match
@@ -56,13 +51,15 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
 
-        view.settable_group_g2g.GraphicView_g2g_question.function = question!!.function
+        view.settableGroup_g2g.GraphicView_g2g_question.function = question!!.function
 
-        view.imageView_g2g_blank1.correctAnsw = question!!.correctIDs.toIntArray()
+        view.GraphicView_g2g_blank1.correctAnsw = question!!.correctIDs.toIntArray()
 
         val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+        Resources.getSystem().displayMetrics.density
+        val height = 110.dpToPx().toInt()
         var answerPic: ImageViewPickable
-        val picParams = ViewGroup.LayoutParams(width, width)
+        val picParams = ViewGroup.LayoutParams(width, height)
         answers?.forEach {
 
             answerPic = ImageViewPickable(this.context!!, null)
