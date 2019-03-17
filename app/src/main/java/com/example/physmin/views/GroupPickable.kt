@@ -1,7 +1,7 @@
 package com.example.physmin.views
 
 import android.content.Context
-import android.graphics.Point
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
@@ -19,17 +19,31 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
     var par: TestConstraintLayout? = null
 
     var itemsPadding = 8.dpToPx().toInt()
+    var onDisplayHeight = 0f
+
+    private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
+    private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+    var blurRadius = 2.dpToPx()
+    var cornerRadius = 2.dpToPx()
+
+    var backPaint: Paint? = null
+    var shadowPaint: Paint? = null
+    var backPanelBitmap: Bitmap? = null
 
     init {
         val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displaySize = Point()
-
         display.getSize(displaySize)
         deviceWidth = displaySize.x
 
-        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.ui_panel, null))
+        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
 
         setOnHierarchyChangeListener(this)
+
+        this.post {
+            backPanelBitmap = generateBackPanel(width, height,
+                    cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+        }
     }
 
     public fun setParent(_par: TestConstraintLayout?) {
@@ -60,7 +74,18 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         }
     }
 
-    override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
+    override fun onChildViewAdded(parent: View?, child: View) {
+        child.setOnClickListener(this)
+        (child as? TextViewPickable)?.setParent(this)
+        (child as? ImageViewPickable)?.setParent(this)
+
+    }
+
+    override fun onChildViewRemoved(parent: View?, child: View?) {
+
+    }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         if(this.childCount <= 0)
             return
 
@@ -74,7 +99,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         var maxHeight = this.getChildAt(0).measuredHeight
 
         val contentLeft = this.paddingLeft
-        val contentTop = this.paddingTop
+        val contentTop = this.paddingTop + blurRadius.toInt()
         val contentRight = this.measuredWidth - this.paddingRight
         val contentBottom = this.measuredHeight - this.paddingBottom
         val childWidth = if (count > 0 ) getChildAt(0).layoutParams.width else contentRight - contentLeft
@@ -90,19 +115,6 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         for (i in 0 until count) {
             val child: View = getChildAt(i)
 
-//            if(child.visibility == View.GONE)
-//                continue
-            //Get the maximum size of the child
-//            child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST))
-//            curWidth = maxWidth
-//            curHeight = maxHeight
-            //wrap is reach to the end
-//            if(curLeft + curWidth >= contentRight) {
-//                curLeft = contentLeft
-//                curTop += maxHeight
-//                maxHeight = 0
-//            }
-
             curChildInRow++
             if(curChildInRow > childInRow){
                 curLeft = contentLeft
@@ -110,38 +122,19 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
                 curChildInRow = 1
             }
             curLeft += childSpacing
-            //do the layout
             child.layout(curLeft, curTop, curLeft + maxWidth, curTop + maxHeight)
-            //store the max height
-//            if(maxHeight < curHeight)
-//                maxHeight = curHeight
 
             curLeft += maxWidth
         }
 
-
     }
-
-    override fun onChildViewAdded(parent: View?, child: View) {
-        child.setOnClickListener(this)
-        (child as? TextViewPickable)?.setParent(this)
-        (child as? ImageViewPickable)?.setParent(this)
-
-    }
-
-    override fun onChildViewRemoved(parent: View?, child: View?) {
-
-    }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val count = childCount
-        // Measurement will ultimately be computing these values.
         var height = 0
         var width = 0
         var itemsInRowWidth = 0
-        // Iterate through all children, measuring them and computing our dimensions
-        // from their size.
+
         for (i in 0 until count) {
             val child = getChildAt(i)
             measureChild(child, widthMeasureSpec, heightMeasureSpec)
@@ -157,10 +150,20 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
             else
                 height = Math.max(height, child.measuredHeight)
         }
-        height += paddingTop + paddingBottom
+        height += paddingTop + paddingBottom + blurRadius.toInt() * 2
+        width += blurRadius.toInt() * 2
+
         height = View.resolveSizeAndState(height, heightMeasureSpec, 0)
         width = View.resolveSizeAndState(width, widthMeasureSpec, 0)
+
         setMeasuredDimension(width, height)
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        backPanelBitmap?.let {
+            canvas.drawBitmap(it, 0f, scrollY.toFloat(), null)
+        }
     }
 
 }

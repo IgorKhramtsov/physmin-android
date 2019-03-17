@@ -14,8 +14,9 @@
 
     <color name="ui_background">#F6F6F6</color>
     <color name="ui_panel">#fff</color>
+    <color name="ui_shadow">#26000000</color>
 
-    <color name="graphic_back_gray">#F3F3F3</color>
+    <color name="graphic_back_gray">#F5F5F5</color>
     <color name="icon_back">#90C4C4C4</color>
     <color name="alpha_green">#2F058B0B</color>
 

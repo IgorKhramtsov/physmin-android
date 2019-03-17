@@ -1,7 +1,8 @@
 package com.example.physmin.views
 
 import android.content.Context
-import android.graphics.Point
+import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
@@ -16,6 +17,15 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
     var deviceWidth: Int = 0
     var par: TestConstraintLayout? = null
 
+    private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
+    private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+    var blurRadius = 2.dpToPx()
+    var cornerRadius = 2.dpToPx()
+
+//    var backPaint: Paint? = null
+//    var shadowPaint: Paint? = null
+    var backPanelBitmap: Bitmap? = null
+
     val inRowSpacing = 8.dpToPx().toInt()
 //    val secondRowMarging = 16.dpToPx().toInt()
 
@@ -26,8 +36,10 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         display.getSize(displaySize)
         deviceWidth = displaySize.x
 
-        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.ui_panel, null))
+        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
         setOnHierarchyChangeListener(this)
+
+        this.post { backPanelBitmap = generateBackPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this) }
     }
 
     public fun setParent(_par: TestConstraintLayout?) {
@@ -206,4 +218,10 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?) : ViewGroup(c
         return true
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        backPanelBitmap?.let {
+            canvas.drawBitmap(it, -5f, 0f, null)
+        }
+    }
 }

@@ -161,7 +161,10 @@ open class GraphView: View {
             it.color = functionColor
             it.style = Paint.Style.STROKE
             it.strokeWidth = 6.pxToDp()
-            it.pathEffect = DashPathEffect(arrayOf(10f,10f).toFloatArray(), 0f)
+            val dashEffect = DashPathEffect(arrayOf(10f,10f).toFloatArray(), 0f)
+            val cornerEffect = CornerPathEffect(10f * 3)
+            val complexEffect = ComposePathEffect(dashEffect, cornerEffect)
+            it.pathEffect = complexEffect
         }
 
         regeneratePath()

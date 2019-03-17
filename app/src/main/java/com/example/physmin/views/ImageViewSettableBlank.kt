@@ -1,6 +1,7 @@
 package com.example.physmin.views
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.text.TextPaint
@@ -18,13 +19,18 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
             field = value
             if(answerView != null)
                 this.function = (answerView as GraphView).function
-//                this.setImageDrawable((answerView as ImageView).drawable)
             else
                 this.function = null
-//                this.setImageResource(R.color.transparent)
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     var correctAnsw: IntArray? = null
+
+    private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
+    private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+    var blurRadius = 4.dpToPx()
+    var cornerRadius = 2.dpToPx()
+
+    var generatedPanel: Bitmap? = null
 
     override fun isCorrect(): Boolean {
         if(answerView == null || correctAnsw == null)
@@ -39,17 +45,20 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
         this.par = _parent
     }
 
+    init {
+        this.post {
+            generatedPanel = generateInsideShadowPanel(width, height,
+                    cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         if(function != null)
             super.onDraw(canvas)
-
-        paint.strokeWidth = 5f
-        paint.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
-
-        canvas.drawLine(0f, 0f, width * 1f, 0f, paint)
-        canvas.drawLine(0f, 0f, 0f, height * 1f, paint)
-        canvas.drawLine(width * 1f, 0f, width * 1f, height * 1f, paint)
-        canvas.drawLine(0f, height * 1f, width * 1f, height * 1f, paint)
+        else
+            generatedPanel?.let {
+                canvas.drawBitmap(it, 0f, 0f, null)
+            }
     }
 
 }

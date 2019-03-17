@@ -273,35 +273,21 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
         this.onPageChangeListener2 = onPageChangeListener
     }
 
-    /**
-     *
-     * @param horizontalOrVertical 默认为水平滑动true，false为纵向滑动
-     */
     fun setHorizontalOrVertical(horizontalOrVertical: Boolean): GroupScrollable {
         isHorizontalOrVertical = horizontalOrVertical
         return this
     }
 
-    /**
-     * 默认ture,边缘可以有滑动效果，false边缘没有滑动效果
-     */
     fun setStartEndScroll(startEndScroll: Boolean): GroupScrollable {
         isStartEndScroll = startEndScroll
         return this
     }
 
-    /**
-     * 设置滑动翻页边界
-     * @param scrollEdge
-     */
     fun setScrollEdge(scrollEdge: Int): GroupScrollable {
         this.scrollEdge = scrollEdge
         return this
     }
 
-    /**
-     * 设置滑动时间默认为800毫秒
-     */
     fun setDuration(duration: Int): GroupScrollable {
         this.duration = duration
         return this
