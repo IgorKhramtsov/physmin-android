@@ -46,11 +46,6 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
     private val mWidth: Int = 0
     private val mHeight: Int = 0
 
-    /**
-     * 判断滑动方向
-     *
-     * @return
-     */
     private val isScrollPath: Boolean
         get() = if (isHorizontalOrVertical) endScrollX > startScrollX else endScrollY > startScrollY
 
@@ -73,17 +68,8 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
 
-//        if(this.getChildAt(this.childCount-1).bottom <= this.bottom)
-//            return false
-        val location = IntArray(2)
-        this.getChildAt(this.childCount-1).getLocationOnScreen(location)
-
-        if(this.getChildAt(this.childCount-1).height + location[1] <= this.bottom) {
-//            return false
-            this.getChildAt(0).getLocationOnScreen(location)
-            if (location[1] >= this.top)
-                return false
-        }
+        if(this.getChildAt(this.childCount-1).bottom + this.top <= this.bottom)
+            return false
         var isIntercept = false//判断是否拦截
         val interceptX = ev.x//获取X坐标
         val interceptY = ev.y//获取Y坐标
@@ -120,18 +106,8 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-//        if(this.getChildAt(this.childCount-1).bottom <= this.bottom)
-//            return false
-        val location = IntArray(2)
-        this.getChildAt(this.childCount-1).getLocationOnScreen(location)
-
-        if(this.getChildAt(this.childCount-1).height + location[1] <= this.bottom) {
-//            return false
-
-            this.getChildAt(0).getLocationOnScreen(location)
-            if (location[1] >= this.top)
-                return false
-        }
+        if(this.getChildAt(this.childCount-1).bottom + this.top <= this.bottom)
+            return false
         val touchX = event.x
         val touchY = event.y
 
