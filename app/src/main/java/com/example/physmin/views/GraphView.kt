@@ -16,22 +16,24 @@ import com.example.physmin.activities.FunctionParcelable
 
 //fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 fun Int.pxToDp(): Float = this / Resources.getSystem().displayMetrics.density;
+
 fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
 
 open class GraphView: View {
 
-    // x - > green
-    // v -> blue
-    // a -> yellow
+    private val positionFunctionColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_position, null)
+    private val velocityFunctionColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_velocity, null)
+    private val accelerationFunctionColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_acceleration, null)
 
     private var _function: FunctionParcelable? = null
     private var _axisColor: Int = ResourcesCompat.getColor(resources, R.color.textColor, null)
     private var _functionColor: Int = Color.RED
+
     private var _textColor: Int = Color.BLACK
     private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
-    private var _vertAxisLetter: String = "x"
-    private var _horAxisLetter: String = "t"
-    private var zeroAxisLetter: String = "0"
+    private var _verticalAxisLetter: String = "x"
+    private var _horizontalAxisLetter: String = "t"
+    private var _zeroAxisLetter: String = "0"
 
     private lateinit var axisPaint: Paint
     private lateinit var functionPaint: Paint
@@ -78,15 +80,15 @@ open class GraphView: View {
             invalidateTextPaintAndMeasurements()
         }
     var vertAxisLetter: String
-        get() = _vertAxisLetter
+        get() = _verticalAxisLetter
         set(value) {
-            _vertAxisLetter = value
+            _verticalAxisLetter = value
             invalidateTextPaintAndMeasurements()
         }
     var horAxisLetter: String
-        get() = _horAxisLetter
+        get() = _horizontalAxisLetter
         set(value) {
-            _horAxisLetter = value
+            _horizontalAxisLetter = value
             invalidateTextPaintAndMeasurements()
         }
     var function: FunctionParcelable?
@@ -109,12 +111,6 @@ open class GraphView: View {
     }
 
     private fun init(attrs: AttributeSet?, defStyle: Int) {
-        // Load attributes
-//        val a = context.obtainStyledAttributes(
-//                attrs, R.styleable.GraphView, defStyle, 0)
-//        a.recycle()
-
-        // Set up a default TextPaint object
 
         setBackgroundColor(backColor)
         textPaint = TextPaint().apply {
@@ -150,35 +146,39 @@ open class GraphView: View {
         smallTextPaint.let {
             it.textSize = smallTextSize
             it.color = textColor
-            zeroAxisHeight = it.measureText(zeroAxisLetter)
+            zeroAxisHeight = it.measureText(_zeroAxisLetter)
         }
         axisPaint.let {
             it.color = axisColor
-            it.strokeWidth = 3.pxToDp()
+            it.strokeWidth = 1.dpToPx()
             it.strokeCap = Paint.Cap.BUTT
         }
         functionPaint.let {
-            it.color = functionColor
+            when(vertAxisLetter) {
+                "x" -> it.color = positionFunctionColor
+                "v" -> it.color = velocityFunctionColor
+                "a" -> it.color = accelerationFunctionColor
+            }
             it.style = Paint.Style.STROKE
-            it.strokeWidth = 6.pxToDp()
-            val dashEffect = DashPathEffect(arrayOf(10f,10f).toFloatArray(), 0f)
+            it.strokeWidth = 2.dpToPx()
+            val dashEffect = DashPathEffect(arrayOf(10f, 5f).toFloatArray(), 0f)
             val cornerEffect = CornerPathEffect(10f * 3)
             val complexEffect = ComposePathEffect(dashEffect, cornerEffect)
             it.pathEffect = complexEffect
         }
-
-        regeneratePath()
     }
 
     fun regeneratePath() {
-        if(height <= 0)
+        if (height <= 0)
             return
 
         functionPath.reset()
         function?.let {
-            Log.i("GraphView","funcType: ${it.funcType}\r\n" +
-                    "coords: ${it.x}, ${it.v}, ${it.a}")
+            Log.i("GraphView", "funcType: ${it.funcType}\r\nparams: ${it.x}, ${it.v}, ${it.a}")
+
             val funcType = it.funcType
+            this.vertAxisLetter = funcType
+
             val x = it.x
             val a = it.a
             val v = it.v
@@ -192,39 +192,29 @@ open class GraphView: View {
 
             val widthStretchFactor = 3
 
-            var calculatedPoint: Float
-            when(funcType) {
-                "x" -> {
-                    functionPath.moveTo(0f, x * heightScaleFactor)
-                    for (t in 0 until xAxisLength * graphFreqFactor) {
-                        calculatedPoint = (x + v * t + (a * t * t) / 2f) * heightScaleFactor
-                        if(calculatedPoint > contentHeight /2f || calculatedPoint < contentHeight / -2f)
-                            break
-
-                        functionPath.lineTo(t * widthScaleFactor / graphFreqFactor * widthStretchFactor, calculatedPoint)
-                    }
-                }
-                "v" -> {
-                    functionPath.moveTo(0f, v * heightScaleFactor)
-                    for (t in 0 until xAxisLength) {
-                        calculatedPoint = (v + a * t) * heightScaleFactor
-                        if(calculatedPoint > contentHeight /2f || calculatedPoint < contentHeight / -2f)
-                            break
-
-                        functionPath.lineTo(t * widthScaleFactor, calculatedPoint)
-                    }
-                }
-                "a" -> {
-                    functionPath.moveTo(0f, a * heightScaleFactor)
-                    for (t in 0 until xAxisLength) {
-                        calculatedPoint = a * heightScaleFactor
-                        if(calculatedPoint > contentHeight /2f || calculatedPoint < contentHeight / -2f)
-                            break
-
-                        functionPath.lineTo(t * widthScaleFactor, calculatedPoint)
-                    }
-                }
+            var calculatedPointY = 0f
+            var calculatedPointX: Float
+            when (funcType) {
+                "x" -> functionPath.moveTo(0f, x * heightScaleFactor)
+                "v" -> functionPath.moveTo(0f, v * heightScaleFactor)
+                "a" -> functionPath.moveTo(0f, a * heightScaleFactor)
             }
+
+            for (t in 0 until xAxisLength * graphFreqFactor) {
+                when (funcType) {
+                    "x" -> calculatedPointY = (x + v * t + (a * t * t) / 2f) * heightScaleFactor
+                    "v" -> calculatedPointY = (v + a * t) * heightScaleFactor
+                    "a" -> calculatedPointY = a * heightScaleFactor
+                }
+                calculatedPointX = t * widthScaleFactor / graphFreqFactor * widthStretchFactor
+                if (calculatedPointY > contentHeight / 2f
+                        || calculatedPointY < contentHeight / -2f
+                        || calculatedPointX > contentWidth)
+                    break
+
+                functionPath.lineTo(calculatedPointX, calculatedPointY)
+            }
+
         }
 
         invalidate()
@@ -241,7 +231,7 @@ open class GraphView: View {
                 axisPaint)
         function?.let {
             canvas.drawText(it.funcType,
-                    axisPaddingLeft + indexWidth ,
+                    axisPaddingLeft + indexWidth,
                     axisPaddingTop + indexHeight * 3,
                     textPaint)
         }
@@ -251,7 +241,7 @@ open class GraphView: View {
                     (height / 2) - indexHeight * 2,
                     textPaint)
         }
-        zeroAxisLetter.let {
+        _zeroAxisLetter.let {
             canvas.drawText(it,
                     indexWidth,
                     (height / 2) + zeroAxisHeight / 2,

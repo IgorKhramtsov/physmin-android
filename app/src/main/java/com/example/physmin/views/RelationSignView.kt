@@ -21,6 +21,7 @@ import com.example.physmin.fragments.tests.toPx
 
 fun Int.spToPx(): Float = this * Resources.getSystem().displayMetrics.scaledDensity
 fun Int.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
+fun Float.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
 
 class RelationSignView : View, View.OnClickListener, Settable {
     var popupWindow: PopupWindow? = null
