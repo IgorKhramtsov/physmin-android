@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
-import com.example.physmin.activities.AnswerParcelable
+import com.example.physmin.activities.FunctionAnswerParcelable
 import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
@@ -37,7 +37,7 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
 
     private var question: QuestionParcelable? = null
 
-    private var answers: ArrayList<AnswerParcelable>? = null
+    private var answers: ArrayList<FunctionAnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
 
-        view.settableGroup_g2g.GraphicView_g2g_question.function = question!!.function
+        view.settableGroup_g2g.GraphicView_g2g_question.functions = question!!.functions
 
         view.GraphicView_g2g_blank1.correctAnsw = question!!.correctIDs.toIntArray()
 
@@ -66,7 +66,7 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
             answerPic = ImageViewPickable(this.context!!, null)
             answerPic.apply {
                 layoutParams = picParams
-                function = it.function
+                functions = it.functions
                 answer = it.id
 
 
@@ -133,7 +133,7 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
          * @return A new instance of fragment FragmentTestGraph2Graph.
          */
         @JvmStatic
-        fun newInstance(question: QuestionParcelable, answers: ArrayList<AnswerParcelable>) =
+        fun newInstance(question: QuestionParcelable, answers: ArrayList<FunctionAnswerParcelable>) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putParcelable(ARG_QUESTION, question)

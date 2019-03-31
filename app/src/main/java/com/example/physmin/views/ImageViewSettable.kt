@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.example.physmin.Pickable
 import com.example.physmin.Settable
 
-open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : ImageView(context, attributeSet), Settable {
+open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : GraphView(context, attributeSet), Settable {
 
     override var par: GroupSettable? = null
     override var answerView: Pickable? = null
@@ -19,13 +19,13 @@ open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Im
             field = value
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
-    var correctAnsw: Int? = null
+    var correctAnsw: IntArray? = null
 
     override fun isCorrect(): Boolean {
         if(answerView == null || correctAnsw == null)
             return false
 
-        return answerView?.answer == correctAnsw
+        return correctAnsw!!.contains(answerView!!.answer)
     }
 
 

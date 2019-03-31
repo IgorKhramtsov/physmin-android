@@ -1,7 +1,6 @@
 package com.example.physmin.fragments.tests
 
 import android.content.Context
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
-import com.example.physmin.activities.AnswerParcelable
+import com.example.physmin.activities.FunctionAnswerParcelable
 import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.views.GroupScrollable
 import com.example.physmin.views.ImageViewPickable
@@ -29,16 +28,16 @@ private const val ARG_ANSWERS = "param2"
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
+class FragmentTestGraph2Graph2: androidx.fragment.app.Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private var question: QuestionParcelable? = null
-    private var answers: ArrayList<AnswerParcelable>? = null
+    private var answers: ArrayList<FunctionAnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             question = it.getParcelable<QuestionParcelable>(ARG_QUESTION)
-            answers = it.getParcelableArrayList<AnswerParcelable>(ARG_ANSWERS)
+            answers = it.getParcelableArrayList<FunctionAnswerParcelable>(ARG_ANSWERS)
         }
     }
 
@@ -46,7 +45,7 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_test_graph2graph_2, container, false)
 
-        view.settableGroup_g2g2.GraphicView_g2g2_question.function = question!!.function
+        view.settableGroup_g2g2.GraphicView_g2g2_question.functions = question!!.functions
 
 //        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         val height = 85.dpToPx().toInt()
@@ -61,10 +60,10 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
             answerPic = ImageViewPickable(this.context!!, null)
             answerPic.apply {
                 layoutParams = picParams
-                answerPic.function = it.function
+                answerPic.functions = it.functions
                 answer = it.id
 
-                if(question!!.correctIDs.contains(it.id))
+                if (question!!.correctIDs.contains(it.id))
                     backColor = ResourcesCompat.getColor(resources, R.color.alpha_green, null) // TODO: DEBUG ONLY
             }
             view.pickableGroup_g2g2.addView(answerPic)
@@ -113,7 +112,8 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
-//    interface OnAllDoneListener {
+
+    //    interface OnAllDoneListener {
 //        fun onAllDone()
 //        fun onResetPressed()
 //    }
@@ -128,7 +128,7 @@ class FragmentTestGraph2Graph2 : androidx.fragment.app.Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(question: QuestionParcelable, answers: ArrayList<AnswerParcelable>) =
+        fun newInstance(question: QuestionParcelable, answers: ArrayList<FunctionAnswerParcelable>) =
                 FragmentTestGraph2Graph2().apply {
                     arguments = Bundle().apply {
                         putParcelable(ARG_QUESTION, question)

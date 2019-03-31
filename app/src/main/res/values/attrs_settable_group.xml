@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="GroupSettable">
+        <attr name="gs_spacingVertical" format="dimension" />
+        <attr name="gs_spacingHorizontal" format="dimension" />
+    </declare-styleable>
+</resources>

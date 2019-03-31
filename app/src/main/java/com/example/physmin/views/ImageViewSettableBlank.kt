@@ -18,9 +18,9 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
         set(value) {
             field = value
             if(answerView != null)
-                this.function = (answerView as GraphView).function
+                this.functions = (answerView as GraphView).functions
             else
-                this.function = null
+                this.functions = null
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     var correctAnsw: IntArray? = null
@@ -53,7 +53,7 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
     }
 
     override fun onDraw(canvas: Canvas) {
-        if(function != null)
+        if(functions != null)
             super.onDraw(canvas)
         else
             generatedPanel?.let {

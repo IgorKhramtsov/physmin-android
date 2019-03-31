@@ -9,17 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
+import com.example.physmin.activities.FunctionAnswerRelationSignParcelable
+import com.example.physmin.activities.QuestionParcelable
+import com.example.physmin.activities.TextAnswerParcelable
 import com.example.physmin.views.RelationSignView
 import kotlinx.android.synthetic.main.fragment_test_relation_signs.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_QUEST_PIC = "param1"
-private const val ARG_QUEST_LTR = "param2"
-private const val ARG_QUEST_LInd = "param3"
-private const val ARG_QUEST_RInd = "param4"
-private const val ARG_QUEST_CORR_SGN = "param5"
+private const val ARG_QUESTS = "param1"
+private const val ARG_ANSWERS = "param2"
 
 data class Question(val letter: String, val leftIndex: String, val rightIndex: String, val corrSign: Int)
 
@@ -33,24 +33,16 @@ data class Question(val letter: String, val leftIndex: String, val rightIndex: S
  *
  */
 class FragmentTestSign2Relation : androidx.fragment.app.Fragment() {
-    private var questPicture: String? = null
     private var listener: OnFragmentInteractionListener? = null
-    private var questions: ArrayList<Question>? = null
+    private var questions: ArrayList<QuestionParcelable>? = null
+    private var answers: ArrayList<FunctionAnswerRelationSignParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            questPicture = it.getString(ARG_QUEST_PIC)
-
-            val letters = it.getStringArray(ARG_QUEST_LTR)
-            val leftIndex = it.getStringArray(ARG_QUEST_LInd)
-            val rightIndex = it.getStringArray(ARG_QUEST_RInd)
-            val sign = it.getIntArray(ARG_QUEST_CORR_SGN)
-
-            questions = ArrayList()
-            for(i in 0 until letters.count())
-                questions!!.add(Question(letters[i], leftIndex[i], rightIndex[i], sign[i]))
+            questions = it.getParcelableArrayList<QuestionParcelable>(ARG_QUESTS)
+            answers = it.getParcelableArrayList<FunctionAnswerRelationSignParcelable>(ARG_ANSWERS)
         }
     }
 
@@ -59,15 +51,12 @@ class FragmentTestSign2Relation : androidx.fragment.app.Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_test_relation_signs, container, false)
 
-        view.imageView_rs_task.apply {
-            val id = resources.getIdentifier(questPicture, "drawable", context!!.packageName)
-            setImageDrawable(resources.getDrawable(id))
-        }
+        view.graphView_rs_task.functions = questions!![0].functions
 
-        for (i in 0 until questions!!.size){
-            val relationSignView = RelationSignView(this.context!!, questions!![i].letter,
-                    questions!![i].leftIndex, questions!![i].rightIndex)
-            relationSignView.correctAnsw = questions!![i].corrSign
+        for(answer in answers!!) {
+            val relationSignView = RelationSignView(this.context!!, answer.letter,
+                    answer.leftIndex, answer.rightIndex)
+            relationSignView.correctAnsw = answer.correctSign
             view.settableGroup_rs.addView(relationSignView)
         }
 
@@ -123,16 +112,11 @@ class FragmentTestSign2Relation : androidx.fragment.app.Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: Array<String>,
-                        param3: Array<String>, param4: Array<String>,
-                        param5: Array<Int>) =
+        fun newInstance(questions: ArrayList<QuestionParcelable>, answers: ArrayList<FunctionAnswerRelationSignParcelable>) =
                 FragmentTestSign2Relation().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_QUEST_PIC, param1)
-                        putStringArray(ARG_QUEST_LTR, param2)
-                        putStringArray(ARG_QUEST_LInd, param3)
-                        putStringArray(ARG_QUEST_RInd, param4)
-                        putIntArray(ARG_QUEST_CORR_SGN, param5.toIntArray())
+                        putParcelableArrayList(ARG_QUESTS, questions)
+                        putParcelableArrayList(ARG_ANSWERS, answers)
 
                     }
                 }

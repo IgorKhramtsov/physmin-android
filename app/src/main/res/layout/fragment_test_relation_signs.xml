@@ -7,8 +7,8 @@
         android:layout_height="match_parent"
         tools:context=".fragments.tests.FragmentTestSign2Relation">
 
-        <ImageView
-            android:id="@+id/imageView_rs_task"
+        <com.example.physmin.views.GraphView
+            android:id="@+id/graphView_rs_task"
             android:layout_width="355dp"
             android:layout_height="144dp"
             android:layout_marginStart="8dp"
@@ -24,14 +24,10 @@
         android:id="@+id/settableGroup_rs"
         android:layout_width="0dp"
         android:layout_height="186dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_rs_task" />
+        app:layout_constraintTop_toBottomOf="@+id/graphView_rs_task" />
 
 
     </com.example.physmin.views.TestConstraintLayout>

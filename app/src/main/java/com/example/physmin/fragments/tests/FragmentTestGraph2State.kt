@@ -9,24 +9,20 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
+import com.example.physmin.activities.QuestionParcelable
+import com.example.physmin.activities.TextAnswerParcelable
 import com.example.physmin.views.ImageViewSettable
 import com.example.physmin.views.TextViewPickable
+import com.example.physmin.views.dpToPx
 import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private val DEF_QUEST_PICTURES = arrayOf("@drawable/graph1", "@drawable/graph2", "@drawable/graph3", "@drawable/graph4")
-private val DEF_ANSWERS = arrayOf("Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед",
-        "Назад, ускоряясь вперед", "Назад, ускоряясь вперед", "Назад, ускоряясь вперед")
 private const val ARG_QUESTS = "param1"
 private const val ARG_ANSWERS = "param2"
-//private const val ARG_CORR_ANSWS = "param3"
-//private const val ARG_ANSW_IDS = "param3"
-//private const val ARG_ANSW_STRS = "param4"
 
 
 /**
@@ -40,14 +36,14 @@ private const val ARG_ANSWERS = "param2"
  */
 class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
     private var listener: OnFragmentInteractionListener? = null
-    private var questions: HashMap<Int,String>? = null
-    private var answers: HashMap<Int,String>? = null
+    private var questions: ArrayList<QuestionParcelable>? = null
+    private var answers: ArrayList<TextAnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            answers = it.getSerializable(ARG_ANSWERS) as HashMap<Int, String>
-            questions = it.getSerializable(ARG_QUESTS) as HashMap<Int, String>
+            questions = it.getParcelableArrayList<QuestionParcelable>(ARG_QUESTS)
+            answers = it.getParcelableArrayList<TextAnswerParcelable>(ARG_ANSWERS)
         }
     }
 
@@ -55,32 +51,34 @@ class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view:View = inflater.inflate(R.layout.fragment_test_state2graph, container, false)
 
-        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+//        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
+        val width = 140.dpToPx().toInt()
+        val height = 85.dpToPx().toInt()
         var questPic:ImageViewSettable
-        val picParams = ViewGroup.LayoutParams(width, width)
+        val picParams = ViewGroup.LayoutParams(width, height)
         var id:Int
 
         questions?.forEach {
             questPic = ImageViewSettable(this.context!!, null)
             questPic.apply {
-                this.correctAnsw = it.key
-                this.layoutParams = picParams
-                id = resources.getIdentifier(it.value, "drawable", context!!.packageName)
-                this.setImageDrawable(resources.getDrawable(id))
+                correctAnsw = it.correctIDs.toIntArray()
+                layoutParams = picParams
+                functions = it.functions
             }
             view.settable_group.addView(questPic)
         }
 
-        val textParams = ViewGroup.LayoutParams(150.toPx(), 40.toPx())
+        val textParams = ViewGroup.LayoutParams(123.dpToPx().toInt(), 33.dpToPx().toInt())
         var textView: TextViewPickable
         answers?.forEach {
             textView = TextViewPickable(this.context!!, null)
             textView.apply {
-                this.answer = it.key
-                this.layoutParams = textParams
-                this.text = it.value
-                this.textSize = 16f
-                this.gravity = Gravity.CENTER
+                answer = it.id
+                layoutParams = textParams
+                text = it.text
+                textSize = 14f
+                gravity = Gravity.CENTER
+                setTextColor(ResourcesCompat.getColor(resources, R.color.textColor, null))
             }
             view.pickable_group.addView(textView)
         }
@@ -136,11 +134,11 @@ class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
          * @return A new instance of fragment FragmentTestGraph2State.
          */
         @JvmStatic
-        fun newInstance(questions: HashMap<Int, String>, answers: HashMap<Int, String>) =
+        fun newInstance(questions: ArrayList<QuestionParcelable>, answers: ArrayList<TextAnswerParcelable>) =
                 FragmentTestGraph2State().apply {
                     arguments = Bundle().apply {
-                        putSerializable(ARG_QUESTS, questions)
-                        putSerializable(ARG_ANSWERS, answers)
+                        putParcelableArrayList(ARG_QUESTS, questions)
+                        putParcelableArrayList(ARG_ANSWERS, answers)
                     }
                 }
     }

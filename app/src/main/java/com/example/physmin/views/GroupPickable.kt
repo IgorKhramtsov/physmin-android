@@ -32,8 +32,8 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         val a = context.obtainStyledAttributes(
                 attrs, R.styleable.GroupPickable, 0, 0)
 
-        horizontalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_horizontalSpacing, 0)
-        verticalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_verticalSpacing, 0)
+        horizontalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_gp_spacingHorizontal, 0)
+        verticalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_gp_spacingVertical, 0)
 
         a.recycle()
 
@@ -101,18 +101,17 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         var center = 0
         var curTop = 20
 
-        var maxWidth = this.getChildAt(0).measuredWidth
+        var childWidth = this.getChildAt(0).measuredWidth
         var maxHeight = this.getChildAt(0).measuredHeight
 
         val contentLeft = this.paddingLeft
         val contentTop = this.paddingTop + blurRadius.toInt()
         val contentRight = this.measuredWidth - this.paddingRight
         val contentBottom = this.measuredHeight - this.paddingBottom
-        val childWidth = if (count > 0 ) getChildAt(0).layoutParams.width else contentRight - contentLeft
-        val childHeight = if(count > 0) getChildAt(0).layoutParams.height else contentBottom - contentTop
 
 
-        var childInRow = Math.floor((contentRight - contentLeft)*1.0/maxWidth*1.0).toInt()
+//        var childInRow = Math.floor((contentRight - contentLeft)*1.0/maxWidth*1.0).toInt()
+        val childInRow = (contentRight - contentLeft) / (childWidth + verticalSpacing / 2)
 //        var childSpacing = ((contentRight - contentLeft)-childInRow*maxWidth)/(childInRow+1)
         var curChildInRow = 0
 
@@ -122,15 +121,16 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 
         var curLeft = 0
         var curRight = 0
+
         for (i in 0 until count) {
             val child = getChildAt(i)
 
             curChildInRow++
             if(curChildInRow > childInRow) {
                 curChildInRow = 1
-                curTop += child.measuredHeight + verticalSpacing
+                curTop += child.measuredHeight + horizontalSpacing
             }
-            curLeft = if (curChildInRow == 1) center - child.measuredWidth - horizontalSpacing / 2 else center + horizontalSpacing / 2
+            curLeft = if (curChildInRow == 1) center - child.measuredWidth - verticalSpacing / 2 else center + verticalSpacing / 2
 
             child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + maxHeight)
         }
@@ -149,10 +149,10 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 //            if (child.visibility == View.GONE)
 //                continue
 
-            itemsInRowWidth += child.measuredWidth
+            itemsInRowWidth += child.measuredWidth + verticalSpacing / 2
             if(itemsInRowWidth > deviceWidth) {
                 width = Math.max(width, itemsInRowWidth)
-                height += child.measuredHeight + verticalSpacing
+                height += child.measuredHeight + horizontalSpacing
                 itemsInRowWidth = 0
             }
             else
