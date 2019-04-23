@@ -77,8 +77,6 @@ class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
                 layoutParams = textParams
                 text = it.text
                 textSize = 14f
-                gravity = Gravity.CENTER
-                setTextColor(ResourcesCompat.getColor(resources, R.color.textColor, null))
             }
             view.pickable_group.addView(textView)
         }

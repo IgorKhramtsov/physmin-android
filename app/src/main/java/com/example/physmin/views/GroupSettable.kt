@@ -2,17 +2,14 @@ package com.example.physmin.views
 
 import android.content.Context
 import android.graphics.*
-import android.os.Build
 import android.util.AttributeSet
-import android.view.Display
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
 import com.example.physmin.Settable
 
-class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(context, attributeSet), ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
+class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(context, attributeSet),
+        ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
     var deviceWidth: Int = 0
     var par: TestConstraintLayout? = null
@@ -25,12 +22,9 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
     var blurRadius = 2.dpToPx()
     var cornerRadius = 2.dpToPx()
 
-    //    var backPaint: Paint? = null
-//    var shadowPaint: Paint? = null
     var backPanelBitmap: Bitmap? = null
 
     val inRowSpacing = 8.dpToPx().toInt()
-//    val secondRowMarging = 16.dpToPx().toInt()
 
     init {
         val a = context.obtainStyledAttributes(
@@ -48,12 +42,13 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
         deviceWidth = displaySize.x
 
         setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
-        setOnHierarchyChangeListener(this)
 
-        this.post { backPanelBitmap = generateBackPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this) }
+        this.post { backPanelBitmap = generateShadowPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this) }
+
+        setOnHierarchyChangeListener(this)
     }
 
-    public fun setParent(_par: TestConstraintLayout?) {
+    fun setParent(_par: TestConstraintLayout?) {
         this.par = _par
     }
 
@@ -217,4 +212,5 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
             canvas.drawBitmap(it, -5f, 0f, null)
         }
     }
+
 }

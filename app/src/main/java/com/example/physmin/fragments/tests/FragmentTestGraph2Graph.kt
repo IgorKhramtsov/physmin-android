@@ -66,12 +66,12 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
             answerPic = ImageViewPickable(this.context!!, null)
             answerPic.apply {
                 layoutParams = picParams
-                functions = it.functions
+
+                graph.functions = it.functions
                 answer = it.id
 
-
-                if(question!!.correctIDs.contains(it.id))
-                    backColor = ResourcesCompat.getColor(resources, R.color.alpha_green, null) // TODO: DEBUG ONLY
+//                if(question!!.correctIDs.contains(it.id))
+//                    backColor = ResourcesCompat.getColor(resources, R.color.alpha_green, null) // TODO: DEBUG ONLY
             }
             view.pickableGroup_g2g.addView(answerPic)
         }

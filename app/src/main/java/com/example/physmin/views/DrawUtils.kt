@@ -6,15 +6,23 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Build
 import android.view.View
+import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
 
-fun generateBackPanel(width: Int,
-                      height: Int,
-                      cornerRadius: Float,
-                      blurRadius: Float,
-                      panelColor: Int,
-                      shadowColor: Int,
-                      view: View): Bitmap {
+const val ROUNDED_RECT = 0
+const val RECT = 1
+const val CIRCLE = 2
+
+fun generateShadowPanel(width: Int,
+                        height: Int,
+                        cornerRadius: Float,
+                        blurRadius: Float,
+                        offsetX: Float,
+                        offsetY: Float,
+                        panelColor: Int,
+                        shadowColor: Int,
+                        view: View,
+                        shapeType: Int = ROUNDED_RECT): Bitmap {
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
     val backPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
@@ -22,25 +30,49 @@ fun generateBackPanel(width: Int,
 
     val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
     shadowPaint.color = shadowColor
-    val blurFilter = BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.OUTER)
+    val blurFilter = BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.SOLID)
     shadowPaint.maskFilter = blurFilter
 
-    var generatedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    var generatedBitmap = Bitmap.createBitmap(width + offsetX.toInt(), height + offsetY.toInt(), Bitmap.Config.ARGB_8888)
     val canvas = Canvas(generatedBitmap)
 
-    drawRoundRect(shadowPaint, canvas, width, height, cornerRadius, blurRadius)
-    drawRoundRect(backPaint, canvas, width, height, cornerRadius, blurRadius)
+    when (shapeType) {
+        ROUNDED_RECT -> {
+            canvas.withScale((width + offsetX) / width, (height + offsetY) / height) {
+                drawRoundRect(shadowPaint, canvas, width, height, cornerRadius, blurRadius)
+            }
+            drawRoundRect(backPaint, canvas, width, height, cornerRadius, blurRadius)
+        }
+        CIRCLE -> {
+            canvas.withTranslation (offsetX, offsetY) {
+                drawCircle(shadowPaint, canvas, width, height, blurRadius)
+            }
+            drawCircle(backPaint, canvas, width, height, blurRadius)
+        }
+    }
+
 
     view.setLayerType(View.LAYER_TYPE_HARDWARE, null)
     return generatedBitmap
 }
+
+fun generateShadowPanel(width: Int,
+                        height: Int,
+                        cornerRadius: Float,
+                        blurRadius: Float,
+                        panelColor: Int,
+                        shadowColor: Int,
+                        view: View): Bitmap {
+    return generateShadowPanel(width, height, cornerRadius, blurRadius, 0f, 0f, panelColor, shadowColor, view)
+}
+
 fun generateInsideShadowPanel(width: Int,
-                      height: Int,
-                      cornerRadius: Float,
-                      blurRadius: Float,
-                      panelColor: Int,
-                      shadowColor: Int,
-                      view: View): Bitmap {
+                              height: Int,
+                              cornerRadius: Float,
+                              blurRadius: Float,
+                              panelColor: Int,
+                              shadowColor: Int,
+                              view: View): Bitmap {
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
     val backPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
@@ -63,6 +95,7 @@ fun generateInsideShadowPanel(width: Int,
     view.setLayerType(View.LAYER_TYPE_HARDWARE, null)
     return generatedBitmap
 }
+
 fun drawRoundRect(paint: Paint, canvas: Canvas, width: Int, height: Int, cornerRadius: Float, blurRadius: Float) {
     paint.let {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -81,4 +114,11 @@ fun drawRoundRect(paint: Paint, canvas: Canvas, width: Int, height: Int, cornerR
                     it)
         }
     }
+}
+
+fun drawCircle(paint: Paint, canvas: Canvas, width: Int, height: Int, blurRadius: Float) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        canvas.drawArc(0f,0f,width.toFloat(), height.toFloat(),0f,360f, true, paint )
+    }
+    //canvas.drawCircle((width - blurRadius) / 2f, (height - blurRadius) / 2f, (Math.max(width, height) - blurRadius) / 2f, paint)
 }

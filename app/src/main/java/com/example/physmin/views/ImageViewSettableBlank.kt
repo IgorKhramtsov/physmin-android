@@ -18,12 +18,14 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
         set(value) {
             field = value
             if(answerView != null)
-                this.functions = (answerView as GraphView).functions
+                this.functions = (answerView as ImageViewPickable).graph.functions
             else
                 this.functions = null
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     var correctAnsw: IntArray? = null
+    var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
+
 
     private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
     private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
@@ -39,7 +41,6 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
         return correctAnsw!!.contains(answerView!!.answer)
     }
 
-    var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
 
     override fun setParent(_parent: GroupSettable) {
         this.par = _parent

@@ -1,7 +1,10 @@
 package com.example.physmin.views
 
+import android.content.ClipData
 import android.content.Context
+import android.content.Intent
 import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
@@ -44,12 +47,13 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 
         setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
 
-        setOnHierarchyChangeListener(this)
-
         this.post {
-            backPanelBitmap = generateBackPanel(width, height,
+            backPanelBitmap = generateShadowPanel(width, height,
                     cornerRadius, blurRadius, _backColor, _backShadowColor, this)
         }
+
+
+        setOnHierarchyChangeListener(this)
     }
 
     public fun setParent(_par: TestConstraintLayout?) {

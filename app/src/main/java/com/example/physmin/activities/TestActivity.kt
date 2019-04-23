@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.fragment.app.transaction
 import com.example.physmin.R
 import com.example.physmin.fragments.tests.*
+import com.example.physmin.views.TimerView
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import org.json.JSONObject
@@ -24,16 +25,22 @@ class TestActivity: AppCompatActivity()//,
 {
     var tests = arrayListOf<JSONObject>()
     //var listener: FragmentTestHello.OnAllDoneListener? = null
-    var buttonNext: Button? = null
+    lateinit var buttonNext: Button
     var nextTestIndex = 0
+    var getTestFunctionName = "getTest"
+    lateinit var timerView: TimerView
     private lateinit var functions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
         buttonNext = findViewById(R.id.button_test_next)
+        timerView = findViewById(R.id.Timer)
         functions = FirebaseFunctions.getInstance("europe-west1")
         hideButtonNext()
+        intent.getStringExtra("GetTestFunctionName")?.let {
+            getTestFunctionName = it
+        }
 
         var text: String
         getTest().addOnCompleteListener {
@@ -124,10 +131,10 @@ class TestActivity: AppCompatActivity()//,
 
     fun getTest(): Task<String> {
         return functions
-                .getHttpsCallable("getTest")
+                .getHttpsCallable(getTestFunctionName)
                 .call()
                 .continueWith { task ->
-                    // TODO: Proccess timeout exception
+                    // TODO: Process timeout exception
                     if (task.exception is SocketTimeoutException)
                         Log.e("TestActivity", "getTest() - Timeout!")
 
@@ -143,41 +150,32 @@ class TestActivity: AppCompatActivity()//,
         for (i in 0 until data!!.length())
             tests.add(data.getJSONObject(i))
 
-        buttonNext?.setOnClickListener {
+        buttonNext.setOnClickListener {
             if (nextTestIndex >= tests.size)
                 return@setOnClickListener
 
             supportFragmentManager.transaction {
                 replace(R.id.test_host_fragment, parseTest(tests[nextTestIndex++]))
+                timerView.Restart()
                 hideButtonNext()
             }
         }
     }
 
     fun showButtonNext() {
-        buttonNext?.visibility = View.VISIBLE
+        buttonNext.visibility = View.VISIBLE
     }
 
     fun hideButtonNext() {
-        buttonNext?.visibility = View.GONE
+        buttonNext.visibility = View.GONE
     }
-
-//    class TestResult {
-//        var test_id: Int
-//        var answers = List<Answer>()
-//    }
-//    class Answer {
-//        var answer_id: Int
-//        var question_id: Int?
-//        var correct_answer_id: Int?
-//    }
 }
 
 class FunctionParcelable(): Parcelable {
     var x: Float = 0f
     var v: Float = 0f
     var a: Float = 0f
-    var t: Int = 0
+    var len: Int = 0
     var funcType: String = ""
 
     constructor(jsonObject: JSONObject): this() {
@@ -188,8 +186,8 @@ class FunctionParcelable(): Parcelable {
                 this.v = it.getDouble("v").toFloat()
             this.a = it.getDouble("a").toFloat()
 
-            if (it.has("t"))
-                this.t = it.getInt("t")
+            if (it.has("len"))
+                this.len = it.getInt("len")
         }
         this.funcType = jsonObject.getString("funcType")
     }
@@ -199,7 +197,7 @@ class FunctionParcelable(): Parcelable {
             x = readFloat()
             v = readFloat()
             a = readFloat()
-            t = readInt()
+            len = readInt()
             funcType = readString()
         }
     }
@@ -213,7 +211,7 @@ class FunctionParcelable(): Parcelable {
             writeFloat(x)
             writeFloat(v)
             writeFloat(a)
-            writeInt(t)
+            writeInt(len)
             writeString(funcType)
         }
     }

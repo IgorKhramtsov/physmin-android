@@ -1,6 +1,7 @@
 package com.example.physmin.activities
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.physmin.R
@@ -15,7 +16,8 @@ class TestingActivity: AppCompatActivity() {
 
 
         menuItemView_concept.setOnClickListener {
-            var intent = Intent(this, TestActivity::class.java)
+            val intent = Intent(this, TestActivity::class.java)
+            intent.putExtra("GetTestFunctionName", "getTestDev")
             startActivity(intent)
         }
     }

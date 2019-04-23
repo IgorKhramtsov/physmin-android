@@ -32,7 +32,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:fab_addButtonColorNormal="@color/primary_transparent"
             app:fab_addButtonColorPressed="@color/primary_transparent_pressed"
             app:fab_addButtonPlusIconColor="@color/white"
@@ -75,16 +75,18 @@
 
     </RelativeLayout>
 
-    <com.example.physmin.views.TimerTask
+    <com.example.physmin.views.TimerView
         android:id="@+id/Timer"
         style="?android:attr/progressBarStyle"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         android:max="60"
-        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:minWidth="50dp"
+        android:minHeight="50dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/Menu_layout"
         app:layout_constraintStart_toStartOf="@+id/Menu_layout" />
 

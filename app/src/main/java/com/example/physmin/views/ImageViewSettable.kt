@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.example.physmin.Pickable
 import com.example.physmin.Settable
 
-open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : GraphView(context, attributeSet), Settable {
+class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : GraphView(context, attributeSet), Settable {
 
     override var par: GroupSettable? = null
     override var answerView: Pickable? = null
@@ -31,7 +31,10 @@ open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Gr
 
     var paint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
 
-    init { }
+    init {
+
+        setOnDragListener(this)
+    }
 
     override  fun setParent(_parent: GroupSettable) {
         this.par = _parent
@@ -39,9 +42,9 @@ open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Gr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         if(answerView == null)
             return
+
         paint.textSize = (answerView as TextView).textSize
         val text = (answerView as TextView).text.toString()
 
@@ -51,9 +54,4 @@ open class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Gr
         staticLayout.draw(canvas)
         canvas.restore()
     }
-
-    open fun onClick() {
-
-    }
-
 }
