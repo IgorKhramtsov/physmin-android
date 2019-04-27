@@ -106,7 +106,6 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
         var curTop = 20
 
         var childWidth = this.getChildAt(0).measuredWidth
-        var maxHeight = this.getChildAt(0).measuredHeight
 
         val contentLeft = this.paddingLeft
         val contentTop = this.paddingTop + blurRadius.toInt()
@@ -125,6 +124,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 
         var curLeft = 0
         var curRight = 0
+        var maxHeightInRow = 0
 
         for (i in 0 until count) {
             val child = getChildAt(i)
@@ -132,11 +132,16 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
             curChildInRow++
             if(curChildInRow > childInRow) {
                 curChildInRow = 1
-                curTop += child.measuredHeight + horizontalSpacing
+                curTop += maxHeightInRow + horizontalSpacing
+                maxHeightInRow = 0
             }
-            curLeft = if (curChildInRow == 1) center - child.measuredWidth - verticalSpacing / 2 else center + verticalSpacing / 2
+            maxHeightInRow = Math.max(maxHeightInRow, child.measuredHeight)
+            curLeft = if (curChildInRow == 1)
+                center - child.measuredWidth - verticalSpacing / 2
+            else
+                center + verticalSpacing / 2
 
-            child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + maxHeight)
+            child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + maxHeightInRow)
         }
 
     }

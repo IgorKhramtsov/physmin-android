@@ -3,6 +3,7 @@ package com.example.physmin.views
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
@@ -65,44 +66,46 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
         var maxWidth = this.getChildAt(0).measuredWidth
         var maxHeight = this.getChildAt(0).measuredHeight
 
-        val wdh = _width
-        val hgh = this.measuredHeight
         val contentLeft = this.paddingLeft
         val contentTop = this.paddingTop
         val contentRight = this.measuredWidth - this.paddingRight
         val contentBottom = this.measuredHeight - this.paddingBottom
-        val childWidth = if (count > 0) getChildAt(0).layoutParams.width else contentRight - contentLeft
-        val childHeight = if (count > 0) getChildAt(0).layoutParams.height else contentBottom - contentTop
 
         var childInRow = (contentRight - contentLeft) / maxWidth
         var childSpacing = ((contentRight - contentLeft) - childInRow * maxWidth) / (childInRow + 1)
         var curChildInRow = 1
 
-        curLeft = wdh / 2
+        curLeft = _width / 2
         curTop = contentTop
+        var maxHeightInRow = 0
 
         var child: View
         for (i in 0 until count) {
             child = getChildAt(i)
 
-            if (count % 2 != 0)
+            if (count % 2 != 0) {
                 if (i == 0) {
                     curLeft -= child.measuredWidth / 2
                     child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + child.measuredHeight)
                     curLeft += child.measuredWidth / 2
                     curTop += child.measuredHeight + horizontalSpacing
+//                    curChildInRow++
                     continue
                 }
+            }
 
             if (curChildInRow % 2 == 1)
                 curLeft -= (child.measuredWidth + verticalSpacing / 2)
             else
                 curLeft += verticalSpacing / 2
 
-            child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + child.measuredHeight)
-            curLeft = wdh / 2
-            if (curChildInRow % 2 == 0)
-                curTop += child.measuredHeight + horizontalSpacing
+            maxHeightInRow = Math.max(maxHeightInRow, child.measuredHeight)
+            child.layout(curLeft, curTop, curLeft + child.measuredWidth, curTop + maxHeightInRow)
+            curLeft = _width / 2
+            if (curChildInRow % 2 == 0) {
+                curTop += maxHeightInRow + horizontalSpacing
+                maxHeightInRow = 0
+            }
 
             curChildInRow++
         }
@@ -151,7 +154,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
 
     override fun onClick(_view: View?) {
         if (_view is ImageViewSettable) {
-            val imageView = _view as ImageViewSettable
+            val imageView = _view
             (imageView.answerView as View?)?.visibility = View.VISIBLE
 
             imageView.answerView = par?.getPickedItem()

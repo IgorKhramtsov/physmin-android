@@ -10,12 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.setPadding
 import com.example.physmin.R
 import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.activities.TextAnswerParcelable
 import com.example.physmin.views.ImageViewSettable
 import com.example.physmin.views.TextViewPickable
 import com.example.physmin.views.dpToPx
+import com.example.physmin.views.spToPx
 import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -34,7 +36,7 @@ private const val ARG_ANSWERS = "param2"
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
+class FragmentTestGraph2State: androidx.fragment.app.Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private var questions: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<TextAnswerParcelable>? = null
@@ -49,34 +51,31 @@ class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view:View = inflater.inflate(R.layout.fragment_test_state2graph, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_test_state2graph, container, false)
 
-//        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
         val width = 140.dpToPx().toInt()
         val height = 85.dpToPx().toInt()
-        var questPic:ImageViewSettable
+        var questPic: ImageViewSettable
         val picParams = ViewGroup.LayoutParams(width, height)
-        var id:Int
 
         questions?.forEach {
-            questPic = ImageViewSettable(this.context!!, null)
-            questPic.apply {
+            questPic = ImageViewSettable(this.context!!, null).apply {
                 correctAnsw = it.correctIDs.toIntArray()
                 layoutParams = picParams
-                functions = it.functions
+                graph.functions = it.functions
             }
             view.settable_group.addView(questPic)
         }
 
-        val textParams = ViewGroup.LayoutParams(123.dpToPx().toInt(), 33.dpToPx().toInt())
+        val textParams = ViewGroup.LayoutParams(150.dpToPx().toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
         var textView: TextViewPickable
         answers?.forEach {
-            textView = TextViewPickable(this.context!!, null)
-            textView.apply {
+            textView = TextViewPickable(this.context!!, null).apply {
+                setPadding(6.dpToPx().toInt(), 3.dpToPx().toInt(), 6.dpToPx().toInt(), 3.dpToPx().toInt())
                 answer = it.id
                 layoutParams = textParams
+                textSize = 14.spToPx()
                 text = it.text
-                textSize = 14f
             }
             view.pickable_group.addView(textView)
         }
@@ -118,7 +117,8 @@ class FragmentTestGraph2State : androidx.fragment.app.Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
-//    interface OnAllDoneListener {
+
+    //    interface OnAllDoneListener {
 //        fun onAllDone()
 //        fun onResetPressed()
 //    }

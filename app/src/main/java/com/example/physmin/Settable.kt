@@ -1,42 +1,21 @@
 package com.example.physmin
 
+import android.content.Context
 import android.graphics.Color
+import android.util.AttributeSet
 import android.util.Log.e
 import android.view.DragEvent
 import android.view.View
+import com.example.physmin.views.GroupPickable
 import com.example.physmin.views.GroupSettable
 
-interface Settable: View.OnDragListener {
-    var par: GroupSettable?
-    var answerView: Pickable?
+abstract class Settable(context: Context, attrs: AttributeSet?): View(context, attrs) {
+    abstract var par: GroupSettable?
+    abstract var answerView: Pickable?
 
-    fun setParent(_parent : GroupSettable)
+    fun setParent(_parent: GroupSettable) { this.par = _parent }
 
-    fun isCorrect(): Boolean
 
-    override fun onDrag(v: View, event: DragEvent): Boolean {
-        when(event.action) {
-            DragEvent.ACTION_DRAG_STARTED,
-            DragEvent.ACTION_DRAG_ENDED,
-            DragEvent.ACTION_DRAG_LOCATION -> return true
+    abstract  fun isCorrect(): Boolean
 
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                v.setBackgroundColor(Color.LTGRAY)
-                return true
-            }
-            DragEvent.ACTION_DRAG_EXITED -> {
-                v.setBackgroundColor(Color.TRANSPARENT)
-                return true
-            }
-            DragEvent.ACTION_DROP -> {
-                v.setBackgroundColor(Color.TRANSPARENT)
-                this.answerView = v as Pickable
-
-                return true
-            }
-        }
-
-        e("DRAG AND DROP SETTABLE","event action not processed!")
-        return false
-    }
 }

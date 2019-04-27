@@ -11,20 +11,21 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 
-class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : GraphView(context, attributeSet), Settable {
+class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Settable(context, attributeSet) {
 
     override var par: GroupSettable? = null
     override var answerView: Pickable? = null
         set(value) {
             field = value
             if(answerView != null)
-                this.functions = (answerView as ImageViewPickable).graph.functions
+                this.graph.functions = (answerView as ImageViewPickable).graph.functions
             else
-                this.functions = null
+                this.graph.functions = null
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
     var correctAnsw: IntArray? = null
     var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
+    private var graph = GraphView(context, null)
 
 
     private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
@@ -41,11 +42,6 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
         return correctAnsw!!.contains(answerView!!.answer)
     }
 
-
-    override fun setParent(_parent: GroupSettable) {
-        this.par = _parent
-    }
-
     init {
         this.post {
             generatedPanel = generateInsideShadowPanel(width, height,
@@ -54,12 +50,11 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Gr
     }
 
     override fun onDraw(canvas: Canvas) {
-        if(functions != null)
-            super.onDraw(canvas)
+        super.onDraw(canvas)
+        if(graph.functions != null)
+            graph.draw(canvas)
         else
-            generatedPanel?.let {
-                canvas.drawBitmap(it, 0f, 0f, null)
-            }
+            if(generatedPanel != null) canvas.drawBitmap(generatedPanel!!, 0f, 0f, null)
     }
 
 }

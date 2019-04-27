@@ -54,7 +54,7 @@ class FragmentTestSign2Relation : androidx.fragment.app.Fragment() {
         view.graphView_rs_task.functions = questions!![0].functions
 
         for(answer in answers!!) {
-            val relationSignView = RelationSignView(this.context!!, answer.letter,
+            val relationSignView = RelationSignView(this.context!!, null, answer.letter,
                     answer.leftIndex, answer.rightIndex)
             relationSignView.correctAnsw = answer.correctSign
             view.settableGroup_rs.addView(relationSignView)

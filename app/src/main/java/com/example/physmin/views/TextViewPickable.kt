@@ -1,76 +1,109 @@
 package com.example.physmin.views
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.text.TextPaint
-import androidx.core.content.ContextCompat
 import android.util.AttributeSet
-import android.util.Size
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
-import com.example.physmin.R
-
-/**
- * TODO: document your custom view class.
- */
+import android.opengl.ETC1.getWidth
+import android.os.Build
+import android.text.Layout
+import android.text.StaticLayout
+import android.util.Log
+import androidx.core.graphics.withTranslation
 
 class TextViewPickable(context: Context, attrs: AttributeSet?) : Pickable(context, attrs) {
 
-    override var picked: Boolean = false
+    override var picked = false
     override var par: GroupPickable? = null
-    private var outlineColor: Int = Color.BLUE
-    override var answer: Int = -1
-    var _text: String = ""
-    var _textMeasuredWidth: Float = 0f
-    var _textMeasuredHeight: Float = 0f
-    var paint: TextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-    var textSize: Float = 14f
-    var textColor: Int = ResourcesCompat.getColor(resources, R.color.textColor, null)
+
+    var paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+    var staticLayout: StaticLayout? = null
+
+    var _textMeasuredWidth = 0f
+    var _textMeasuredHeight = 0f
+
+    private var outlineColor = Color.BLUE
+    override var answer = -1
+    var _text = ""
+    var _textSize = 14.spToPx()
+    var _textColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.textColor, null)
+
 
     var text: String
         get() = _text
         set(value) {
             _text = value
-            paint.let {
-                _textMeasuredWidth = it.measureText(_text)
-                _textMeasuredHeight = it.fontMetrics.bottom
-            }
+            invalidatePaint()
+            invalidate()
         }
+
+    var textSize: Float
+        get() = _textSize
+        set(value) {
+            _textSize = value
+            invalidatePaint()
+            invalidate()
+        }
+    var textColor: Int
+        get() = _textColor
+        set(value) {
+            _textColor = value
+            invalidatePaint()
+            invalidate()
+        }
+
+    private fun invalidatePaint() {
+        paint.let {
+            it.textSize = textSize
+            it.color = textColor
+            _textMeasuredWidth = it.measureText(_text)
+            _textMeasuredHeight = Math.abs(it.fontMetrics.top)
+//            it.textAlign = Paint.Align.CENTER
+        }
+    }
+    private fun invalidateStaticLayout() {
+        if (width <= 0)
+            return
+
+        staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            StaticLayout.Builder.obtain(text, 0, text.length, paint, width - paddingRight - paddingLeft)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER).build()
+        else
+            StaticLayout(text, paint, width - paddingRight - paddingLeft, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false)
+
+    }
 
     init {
-        if(attrs != null) {
-            val ar: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.TextViewPickable)
-            outlineColor = ar.getColor(R.styleable.TextViewPickable_outlineColor, ContextCompat.getColor(context, R.color.textview_pick_outline))
-            answer = ar.getInt(R.styleable.TextViewPickable_answer, 0)
-
-            ar.recycle()
-        }
-
-        paint.textAlign = Paint.Align.CENTER
+//        paint.textAlign = Paint.Align.CENTER
     }
 
-    override fun setParent(_parent: GroupPickable) {
-        this.par = _parent
-    }
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        invalidatePaint()
 
-    override fun isPicked() : Boolean {
-        return picked
+        var width = MeasureSpec.getSize(widthMeasureSpec)
+        var height = MeasureSpec.getSize(heightMeasureSpec)
+
+        val rows = Math.max(Math.round(_textMeasuredWidth / width), 1)
+        height = paddingTop + paddingBottom + Math.round(_textMeasuredHeight) * (rows + 2)
+
+        height = resolveSizeAndState(height, heightMeasureSpec, 0)
+        width = resolveSizeAndState(width, widthMeasureSpec, 0)
+
+        setMeasuredDimension(width, height)
+
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        text.let {
-            canvas.drawText(it,
-                    paddingLeft,
-                    paddingTop,
-                    (width - paddingRight).toFloat(),
-                    (height - paddingBottom).toFloat(),
-                    paint)
+        if (staticLayout === null) invalidateStaticLayout()
+        canvas.withTranslation(paddingLeft.toFloat(), paddingTop.toFloat()) {
+            staticLayout?.draw(canvas)
         }
     }
 

@@ -20,10 +20,11 @@ import com.example.physmin.Settable
 import com.example.physmin.fragments.tests.toPx
 
 fun Int.spToPx(): Float = this * Resources.getSystem().displayMetrics.scaledDensity
+fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
 fun Int.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
 fun Float.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
 
-class RelationSignView : View, View.OnClickListener, Settable {
+class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: String?, lIndex: String?, rIndex: String?): Settable(context, attributeSet), View.OnClickListener  {
     var popupWindow: PopupWindow? = null
     var padding: Int = 0
     var location = intArrayOf(0, 0)
@@ -94,22 +95,11 @@ class RelationSignView : View, View.OnClickListener, Settable {
             par!!.par!!.checkTestComplete(par!!.isAllChecked())
         }
 
-    constructor(context: Context) : super(context) {
-        init(null, 0)
-    }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        init(attrs, defStyle)
-    }
-
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
-        if(attrs != null) {
+    init {
+        if(attributeSet != null) {
             val a = context.obtainStyledAttributes(
-                    attrs, R.styleable.RelationSignView, defStyle, 0)
+                    attributeSet, R.styleable.RelationSignView, 0, 0)
 
             _letter = a.getString(R.styleable.RelationSignView_letter)
             _leftIndex = a.getString(R.styleable.RelationSignView_leftIndex)
@@ -117,6 +107,10 @@ class RelationSignView : View, View.OnClickListener, Settable {
 
             a.recycle()
         }
+
+        _letter = letter
+        _leftIndex = lIndex
+        _rightIndex = rIndex
 
         layoutParams = ViewGroup.LayoutParams(150.toPx(), 50.toPx())
 
@@ -132,13 +126,6 @@ class RelationSignView : View, View.OnClickListener, Settable {
         this.setOnClickListener(this)
 
         invalidateTextPaintAndMeasurements()
-    }
-    constructor(context: Context, letter: String, lIndex: String, rIndex: String) : super(context) {
-        _letter = letter
-        _leftIndex = lIndex
-        _rightIndex = rIndex
-
-        init(null, 0)
     }
 
     // TODO: find correct color from theme
@@ -242,7 +229,4 @@ class RelationSignView : View, View.OnClickListener, Settable {
         onClick(view)
     }
 
-    override fun setParent(_parent : GroupSettable) {
-        this.par = _parent
-    }
 }

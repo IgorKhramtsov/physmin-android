@@ -13,11 +13,9 @@ import androidx.core.graphics.withTranslation
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionParcelable
 
-// TODO: Make arrows on axis
+fun Float.isZero(): Boolean = Math.abs(this) < 0.00001f
 
-//fun Int.spToPx(): Float = (this * Resources.getSystem().displayMetrics.density)
-fun Int.pxToDp(): Float = this / Resources.getSystem().displayMetrics.density
-fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
+// TODO: Make arrows on axis
 
 open class GraphView(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
@@ -131,12 +129,12 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
             it.textSize = textSize
             it.color = textColor
             indexWidth = it.measureText(vertAxisLetter)
-            indexHeight = it.fontMetrics.bottom
+            indexHeight = Math.abs(it.fontMetrics.top)
         }
         smallTextPaint.let {
             it.textSize = smallTextSize
             it.color = textColor
-            zeroAxisHeight = it.fontMetrics.bottom
+            zeroAxisHeight = Math.abs(it.fontMetrics.top)
         }
         axisPaint.let {
             it.color = axisColor
@@ -164,22 +162,22 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         val heightScaleFactor   = -(contentHeight / yAxisLength)
         val widthScaleFactor    =   contentWidth / xAxisLength
         var calculatedPointY: Float
-        var calculatedPointX: Float
+        var calculatedPointX = 0f
+        var globalT = 0f
         var len: Float
 
         functionPath.reset()
         for (function in functions!!) {
             Log.e("GraphView", "funcType: ${function.funcType}\r\nparams: ${function.x}, ${function.v}, ${function.a} ${function.len}")
 
-            calculatedPointX = 0f
             calculatedPointY = calculateFunctionValue(function, 0f) * heightScaleFactor
             functionPath.moveTo(calculatedPointX, calculatedPointY)
 
-            len = if (function.len != 0) function.len.toFloat() else xAxisLength - calculatedPointX
+            len = function.len.toFloat()
 
             var localT = 0f
-            while (localT < len) {
-                localT += step
+            while (localT < len || (len.isZero() && calculatedPointX < contentWidth)) {
+                localT = Math.min(localT + step, len)
 
                 calculatedPointX += step * widthScaleFactor
                 calculatedPointY = calculateFunctionValue(function, localT) * heightScaleFactor
@@ -189,6 +187,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
 
                 functionPath.lineTo(calculatedPointX, calculatedPointY)
             }
+
         }
 
     }
@@ -201,9 +200,6 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         }
     }
 
-
-    // TODO: background must be an rounded rect
-    // TODO: refactor all code. Its shit now.
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val width = canvas.width
@@ -223,16 +219,21 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         canvas.drawLine(axisPaddingLeft, height / 2f,
                 width - axisPaddingRight, height / 2f,
                 axisPaint)
-        functions?.let {
-            canvas.drawText(it[0].funcType,
+        canvas.withTranslation(axisPaddingLeft, height / 2f) {
+            functionPath.let {
+                canvas.drawPath(it, functionPaint)
+            }
+        }
+        vertAxisLetter.let {
+            canvas.drawText(it,
                     axisPaddingLeft + indexWidth,
-                    axisPaddingTop + indexHeight * 3,
+                    axisPaddingTop + indexHeight,
                     textPaint)
         }
         horAxisLetter.let {
             canvas.drawText(it,
                     axisPaddingLeft + contentWidth - indexWidth * 2,
-                    (height / 2) - indexHeight * 2,
+                    (height / 2) - indexHeight / 2f,
                     textPaint)
         }
         _zeroAxisLetter.let {
@@ -240,12 +241,6 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
                     indexWidth,
                     (height / 2) + zeroAxisHeight / 2,
                     smallTextPaint)
-        }
-
-        canvas.withTranslation(axisPaddingLeft, height / 2f) {
-            functionPath.let {
-                canvas.drawPath(it, functionPaint)
-            }
         }
 
     }
