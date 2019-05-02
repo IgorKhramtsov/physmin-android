@@ -13,6 +13,7 @@ import com.example.physmin.fragments.tests.*
 import com.example.physmin.views.TimerView
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
+import kotlinx.android.synthetic.main.activity_test.*
 import org.json.JSONObject
 import java.net.SocketTimeoutException
 
@@ -38,17 +39,18 @@ class TestActivity: AppCompatActivity()//,
         timerView = findViewById(R.id.Timer)
         functions = FirebaseFunctions.getInstance("europe-west1")
         hideButtonNext()
+        loadingHorBar.show()
         intent.getStringExtra("GetTestFunctionName")?.let {
             getTestFunctionName = it
         }
 
-        var text: String
         getTest().addOnCompleteListener {
+            loadingHorBar.hide()
+
             if (!it.isSuccessful)
                 return@addOnCompleteListener
 
-            text = it.result!!
-            processTests(text)
+            processTests(it.result!!)
         }
 
         // Greeting
@@ -56,7 +58,6 @@ class TestActivity: AppCompatActivity()//,
 //            replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
 //        }
     }
-
 
     fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
         return when (test.getString("type")) {

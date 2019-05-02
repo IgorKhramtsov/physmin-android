@@ -16,6 +16,9 @@
     <color name="ui_panel">#fff</color>
     <color name="ui_shadow">#26000000</color>
 
+    <color name="loading_back">#996E44FF</color>
+    <color name="loading_front">#6E44FF</color>
+
     <color name="graphic_back_gray">#F5F5F5</color>
 
     <color name="graphic_position">#388E3C</color>
@@ -28,10 +31,10 @@
     <color name="textColor">#DE000000</color>
 
     <!--FABs-->
-    <color name="primary_transparent">#8000574B</color>
-    <color name="primary_transparent_pressed">#80008577</color>
-    <color name="primary_lighten_transparent">#8050AA97</color>
-    <color name="primary_lighten_transparent_pressed">#806DE2C9</color>
+    <color name="primary_transparent">@color/colorPrimary</color>
+    <color name="primary_transparent_pressed">#6033FD</color>
+    <color name="primary_lighten_transparent">#7B55FF</color>
+    <color name="primary_lighten_transparent_pressed">#8A68FF</color>
 
     <color name="textview_pick_outline">#AB2196F3</color>
 
