@@ -157,7 +157,7 @@ class TestActivity: AppCompatActivity()//,
 
             supportFragmentManager.transaction {
                 replace(R.id.test_host_fragment, parseTest(tests[nextTestIndex++]))
-                timerView.Restart()
+                timerView.restart()
                 hideButtonNext()
             }
         }

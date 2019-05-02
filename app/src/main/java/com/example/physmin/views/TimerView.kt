@@ -1,5 +1,6 @@
 package com.example.physmin.views
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.os.Build
@@ -8,95 +9,124 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ImageView
+import androidx.core.animation.doOnEnd
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.minus
 import androidx.core.graphics.withTranslation
 import com.example.physmin.R
 
 
 class TimerView(context: Context, attrs: AttributeSet?): ImageView(context, attrs) {
 
-    var paintText = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
-    var hsvWheelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var paintText: TextPaint
+    private var hsvWheelPaint: Paint
+    private lateinit var valueAnimator: ValueAnimator
+
     var circleColor = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
     var circleShadowColor = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
     val shadowBlurRadius = 2.dpToPx()
     val shadowOffsetY = 2.dpToPx()
     val shadowOffsetX = 0f
-    var time = 60f
-    var staticLayout: StaticLayout? = null
-    var hsvColor = floatArrayOf(120f, 0.4f, 0.75f)
     var hsvWheelStrokeWidth = 4.dpToPx()
-    var timerHandler = Handler()
-    lateinit var timerRunnable: Runnable
-    var hsvWheelRect: RectF? = null
-    var backShadowPanelBitmap: Bitmap? = null
+
+    private var _wheelLen = 360f
+    private var _wheelDx = 0f
+    private var _time = 60
+    private var _timeTextHeight = 0f
+    private var _staticLayout: StaticLayout? = null
+    private var _hsvWheelRect: RectF? = null
+    private var _backShadowPanelBitmap: Bitmap? = null
+    private var _timerHandler = Handler()
+    private lateinit var _timerRunnable: Runnable
 
     init {
-        hsvWheelPaint.style = Paint.Style.STROKE
-        hsvWheelPaint.strokeCap = Paint.Cap.ROUND
-        hsvWheelPaint.strokeWidth = hsvWheelStrokeWidth
-        paintText.textSize = 20f.dpToPx()
+        hsvWheelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeCap = Paint.Cap.ROUND
+            strokeWidth = hsvWheelStrokeWidth
+            color = ResourcesCompat.getColor(resources, R.color.colorPrimary, null)//Color.HSVToColor(_hsvColor)
+        }
+
+        paintText = TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply { textSize = 20f.dpToPx() }
+        _timeTextHeight = Math.abs(paintText.fontMetrics.top)
 
         this.post {
             val width = this.width - shadowOffsetX
             val height = this.height - shadowOffsetY
+            createStaticLayout()
 
-            hsvWheelRect = RectF(0f  + hsvWheelStrokeWidth / 2f,
-                    0f  + hsvWheelStrokeWidth / 2f,
-                    width  - hsvWheelStrokeWidth / 2f,
-                    height  - hsvWheelStrokeWidth / 2f)
+            _hsvWheelRect = RectF().apply {
+                left = 0f + hsvWheelStrokeWidth / 2f
+                top = 0f + hsvWheelStrokeWidth / 2f
+                right = width - hsvWheelStrokeWidth / 2f
+                bottom = height - hsvWheelStrokeWidth / 2f
+            }
 
-            backShadowPanelBitmap = generateShadowPanel(width.toInt(), height.toInt(),
+            _backShadowPanelBitmap = generateShadowPanel(width.toInt(), height.toInt(),
                     0f, shadowBlurRadius,
                     shadowOffsetX, shadowOffsetY,
                     circleColor, circleShadowColor,
                     this, CIRCLE)
 
-            val view = this
-            timerRunnable = Runnable {
-                if (time <= 0) {
-                    time = 0f
-                    view.invalidate()
+            valueAnimator = ValueAnimator.ofFloat(0f, 360f / 60f).apply {
+                addUpdateListener {
+                    _wheelDx = it.animatedValue as Float
+                    invalidate()
+                }
+                this.doOnEnd {
+                    _wheelLen -= _wheelDx
+                    _wheelDx = 0f
+                    invalidate()
+                }
+                duration = 150
+            }
+
+            _timerRunnable = Runnable {
+                if (_time <= 0) {
+                    timerEnd()
                     return@Runnable
                 }
 
-                if (hsvColor[0] > 0) {
-                    if (hsvColor[0] > 40)
-                        hsvColor[0] -= 0.25f
-                    else hsvColor[0] -= 0.2f
-                    if (hsvColor[0] < 0)
-                        hsvColor[0] = 0f
-                }
-                time -= 0.1f
-                view.invalidate()
-                timerHandler.postDelayed(timerRunnable, 100)
+                _time -= 1
+                createStaticLayout()
+                valueAnimator.start()
+                _timerHandler.postDelayed(_timerRunnable, 1000)
             }
         }
 
     }
 
-    fun Restart() {
-        time = 60f
-        hsvColor = floatArrayOf(120f, 0.4f, 0.75f)
-        Start()
+    private fun createStaticLayout() {
+        _staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            StaticLayout.Builder.obtain(_time.toString(), 0, _time.toString().length, paintText, width - paddingRight - paddingLeft)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER).build()
+        else
+            StaticLayout(_time.toString(), paintText, width - paddingRight - paddingLeft, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false)
     }
 
-    fun Start() {
-        timerHandler.removeCallbacks(timerRunnable)
-        timerHandler.postDelayed(timerRunnable, 0)
+    fun restart() {
+        _time = 60
+        _wheelLen = 360f
+        start()
+    }
+
+    fun start() {
+        _timerHandler.removeCallbacks(_timerRunnable)
+        _timerHandler.postDelayed(_timerRunnable, 0)
+    }
+
+    private fun timerEnd() {
+        _time = 0
+        _wheelLen = 0f
+        this.invalidate()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            var height = this.minimumHeight + shadowBlurRadius.toInt() + shadowOffsetY.toInt()
-
-            var width = this.minimumWidth + shadowBlurRadius.toInt() + shadowOffsetX.toInt()
-
+            val height = this.minimumHeight + shadowBlurRadius.toInt() + shadowOffsetY.toInt()
+            val width = this.minimumWidth + shadowBlurRadius.toInt() + shadowOffsetX.toInt()
             setMeasuredDimension(width, height)
         } else {
             TODO("VERSION.SDK_INT < JELLY_BEAN")
@@ -105,20 +135,17 @@ class TimerView(context: Context, attrs: AttributeSet?): ImageView(context, attr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        backShadowPanelBitmap?.let {
+        _backShadowPanelBitmap?.let {
             canvas.drawBitmap(it, 0f, 0f, null)
         }
 
-        hsvWheelPaint.color = Color.HSVToColor(hsvColor)
-        hsvWheelRect?.let {
-            canvas.drawArc(it, 360f, 0f + time * 6, false, hsvWheelPaint)
+        _hsvWheelRect?.let {
+            canvas.drawArc(it, 0f, _wheelLen - _wheelDx, false, hsvWheelPaint)
         }
 
-        staticLayout = StaticLayout(Math.round(time).toString(), paintText, canvas.width, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
-        canvas.save()
-        canvas.translate(this.width / 2f - staticLayout!!.width / 2f, this.height / 2f - staticLayout!!.height / 2f)
-        staticLayout!!.draw(canvas)
-        canvas.restore()
+        canvas.withTranslation(paddingLeft.toFloat(), paddingTop + (_timeTextHeight / 2f)) {
+            _staticLayout!!.draw(canvas)
+        }
     }
 
 

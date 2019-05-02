@@ -51,8 +51,8 @@ class LoadingHorBar(context: Context, attrs: AttributeSet?): View(context, attrs
                 loadingBarWidth = widthInterpolate(20.dpToPx(), 100.dpToPx(), it.animatedFraction)
                 invalidate()
             }
-            repeatMode = ValueAnimator.RESTART
             repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.RESTART
             duration = 1200
             start()
         }
