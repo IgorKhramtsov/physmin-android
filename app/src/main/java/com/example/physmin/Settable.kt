@@ -1,21 +1,35 @@
 package com.example.physmin
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log.e
-import android.view.DragEvent
 import android.view.View
-import com.example.physmin.views.GroupPickable
-import com.example.physmin.views.GroupSettable
+import com.example.physmin.views.Layouts.GroupSettable
+import com.example.physmin.views.Layouts.TestConstraintLayout
 
 abstract class Settable(context: Context, attrs: AttributeSet?): View(context, attrs) {
-    abstract var par: GroupSettable?
-    abstract var answerView: Pickable?
+    internal lateinit var parentSettableGroup: GroupSettable
+    internal lateinit var parentTestConstraintLayout: TestConstraintLayout
+    internal var answerView: Pickable? = null
+        set(value) {
+            field?.show() // Show prev
+            field = value
+            field?.deselect() // Deselect new
+            field?.hide() // Hide new
+            parentTestConstraintLayout.checkTestComplete()
+            invalidate()
 
-    fun setParent(_parent: GroupSettable) { this.par = _parent }
+            onAnswerChanged(field)
+        }
 
+    open fun onAnswerChanged(answerView: Pickable?) {
 
-    abstract  fun isCorrect(): Boolean
+    }
+
+    fun setParent(_parent: GroupSettable) {
+        this.parentSettableGroup = _parent
+        this.parentTestConstraintLayout = _parent.parentTestConstraintLayout
+    }
+
+    abstract fun isCorrect(): Boolean
 
 }

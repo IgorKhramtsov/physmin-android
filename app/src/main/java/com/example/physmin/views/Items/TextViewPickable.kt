@@ -1,4 +1,4 @@
-package com.example.physmin.views
+package com.example.physmin.views.Items
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,77 +8,62 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
-import android.opengl.ETC1.getWidth
 import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
-import android.util.Log
 import androidx.core.graphics.withTranslation
+import com.example.physmin.views.spToPx
 
-class TextViewPickable(context: Context, attrs: AttributeSet?) : Pickable(context, attrs) {
+class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context, attrs) {
 
-    override var picked = false
-    override var par: GroupPickable? = null
+    var outlineColor = Color.BLUE
 
-    var paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-    var staticLayout: StaticLayout? = null
+    private var _textMeasuredWidth = 0f
+    private var _textMeasuredHeight = 0f
+    private var _paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+    private var _staticLayout: StaticLayout? = null
 
-    var _textMeasuredWidth = 0f
-    var _textMeasuredHeight = 0f
-
-    private var outlineColor = Color.BLUE
-    override var answer = -1
-    var _text = ""
-    var _textSize = 14.spToPx()
-    var _textColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.textColor, null)
-
-
-    var text: String
-        get() = _text
+    var text: String = ""
         set(value) {
-            _text = value
+            field = value
             invalidatePaint()
             invalidate()
         }
-
-    var textSize: Float
-        get() = _textSize
+    private var textSize = 14.spToPx()
         set(value) {
-            _textSize = value
+            field = value
             invalidatePaint()
             invalidate()
         }
-    var textColor: Int
-        get() = _textColor
+    private var textColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.textColor, null)
         set(value) {
-            _textColor = value
-            invalidatePaint()
+            field = value
+            _paint.color = value
             invalidate()
         }
 
     private fun invalidatePaint() {
-        paint.let {
+        _paint.let {
             it.textSize = textSize
             it.color = textColor
-            _textMeasuredWidth = it.measureText(_text)
+            _textMeasuredWidth = it.measureText(text)
             _textMeasuredHeight = Math.abs(it.fontMetrics.top)
-//            it.textAlign = Paint.Align.CENTER
         }
+        invalidateStaticLayout()
     }
+
     private fun invalidateStaticLayout() {
-        if (width <= 0)
+        if (width <= 0) // ??
             return
 
-        staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            StaticLayout.Builder.obtain(text, 0, text.length, paint, width - paddingRight - paddingLeft)
+        _staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            StaticLayout.Builder.obtain(text, 0, text.length, _paint, width - paddingRight - paddingLeft)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER).build()
         else
-            StaticLayout(text, paint, width - paddingRight - paddingLeft, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false)
-
+            StaticLayout(text, _paint, width - paddingRight - paddingLeft, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false)
     }
 
     init {
-//        paint.textAlign = Paint.Align.CENTER
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -101,23 +86,28 @@ class TextViewPickable(context: Context, attrs: AttributeSet?) : Pickable(contex
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if (staticLayout === null) invalidateStaticLayout()
+        if (_staticLayout === null) invalidateStaticLayout()
         canvas.withTranslation(paddingLeft.toFloat(), paddingTop.toFloat()) {
-            staticLayout?.draw(canvas)
+            _staticLayout?.draw(canvas)
         }
     }
 
-    override fun pick() {
-        picked = true
-//        this.setShadowLayer(2.3f, 0f, 0f, outlineColor)
+    override fun select() {
+        super.select()
+
+        _paint.setShadowLayer(2.3f, 0f, 0f, outlineColor)
         this.scaleX = 1.05f
         this.scaleY = 1.05f
+        invalidate()
     }
-    override fun unPick() {
-        picked = false
-//        this.setShadowLayer(0f, 0f, 0f, outlineColor)
+
+    override fun deselect() {
+        super.deselect()
+
+        _paint.setShadowLayer(0f, 0f, 0f, outlineColor)
         this.scaleX = 1f
         this.scaleY = 1f
+        invalidate()
     }
 
 }

@@ -4,14 +4,12 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerRelationSignParcelable
 import com.example.physmin.activities.QuestionParcelable
-import com.example.physmin.activities.TextAnswerParcelable
 import com.example.physmin.views.RelationSignView
 import kotlinx.android.synthetic.main.fragment_test_relation_signs.view.*
 
@@ -56,7 +54,7 @@ class FragmentTestSign2Relation : androidx.fragment.app.Fragment() {
         for(answer in answers!!) {
             val relationSignView = RelationSignView(this.context!!, null, answer.letter,
                     answer.leftIndex, answer.rightIndex)
-            relationSignView.correctAnsw = answer.correctSign
+            relationSignView.correctAnswers = answer.correctSign
             view.settableGroup_rs.addView(relationSignView)
         }
 

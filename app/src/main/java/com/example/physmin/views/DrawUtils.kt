@@ -1,5 +1,6 @@
 package com.example.physmin.views
 
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
@@ -8,6 +9,12 @@ import android.os.Build
 import android.view.View
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
+
+fun Float.isZero(): Boolean = Math.abs(this) < 0.00001f
+fun Int.spToPx(): Float = this * Resources.getSystem().displayMetrics.scaledDensity
+fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
+fun Int.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
+fun Float.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
 
 const val ROUNDED_RECT = 0
 const val RECT = 1

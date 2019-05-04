@@ -1,4 +1,4 @@
-package com.example.physmin.views
+package com.example.physmin.views.Items
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,42 +10,41 @@ import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
+import com.example.physmin.views.GraphView
+import com.example.physmin.views.dpToPx
+import com.example.physmin.views.generateInsideShadowPanel
 
 class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Settable(context, attributeSet) {
 
-    override var par: GroupSettable? = null
-    override var answerView: Pickable? = null
-        set(value) {
-            field = value
-            if(answerView != null)
-                this.graph.functions = (answerView as ImageViewPickable).graph.functions
-            else
-                this.graph.functions = null
-            par!!.par!!.checkTestComplete(par!!.isAllChecked())
-        }
-    var correctAnsw: IntArray? = null
-    var paint = Paint(TextPaint.ANTI_ALIAS_FLAG)
+    var correctAnswers: IntArray? = null
     private var graph = GraphView(context, null)
-
 
     private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
     private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
     var blurRadius = 4.dpToPx()
     var cornerRadius = 2.dpToPx()
 
-    var generatedPanel: Bitmap? = null
+    private var generatedPanel: Bitmap? = null
+
+    override fun onAnswerChanged(answerView: Pickable?) {
+        super.onAnswerChanged(answerView)
+
+        if(answerView != null)
+            this.graph.functions = (answerView as ImageViewPickable).graph.functions
+        else
+            this.graph.functions = null
+    }
 
     override fun isCorrect(): Boolean {
-        if(answerView == null || correctAnsw == null)
+        if(answerView == null || correctAnswers == null)
             return false
 
-        return correctAnsw!!.contains(answerView!!.answer)
+        return correctAnswers!!.contains(answerView!!.answer)
     }
 
     init {
         this.post {
-            generatedPanel = generateInsideShadowPanel(width, height,
-                    cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+            generatedPanel = generateInsideShadowPanel(width, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
         }
     }
 

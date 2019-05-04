@@ -1,19 +1,16 @@
 package com.example.physmin.fragments.tests
 
 import android.content.Context
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerParcelable
 import com.example.physmin.activities.QuestionParcelable
-import com.example.physmin.views.GroupScrollable
-import com.example.physmin.views.ImageViewPickable
+import com.example.physmin.views.Layouts.GroupScrollable
 import com.example.physmin.views.dpToPx
 import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
 
@@ -32,17 +29,16 @@ private const val ARG_ANSWERS = "param2"
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
-    // TODO: Rename and change types of parameters
 
-    private var question: QuestionParcelable? = null
+class FragmentTestGraph2Graph: FragmentTestBase() {
 
+    private var question: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<FunctionAnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            question = it.getParcelable(ARG_QUESTION)
+            question = it.getParcelableArrayList(ARG_QUESTION)
             answers = it.getParcelableArrayList(ARG_ANSWERS)
         }
     }
@@ -50,37 +46,24 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
+        settableGroup = view.settableGroup_g2g
+        pickableGroup = view.pickableGroup_g2g
 
-        view.settableGroup_g2g.GraphicView_g2g_question.functions = question!!.functions
-
-        view.GraphicView_g2g_blank1.correctAnsw = question!!.correctIDs.toIntArray()
-
-//        val width = (Resources.getSystem().displayMetrics.widthPixels / 2) - 40
-        Resources.getSystem().displayMetrics.density
-        val height = 110.dpToPx().toInt()
-        val width = 150.dpToPx().toInt()
-        var answerPic: ImageViewPickable
-        val picParams = ViewGroup.LayoutParams(width, height)
-        answers?.forEach {
-
-            answerPic = ImageViewPickable(this.context!!, null)
-            answerPic.apply {
-                layoutParams = picParams
-
-                graph.functions = it.functions
-                answer = it.id
-
-//                if(question!!.correctIDs.contains(it.id))
-//                    backColor = ResourcesCompat.getColor(resources, R.color.alpha_green, null) // TODO: DEBUG ONLY
-            }
-            view.pickableGroup_g2g.addView(answerPic)
+        question?.forEach {
+            settableGroup.addQuestionGraphic(it.functions)
+            for (i in 0 until it.correctIDs.count())
+                settableGroup.addQuestionBlankView(it.correctIDs.toIntArray())
         }
 
-        val mScrollGroup = view.pickableGroup_g2g as? GroupScrollable
-        mScrollGroup?.setHorizontalOrVertical(false)
-                ?.setStartEndScroll(true)
-                ?.setDuration(300)
-                ?.setInvalidate()
+        answers?.forEach {
+            pickableGroup.addImageViewPickable(it)
+        }
+
+        val mScrollGroup = pickableGroup as GroupScrollable
+        mScrollGroup.setHorizontalOrVertical(false)
+                .setStartEndScroll(true)
+                .setDuration(300)
+                .setInvalidate()
 
         return view
     }
@@ -119,7 +102,8 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
-//    interface OnAllDoneListener {
+
+    //    interface OnAllDoneListener {
 //        fun onAllDone()
 //        fun onResetPressed()
 //    }
@@ -133,10 +117,10 @@ class FragmentTestGraph2Graph : androidx.fragment.app.Fragment() {
          * @return A new instance of fragment FragmentTestGraph2Graph.
          */
         @JvmStatic
-        fun newInstance(question: QuestionParcelable, answers: ArrayList<FunctionAnswerParcelable>) =
+        fun newInstance(question: ArrayList<QuestionParcelable>, answers: ArrayList<FunctionAnswerParcelable>) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
-                        putParcelable(ARG_QUESTION, question)
+                        putParcelableArrayList(ARG_QUESTION, question)
                         putParcelableArrayList(ARG_ANSWERS, answers)
                     }
                 }

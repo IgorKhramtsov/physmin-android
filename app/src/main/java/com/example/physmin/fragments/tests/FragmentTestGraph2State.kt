@@ -5,19 +5,15 @@ import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.setPadding
 import com.example.physmin.R
 import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.activities.TextAnswerParcelable
-import com.example.physmin.views.ImageViewSettable
-import com.example.physmin.views.TextViewPickable
+import com.example.physmin.views.Items.ImageViewSettable
+import com.example.physmin.views.Items.TextViewPickable
 import com.example.physmin.views.dpToPx
-import com.example.physmin.views.spToPx
 import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -60,7 +56,7 @@ class FragmentTestGraph2State: androidx.fragment.app.Fragment() {
 
         questions?.forEach {
             questPic = ImageViewSettable(this.context!!, null).apply {
-                correctAnsw = it.correctIDs.toIntArray()
+                correctAnswers = it.correctIDs.toIntArray()
                 layoutParams = picParams
                 graph.functions = it.functions
             }
@@ -74,7 +70,6 @@ class FragmentTestGraph2State: androidx.fragment.app.Fragment() {
                 setPadding(6.dpToPx().toInt(), 3.dpToPx().toInt(), 6.dpToPx().toInt(), 3.dpToPx().toInt())
                 answer = it.id
                 layoutParams = textParams
-                textSize = 14.spToPx()
                 text = it.text
             }
             view.pickable_group.addView(textView)

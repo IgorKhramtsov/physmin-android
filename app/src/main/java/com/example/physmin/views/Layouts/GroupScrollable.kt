@@ -1,13 +1,10 @@
-package com.example.physmin.views
+package com.example.physmin.views.Layouts
 
 import android.content.Context
-import android.graphics.Point
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Scroller
-import androidx.core.content.getSystemService
 
 /*
     TODO: Make cleanup

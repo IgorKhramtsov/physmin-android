@@ -1,26 +1,20 @@
 package com.example.physmin
 
-import android.content.ClipData
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
-import com.example.physmin.views.GroupPickable
+import com.example.physmin.views.Layouts.GroupPickable
 
-
-// TODO: Make it class??
 abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, attrs) {
-
-    abstract var picked: Boolean
-    abstract var par: GroupPickable?
-    abstract var answer: Int
+    internal lateinit var par: GroupPickable
+    internal var answer = -1
+    internal var picked = false
 
     var touchX = 0f
     var touchY = 0f
@@ -30,10 +24,19 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
 
     fun setParent(_parent: GroupPickable) { this.par = _parent }
 
-    fun isPicked(): Boolean { return picked }
+    fun isPicked() = picked
 
-    abstract fun pick()
-    abstract fun unPick()
+    fun show() { this.visibility = VISIBLE }
+
+    fun hide() { this.visibility = GONE }
+
+    open fun select() {
+        picked = true
+    }
+
+    open fun deselect() {
+        picked = false
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
@@ -46,7 +49,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
             }
             MotionEvent.ACTION_MOVE -> {
                 if ((Math.abs(event.rawX - touchX) > 20 || Math.abs(event.rawY - touchY) > 20) || draggedView != null) {
-                    if(draggedView === null) createDraggedView()
+                    if (draggedView === null) createDraggedView()
 
                     draggedView?.let {
                         moveTo(it, event.rawX + par!!.x + (viewX - touchX), event.rawY + par!!.y + (viewY - touchY))
@@ -54,23 +57,23 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                if(draggedView === null)
+                if (draggedView === null)
                     par?.onClick(this)
                 else
-                    par?.par?.groupSettable?.let {
+                    par?.parentTestConstraintLayout?.groupSettable?.let {
                         var child: View
                         var rect: RectF
 
                         for (i in 0 until it.childCount) {
                             child = it.getChildAt(i)
-                            if(!(child is Settable))
+                            if (!(child is Settable))
                                 continue
                             rect = getViewBounds(child)
 
-                            if(rect.contains(event.rawX, event.rawY)) {
+                            if (rect.contains(event.rawX, event.rawY)) {
                                 par?.onClick(this)
                                 it.onClick(child)
-                                par?.par?.removeView(draggedView)
+                                par?.parentTestConstraintLayout?.removeView(draggedView)
                                 draggedView = null
                                 return true
                             }
@@ -88,7 +91,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                             .start()
                 }
 
-                par?.par?.removeView(draggedView)
+                par?.parentTestConstraintLayout?.removeView(draggedView)
                 draggedView = null
                 this.visibility = VISIBLE
             }
@@ -104,6 +107,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                 .setDuration(duration)
                 .start()
     }
+
     private fun getViewBounds(view: View): RectF {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
@@ -116,14 +120,14 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
         }
     }
 
-    fun createDraggedView() {
+    private fun createDraggedView() {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         this.draw(canvas)
         draggedView = ImageView(context)
         (draggedView as ImageView).let {
             it.setImageDrawable(BitmapDrawable(resources, bitmap))
-            par?.par?.addView(it)
+            par?.parentTestConstraintLayout?.addView(it)
             it.bringToFront()
         }
         this.visibility = INVISIBLE

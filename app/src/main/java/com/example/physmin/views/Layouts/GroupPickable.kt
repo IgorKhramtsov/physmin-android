@@ -1,10 +1,7 @@
-package com.example.physmin.views
+package com.example.physmin.views.Layouts
 
-import android.content.ClipData
 import android.content.Context
-import android.content.Intent
 import android.graphics.*
-import android.os.Build
 import android.util.AttributeSet
 import android.view.Display
 import android.view.View
@@ -13,37 +10,43 @@ import android.view.WindowManager
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
+import com.example.physmin.activities.FunctionAnswerParcelable
+import com.example.physmin.views.*
+import com.example.physmin.views.Items.ImageViewPickable
+import com.example.physmin.views.Items.TextViewPickable
 
-class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(context, attrs),
+class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
-    var deviceWidth: Int = 0
+    lateinit var parentTestConstraintLayout: TestConstraintLayout
     var pickedItem: Pickable? = null
-    var par: TestConstraintLayout? = null
-
-    var horizontalSpacing = 0
-    var verticalSpacing = 0
+        private set(value) {
+            field?.deselect() // Deselect previous
+            field = value
+            field?.select() // Select new
+        }
 
     private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
     private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+
+    var horizontalSpacing = 0
+    var verticalSpacing = 0
     var blurRadius = 2.dpToPx()
     var cornerRadius = 2.dpToPx()
-
     var backPanelBitmap: Bitmap? = null
 
-    init {
-        val a = context.obtainStyledAttributes(
-                attrs, R.styleable.GroupPickable, 0, 0)
+    private var _deviceWidth: Int = 0
 
+    init {
+        val a = context.obtainStyledAttributes(attrs, R.styleable.GroupPickable, 0, 0)
         horizontalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_gp_spacingHorizontal, 0)
         verticalSpacing = a.getDimensionPixelSize(R.styleable.GroupPickable_gp_spacingVertical, 0)
-
         a.recycle()
 
         val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displaySize = Point()
         display.getSize(displaySize)
-        deviceWidth = displaySize.x
+        _deviceWidth = displaySize.x
 
         setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
 
@@ -52,36 +55,33 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
                     cornerRadius, blurRadius, _backColor, _backShadowColor, this)
         }
 
-
         setOnHierarchyChangeListener(this)
     }
 
-    public fun setParent(_par: TestConstraintLayout?) {
-        this.par = _par
+    fun addImageViewPickable(answerParcelable: FunctionAnswerParcelable) {
+        val answerPic = ImageViewPickable(context, null).apply {
+            layoutParams = LayoutParams(150.dpToPx().toInt(), 110.dpToPx().toInt())
+            graph.functions = answerParcelable.functions
+            answer = answerParcelable.id
+        }
+
+        this.addView(answerPic)
     }
 
-    public fun pick(item: Pickable?) {
-        val childs: Int = childCount
-        pickedItem = item
+    fun setParent(parent: TestConstraintLayout) {
+        this.parentTestConstraintLayout = parent
+    }
 
-        var child: View
-        for(i in 0 until childs) {
-            child = getChildAt(i)
-            if(child !is Pickable)
-                continue
+    fun resetPickedItem() {
+        this.pickedItem = null
+    }
 
-            if(child == item) {
-                child.pick()
-            }
-            else
-                child.unPick()
-        }
+    private fun pickItem(item: Pickable?) {
+        pickedItem = if (pickedItem == item) null else item
     }
 
     override fun onClick(p0: View?) {
-        if(p0 is Pickable) {
-            if (p0.picked) pick(null) else pick(p0)
-        }
+        if (p0 is Pickable) pickItem(p0)
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {
@@ -96,7 +96,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        if(this.childCount <= 0)
+        if (this.childCount <= 0)
             return
 
         val count: Int = childCount
@@ -130,7 +130,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
             val child = getChildAt(i)
 
             curChildInRow++
-            if(curChildInRow > childInRow) {
+            if (curChildInRow > childInRow) {
                 curChildInRow = 1
                 curTop += maxHeightInRow + horizontalSpacing
                 maxHeightInRow = 0
@@ -159,12 +159,11 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 //                continue
 
             itemsInRowWidth += child.measuredWidth + verticalSpacing / 2
-            if(itemsInRowWidth > deviceWidth) {
+            if (itemsInRowWidth > _deviceWidth) {
                 width = Math.max(width, itemsInRowWidth)
                 height += child.measuredHeight + horizontalSpacing
                 itemsInRowWidth = 0
-            }
-            else
+            } else
                 height = Math.max(height, child.measuredHeight)
         }
         height += paddingTop + paddingBottom + blurRadius.toInt() * 2
@@ -178,6 +177,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?) : GroupScrollable(co
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
         backPanelBitmap?.let {
             canvas.drawBitmap(it, 0f, scrollY.toFloat(), null)
         }

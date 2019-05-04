@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/black_semi_transparent">
 
-    <com.example.physmin.views.TextViewPickable
+    <com.example.physmin.views.Items.TextViewPickable
         android:id="@+id/textViewPickable_equal"
         android:layout_width="28dp"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         app:layout_constraintStart_toEndOf="@+id/textViewPickable_less"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.TextViewPickable
+    <com.example.physmin.views.Items.TextViewPickable
         android:id="@+id/textViewPickable_less"
         android:layout_width="28dp"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.TextViewPickable
+    <com.example.physmin.views.Items.TextViewPickable
         android:id="@+id/textViewPickable_more"
         android:layout_width="28dp"
         android:layout_height="wrap_content"

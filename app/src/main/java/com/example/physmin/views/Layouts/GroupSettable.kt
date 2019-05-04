@@ -1,56 +1,70 @@
-package com.example.physmin.views
+package com.example.physmin.views.Layouts
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.R
 import com.example.physmin.Settable
+import com.example.physmin.activities.FunctionParcelable
+import com.example.physmin.views.*
+import com.example.physmin.views.Items.ImageViewSettableBlank
 
 class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
-    var deviceWidth: Int = 0
-    var par: TestConstraintLayout? = null
-
-    var horizontalSpacing = 0
-    var verticalSpacing = 0
+    lateinit var parentTestConstraintLayout: TestConstraintLayout
 
     private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
     private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+
+    var horizontalSpacing = 0
+    var verticalSpacing = 0
     var blurRadius = 2.dpToPx()
     var cornerRadius = 2.dpToPx()
-
     var backPanelBitmap: Bitmap? = null
 
-    val inRowSpacing = 8.dpToPx().toInt()
+    private var _deviceWidth: Int = 0
 
     init {
-        val a = context.obtainStyledAttributes(
-                attributeSet, R.styleable.GroupSettable, 0, 0)
-
+        val a = context.obtainStyledAttributes(attributeSet, R.styleable.GroupSettable, 0, 0)
         horizontalSpacing = a.getDimensionPixelSize(R.styleable.GroupSettable_gs_spacingHorizontal, 0)
         verticalSpacing = a.getDimensionPixelSize(R.styleable.GroupSettable_gs_spacingVertical, 0)
-
         a.recycle()
 
         val display: Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displaySize = Point()
-
         display.getSize(displaySize)
-        deviceWidth = displaySize.x
+        _deviceWidth = displaySize.x
 
         setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
 
-        this.post { backPanelBitmap = generateShadowPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this) }
+        this.post {
+            backPanelBitmap = generateShadowPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+        }
 
         setOnHierarchyChangeListener(this)
     }
 
-    fun setParent(_par: TestConstraintLayout?) {
-        this.par = _par
+    fun addQuestionGraphic(functions: ArrayList<FunctionParcelable>) {
+        val graphView = GraphView(context, null)
+        graphView.functions = functions
+        graphView.layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
+
+        this.addView(graphView)
+    }
+
+    fun addQuestionBlankView(correctAnswers: IntArray) {
+        val imageViewSettableBlank = ImageViewSettableBlank(context, null)
+        imageViewSettableBlank.correctAnswers = correctAnswers
+        imageViewSettableBlank.layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
+
+        this.addView(imageViewSettableBlank)
+    }
+
+    fun setParent(parent: TestConstraintLayout) {
+        this.parentTestConstraintLayout = parent
     }
 
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, _width: Int, p4: Int) {
@@ -112,19 +126,17 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {
-        (child as? ImageViewSettable)?.setParent(this)
-        (child as? ImageViewSettable)?.setOnClickListener(this)
+        when (child) {
+            is Settable -> {
+                child.setParent(this)
+                child.setOnClickListener(this)
+            }
+        }
 
-        (child as? ImageViewSettableBlank)?.setParent(this)
-        (child as? ImageViewSettableBlank)?.setOnClickListener(this)
-
-        (child as? RelationSignView)?.setParent(this)
-
+        (child as? RelationSignView)?.setParent(this) // ??
     }
 
-    override fun onChildViewRemoved(parent: View?, child: View?) {
-
-    }
+    override fun onChildViewRemoved(parent: View?, child: View?) {}
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -147,64 +159,24 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
 
         height = View.resolveSizeAndState(height, heightMeasureSpec, 0)
 //        width = View.resolveSizeAndState(width, widthMeasureSpec, 0)
-        width = Math.round(deviceWidth * 1.1f)
+        width = Math.round(_deviceWidth * 1.1f)
 
         setMeasuredDimension(width, height)
     }
 
-    override fun onClick(_view: View?) {
-        if (_view is ImageViewSettable) {
-            val imageView = _view
-            (imageView.answerView as View?)?.visibility = View.VISIBLE
+    override fun onClick(clickedChild: View?) {
+        if (clickedChild !is Settable) return
 
-            imageView.answerView = par?.getPickedItem()
-            (par?.getPickedItem() as View?)?.visibility = View.GONE
-            imageView.invalidate()
-
-            var child: View?
-            for (i in 0 until childCount) {
-                child = getChildAt(i)
-                if (child !is ImageViewSettable)
-                    continue
-
-                if (child != imageView)
-                    if (child.answerView == imageView.answerView) {
-                        child.answerView = null
-                        child.invalidate()
-                    }
-            }
-            par?.resetPickedItem()
-        } else if (_view is ImageViewSettableBlank) {
-            val imageView = _view as ImageViewSettableBlank
-            (imageView.answerView as View?)?.visibility = View.VISIBLE
-
-            imageView.answerView = par?.getPickedItem()
-            (par?.getPickedItem() as View?)?.visibility = View.GONE
-            imageView.invalidate()
-
-            var child: View?
-            for (i in 0 until childCount) {
-                child = getChildAt(i)
-                if (child !is ImageViewSettable)
-                    continue
-
-                if (child != imageView)
-                    if (child.answerView == imageView.answerView) {
-                        child.answerView = null
-                        child.invalidate()
-                    }
-            }
-            par?.resetPickedItem()
-        }
+        clickedChild.answerView = parentTestConstraintLayout.takePickedItem()
     }
 
     fun isAllChecked(): Boolean {
-        val childCount = this.childCount
         var child: View
-        for (i in 0 until childCount) {
+        for (i in 0 until this.childCount) {
             child = getChildAt(i)
             if (child is Settable)
-                if (child.answerView == null) return false
+                if (child.answerView == null)
+                    return false
         }
         return true
     }

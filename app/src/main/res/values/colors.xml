@@ -19,6 +19,8 @@
     <color name="loading_back">#996E44FF</color>
     <color name="loading_front">#6E44FF</color>
 
+    <color name="progressBack">#DBDBDB</color>
+
     <color name="graphic_back_gray">#F5F5F5</color>
 
     <color name="graphic_position">#388E3C</color>

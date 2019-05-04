@@ -13,7 +13,7 @@ import androidx.core.graphics.withTranslation
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionParcelable
 
-fun Float.isZero(): Boolean = Math.abs(this) < 0.00001f
+
 
 // TODO: Make arrows on axis
 

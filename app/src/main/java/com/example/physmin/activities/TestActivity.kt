@@ -10,6 +10,8 @@ import android.widget.Button
 import androidx.fragment.app.transaction
 import com.example.physmin.R
 import com.example.physmin.fragments.tests.*
+import com.example.physmin.views.Layouts.TestConstraintLayout
+import com.example.physmin.views.ProgressBarView
 import com.example.physmin.views.TimerView
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
@@ -17,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_test.*
 import org.json.JSONObject
 import java.net.SocketTimeoutException
 
-class TestActivity: AppCompatActivity()//,
+class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseListener//,
 //FragmentTestHello.OnFragmentInteractionListener,
 //        FragmentTestGraph2State.OnAllDoneListener,
 //        FragmentTestGraph2Graph2.OnAllDoneListener,
@@ -31,10 +33,13 @@ class TestActivity: AppCompatActivity()//,
     var getTestFunctionName = "getTest"
     lateinit var timerView: TimerView
     private lateinit var functions: FirebaseFunctions
+    lateinit var progressBarView: ProgressBarView
+    var testConstraintLayout: TestConstraintLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
+
         buttonNext = findViewById(R.id.button_test_next)
         timerView = findViewById(R.id.Timer)
         functions = FirebaseFunctions.getInstance("europe-west1")
@@ -43,6 +48,8 @@ class TestActivity: AppCompatActivity()//,
         intent.getStringExtra("GetTestFunctionName")?.let {
             getTestFunctionName = it
         }
+        this.progressBarView = progressBar
+        progressBarView.hide()
 
         getTest().addOnCompleteListener {
             loadingHorBar.hide()
@@ -57,6 +64,10 @@ class TestActivity: AppCompatActivity()//,
 //        supportFragmentManager.transaction {
 //            replace(R.id.test_host_fragment, FragmentTestHello.newInstance())
 //        }
+    }
+
+    override fun asd() {
+
     }
 
     fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
@@ -90,14 +101,15 @@ class TestActivity: AppCompatActivity()//,
         val questionJson = test.getJSONObject("question")
         val answersJson = test.getJSONArray("answers")
 
-        var question = QuestionParcelable(questionJson)
-        var answers = ArrayList<FunctionAnswerParcelable>()
+        val questions = ArrayList<QuestionParcelable>()
+        val answers = ArrayList<FunctionAnswerParcelable>()
 
+        questions.add(QuestionParcelable(questionJson))
         for (i in 0 until answersJson.length()) {
             answers.add(FunctionAnswerParcelable(answersJson.getJSONObject(i)))
         }
 
-        return FragmentTestGraph2Graph2.newInstance(question, answers)
+        return FragmentTestGraph2Graph2.newInstance(questions, answers)
     }
 
     fun parseG2G(test: JSONObject): androidx.fragment.app.Fragment {
@@ -105,14 +117,15 @@ class TestActivity: AppCompatActivity()//,
         val questionJson = test.getJSONObject("question")
         val answersJson = test.getJSONArray("answers")
 
-        var question = QuestionParcelable(questionJson)
-        var answers = ArrayList<FunctionAnswerParcelable>()
+        val questions = ArrayList<QuestionParcelable>()
+        val answers = ArrayList<FunctionAnswerParcelable>()
 
+        questions.add(QuestionParcelable(questionJson))
         for (i in 0 until answersJson.length()) {
             answers.add(FunctionAnswerParcelable(answersJson.getJSONObject(i)))
         }
 
-        return FragmentTestGraph2Graph.newInstance(question, answers)
+        return FragmentTestGraph2Graph.newInstance(questions, answers)
     }
 
     fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
@@ -151,14 +164,34 @@ class TestActivity: AppCompatActivity()//,
         for (i in 0 until data!!.length())
             tests.add(data.getJSONObject(i))
 
+        progressBar.segmentCount = tests.count()
+
         buttonNext.setOnClickListener {
             if (nextTestIndex >= tests.size)
                 return@setOnClickListener
 
+            progressBarView.show()
             supportFragmentManager.transaction {
+                onTestSwitch()
                 replace(R.id.test_host_fragment, parseTest(tests[nextTestIndex++]))
                 timerView.restart()
                 hideButtonNext()
+            }
+
+        }
+    }
+
+    private fun onTestSwitch() {
+        testConstraintLayout?.let {
+
+            if (it.isAnswersCorrect())
+                progressBarView.addSegment()
+            else {
+                tests.add(tests[nextTestIndex])
+
+                // TODO: create custom arrayList
+//            tests.removeAt(nextTestIndex)
+//            nextTestIndex--
             }
         }
     }
@@ -170,6 +203,8 @@ class TestActivity: AppCompatActivity()//,
     fun hideButtonNext() {
         buttonNext.visibility = View.GONE
     }
+
+
 }
 
 class FunctionParcelable(): Parcelable {

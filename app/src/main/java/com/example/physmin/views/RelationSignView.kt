@@ -7,7 +7,6 @@ import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -18,18 +17,15 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.fragments.tests.toPx
+import com.example.physmin.views.Items.TextViewPickable
 
-fun Int.spToPx(): Float = this * Resources.getSystem().displayMetrics.scaledDensity
-fun Int.pxToSp(): Float = this / Resources.getSystem().displayMetrics.scaledDensity
-fun Int.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
-fun Float.dpToPx(): Float = this * Resources.getSystem().displayMetrics.density
+
 
 class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: String?, lIndex: String?, rIndex: String?): Settable(context, attributeSet), View.OnClickListener  {
     var popupWindow: PopupWindow? = null
     var padding: Int = 0
     var location = intArrayOf(0, 0)
-    override var par: GroupSettable? = null
-    var correctAnsw: Int? = null
+    var correctAnswers: Int? = null
 
     private var _letter: String? = null
     private var _leftIndex: String? = null
@@ -49,10 +45,10 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
     var contentHeight = height
 
     override fun isCorrect(): Boolean {
-        if(answerView == null || correctAnsw == null)
+        if(answerView == null || correctAnswers == null)
             return false
 
-        return answerView?.answer == correctAnsw
+        return answerView?.answer == correctAnswers
     }
 
     var letter: String?
@@ -83,17 +79,16 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
             invalidateTextPaintAndMeasurements()
         }
 
-    override var answerView: Pickable? = null
-        set(value) {
-            field = value
-            when {
-                answerView?.answer == -1 -> currentSign = "<"
-                answerView?.answer == 0 -> currentSign = "="
-                answerView?.answer == 1 -> currentSign = ">"
-                else -> currentSign = null
-            }
-            par!!.par!!.checkTestComplete(par!!.isAllChecked())
+    override fun onAnswerChanged(answerView: Pickable?) {
+        super.onAnswerChanged(answerView)
+
+        when {
+            answerView?.answer == -1 -> currentSign = "<"
+            answerView?.answer == 0 -> currentSign = "="
+            answerView?.answer == 1 -> currentSign = ">"
+            else -> currentSign = null
         }
+    }
 
 
     init {

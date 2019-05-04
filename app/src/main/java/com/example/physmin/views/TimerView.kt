@@ -143,8 +143,10 @@ class TimerView(context: Context, attrs: AttributeSet?): ImageView(context, attr
             canvas.drawArc(it, 0f, _wheelLen - _wheelDx, false, hsvWheelPaint)
         }
 
-        canvas.withTranslation(paddingLeft.toFloat(), paddingTop + (_timeTextHeight / 2f)) {
-            _staticLayout!!.draw(canvas)
+        _staticLayout?.let {
+            canvas.withTranslation(paddingLeft.toFloat(), paddingTop + (_timeTextHeight / 2f)) {
+                it.draw(canvas)
+            }
         }
     }
 
