@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerRelationSignParcelable
 import com.example.physmin.activities.QuestionParcelable
-import com.example.physmin.views.RelationSignView
+import com.example.physmin.views.items.RelationSignView
 import kotlinx.android.synthetic.main.fragment_test_relation_signs.view.*
 
 

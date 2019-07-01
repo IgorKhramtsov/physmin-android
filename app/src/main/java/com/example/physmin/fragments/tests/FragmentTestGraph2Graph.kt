@@ -10,8 +10,7 @@ import android.view.ViewGroup
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerParcelable
 import com.example.physmin.activities.QuestionParcelable
-import com.example.physmin.views.Layouts.GroupScrollable
-import com.example.physmin.views.dpToPx
+import com.example.physmin.views.layouts.GroupScrollable
 import kotlinx.android.synthetic.main.fragment_test_graph2graph.view.*
 
 

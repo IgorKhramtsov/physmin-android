@@ -1,4 +1,4 @@
-package com.example.physmin.views.Layouts
+package com.example.physmin.views.layouts
 
 import android.content.Context
 import androidx.constraintlayout.widget.ConstraintLayout

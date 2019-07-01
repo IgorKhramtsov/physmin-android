@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import com.example.physmin.R
 import com.example.physmin.activities.QuestionParcelable
 import com.example.physmin.activities.TextAnswerParcelable
-import com.example.physmin.views.Items.ImageViewSettable
-import com.example.physmin.views.Items.TextViewPickable
+import com.example.physmin.views.items.ImageViewSettable
+import com.example.physmin.views.items.TextViewPickable
 import com.example.physmin.views.dpToPx
 import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 

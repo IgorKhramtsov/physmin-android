@@ -1,4 +1,4 @@
-package com.example.physmin.views.Items
+package com.example.physmin.views.items
 
 import android.content.Context
 import android.graphics.Canvas
@@ -12,6 +12,7 @@ import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
 import androidx.core.graphics.withTranslation
+import com.example.physmin.R
 import com.example.physmin.views.spToPx
 
 class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context, attrs) {
@@ -64,6 +65,18 @@ class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context
     }
 
     init {
+        val a = context.obtainStyledAttributes(
+                attrs, R.styleable.TextViewPickable, 0, 0)
+
+        if( a.hasValue(R.styleable.TextViewPickable_textViewPickableText))
+            text = a.getString(R.styleable.TextViewPickable_textViewPickableText)!!
+        if( a.hasValue(R.styleable.TextViewPickable_textViewPickableAnswer))
+            answer = a.getInteger(R.styleable.TextViewPickable_textViewPickableAnswer, 0)
+        if( a.hasValue(R.styleable.TextViewPickable_textViewPickableTextColor))
+            textColor = a.getColor(R.styleable.TextViewPickable_textViewPickableTextColor, 0)
+        if( a.hasValue(R.styleable.TextViewPickable_textViewPickableTextSize))
+            textSize = a.getDimensionPixelSize(R.styleable.TextViewPickable_textViewPickableTextSize, 0).toFloat()
+        a.recycle()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -72,6 +85,8 @@ class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context
 
         var width = MeasureSpec.getSize(widthMeasureSpec)
         var height = MeasureSpec.getSize(heightMeasureSpec)
+        if(MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY)
+            return setMeasuredDimension(width, height)
 
         val rows = Math.max(Math.round(_textMeasuredWidth / width), 1)
         height = paddingTop + paddingBottom + Math.round(_textMeasuredHeight) * (rows + 2)

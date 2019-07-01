@@ -1,7 +1,6 @@
 package com.example.physmin.views
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.*
 import android.os.Build
 import android.text.TextPaint
@@ -12,47 +11,50 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionParcelable
-
+import kotlin.math.abs
+import kotlin.math.min
 
 
 // TODO: Make arrows on axis
 
 open class GraphView(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
-    private val yAxisLength = 12
+    private var yAxisLength = 12f
     private val xAxisLength = 12f
     private val step = 0.2f
 
-    private val positionFunctionColor       = ResourcesCompat.getColor(resources, R.color.graphic_position, null)
-    private val velocityFunctionColor       = ResourcesCompat.getColor(resources, R.color.graphic_velocity, null)
-    private val accelerationFunctionColor   = ResourcesCompat.getColor(resources, R.color.graphic_acceleration, null)
+    private val positionFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_position, null)
+    private val velocityFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_velocity, null)
+    private val accelerationFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_acceleration, null)
 
-    private var _backColor      = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
-    private var _axisColor      = ResourcesCompat.getColor(resources, R.color.textColor, null)
-    private var _textColor      = ResourcesCompat.getColor(resources, R.color.textColor, null)
-    private var _verticalAxisLetter     = "x"
-    private var _horizontalAxisLetter   = "t"
-    private var _zeroAxisLetter         = "0"
+    private var _backColor = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
+    private var _axisColor = ResourcesCompat.getColor(resources, R.color.textColor, null)
+    private var _textColor = ResourcesCompat.getColor(resources, R.color.textColor, null)
+    private var _smallTextColor = ResourcesCompat.getColor(resources, R.color.textColorGray, null)
+    private var _verticalAxisLetter = "x"
+    private var _horizontalAxisLetter = "t"
+    private var _zeroAxisLetter = "0"
 
-    private val axisPaddingLeft     = 40f
-    private val axisPaddingTop      = 20f
-    private val axisPaddingRight    = 60f
-    private val axisPaddingBottom   = 20f
+    private val axisPaddingLeft = 40f
+    private val axisPaddingTop = 20f
+    private val axisPaddingRight = 20f
+    private val axisPaddingBottom = 20f
 
-    private var backgroundPaint:   Paint
-    private var axisPaint:         Paint
-    private var functionPaint:     Paint
-    private var textPaint:         TextPaint
-    private var smallTextPaint:    TextPaint
+    private var backgroundPaint: Paint
+    private var axisPaint: Paint
+    private var functionPaint: Paint
+    private var textPaint: TextPaint
+    private var smallTextPaint: TextPaint
     private var functionPath = Path()
-    private var indexWidth      = 0.0f
-    private var indexHeight     = 0.0f
-    private var zeroAxisHeight  = 0f
-    private var textSize        = 30f
-    private var smallTextSize   = 20f
+    private var indexTextWidth = 0.0f
+    private var indexTextHeight = 0.0f
+    private var zeroAxisTextHeight = 0f
+    private var upperLimitTextWidth = 0f
+    private var textSize = 27f
+    private var smallTextSize = 20f
 
-    private var contentWidth    = width  - (axisPaddingLeft + axisPaddingRight)
-    private var contentHeight   = height - (axisPaddingTop + axisPaddingBottom)
+    private var contentWidth = width - (axisPaddingLeft + axisPaddingRight)
+    private var contentHeight = height - (axisPaddingTop + axisPaddingBottom)
 
     private var _functions: ArrayList<FunctionParcelable>? = null
 
@@ -101,6 +103,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         smallTextPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
             textAlign = Paint.Align.LEFT
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
         }
         axisPaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
@@ -128,13 +131,15 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         textPaint.let {
             it.textSize = textSize
             it.color = textColor
-            indexWidth = it.measureText(vertAxisLetter)
-            indexHeight = Math.abs(it.fontMetrics.top)
+            indexTextWidth = it.measureText(vertAxisLetter)
+            indexTextHeight = abs(it.fontMetrics.ascent)
+
         }
         smallTextPaint.let {
             it.textSize = smallTextSize
-            it.color = textColor
-            zeroAxisHeight = Math.abs(it.fontMetrics.top)
+            it.color = _smallTextColor
+            zeroAxisTextHeight = abs(it.fontMetrics.ascent)
+            upperLimitTextWidth = it.measureText((yAxisLength / 2).toString())
         }
         axisPaint.let {
             it.color = axisColor
@@ -159,8 +164,9 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
 
         this.vertAxisLetter = functions!![0].funcType
 
-        val heightScaleFactor   = -(contentHeight / yAxisLength)
-        val widthScaleFactor    =   contentWidth / xAxisLength
+        if (this.vertAxisLetter == "a") yAxisLength = 1f
+        val heightScaleFactor = -(contentHeight / yAxisLength)
+        val widthScaleFactor = contentWidth / xAxisLength
         var calculatedPointY: Float
         var calculatedPointX = 0f
         var globalT = 0f
@@ -177,13 +183,15 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
 
             var localT = 0f
             while (localT < len || (len.isZero() && calculatedPointX < contentWidth)) {
-                localT = Math.min(localT + step, len)
+                localT = min(localT + step, len)
 
                 calculatedPointX += step * widthScaleFactor
                 calculatedPointY = calculateFunctionValue(function, localT) * heightScaleFactor
 
-                if (Math.abs(calculatedPointY) > contentHeight / 2f)
+                if (abs(calculatedPointY) > contentHeight / 2f) {
+                    functionPath.moveTo(calculatedPointX, calculatedPointY)
                     continue
+                }
 
                 functionPath.lineTo(calculatedPointX, calculatedPointY)
             }
@@ -219,27 +227,32 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         canvas.drawLine(axisPaddingLeft, height / 2f,
                 width - axisPaddingRight, height / 2f,
                 axisPaint)
-        canvas.withTranslation(axisPaddingLeft, height / 2f) {
-            functionPath.let {
+
+        functionPath.let {
+            canvas.withTranslation(axisPaddingLeft, height / 2f) {
                 canvas.drawPath(it, functionPaint)
             }
+            canvas.drawText((yAxisLength / 2).toString(),
+                    upperLimitTextWidth / 3,
+                    axisPaddingTop + zeroAxisTextHeight / 2,
+                    smallTextPaint)
         }
         vertAxisLetter.let {
             canvas.drawText(it,
-                    axisPaddingLeft + indexWidth,
-                    axisPaddingTop + indexHeight,
+                    axisPaddingLeft + indexTextWidth / 2,
+                    axisPaddingTop + indexTextHeight,
                     textPaint)
         }
         horAxisLetter.let {
             canvas.drawText(it,
-                    axisPaddingLeft + contentWidth - indexWidth * 2,
-                    (height / 2) - indexHeight / 2f,
+                    axisPaddingLeft + contentWidth - indexTextWidth * 2,
+                    (height / 2) - indexTextHeight / 2f,
                     textPaint)
         }
         _zeroAxisLetter.let {
             canvas.drawText(it,
-                    indexWidth,
-                    (height / 2) + zeroAxisHeight / 2,
+                    indexTextWidth,
+                    (height / 2) + (zeroAxisTextHeight / 2),
                     smallTextPaint)
         }
 

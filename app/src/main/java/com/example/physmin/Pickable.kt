@@ -9,18 +9,19 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
-import com.example.physmin.views.Layouts.GroupPickable
+import com.example.physmin.views.layouts.GroupPickable
 
 abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, attrs) {
     internal lateinit var par: GroupPickable
     internal var answer = -1
     internal var picked = false
+    private var isDraggable = true
 
-    var touchX = 0f
-    var touchY = 0f
-    var viewX = 0f
-    var viewY = 0f
-    var draggedView: View? = null
+    private var touchX = 0f
+    private var touchY = 0f
+    private var viewX = 0f
+    private var viewY = 0f
+    private var draggedView: View? = null
 
     fun setParent(_parent: GroupPickable) { this.par = _parent }
 
@@ -29,6 +30,10 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
     fun show() { this.visibility = VISIBLE }
 
     fun hide() { this.visibility = GONE }
+
+    fun setDraggable(boolean: Boolean) {
+        this.isDraggable = boolean
+    }
 
     open fun select() {
         picked = true
@@ -39,6 +44,12 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        if(!isDraggable) {
+            if(event.action == MotionEvent.ACTION_UP)
+                this.callOnClick()
+            return true
+        }
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {

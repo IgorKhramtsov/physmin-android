@@ -1,13 +1,13 @@
-package com.example.physmin.views
+package com.example.physmin.views.items
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
@@ -17,11 +17,10 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.fragments.tests.toPx
-import com.example.physmin.views.Items.TextViewPickable
+import com.example.physmin.views.spToPx
 
 
-
-class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: String?, lIndex: String?, rIndex: String?): Settable(context, attributeSet), View.OnClickListener  {
+class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: String?, lIndex: String?, rIndex: String?): Settable(context, attributeSet), View.OnClickListener, View.OnTouchListener  {
     var popupWindow: PopupWindow? = null
     var padding: Int = 0
     var location = intArrayOf(0, 0)
@@ -120,8 +119,11 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
 
         this.setOnClickListener(this)
 
+
         invalidateTextPaintAndMeasurements()
     }
+
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean { return false }
 
     // TODO: find correct color from theme
     private fun invalidateTextPaintAndMeasurements() {
@@ -190,7 +192,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
 
     override fun onClick(view: View?) {
         if(popupWindow != null) {
-            popupWindow!!.showAtLocation(view, 0,
+            popupWindow!!.showAtLocation(this.parentTestConstraintLayout.groupPickable, 0,
                     location[0] + padding,
                     location[1] - Math.round(this.height * 0.7f))
             return
@@ -208,6 +210,15 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         popupWindow!!.isOutsideTouchable = true
         popupWindow!!.isTouchable = true
 
+//        val liste = OnTouchListener { choosed_view, event ->
+//            if(event.action == MotionEvent.ACTION_UP) {
+//                answerView = if (answerView == choosed_view) null else (choosed_view as TextViewPickable)
+//
+//                popupWindow!!.dismiss()
+//                view?.invalidate()
+//            }
+//            return@OnTouchListener true
+//        }
         val listener = OnClickListener { choosed_view ->
             answerView = if (answerView == choosed_view) null else (choosed_view as TextViewPickable)
 
@@ -215,6 +226,9 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
             view?.invalidate()
         }
 
+        popupView.findViewById<TextViewPickable>(R.id.textViewPickable_less).setDraggable(false)
+        popupView.findViewById<TextViewPickable>(R.id.textViewPickable_equal).setDraggable(false)
+        popupView.findViewById<TextViewPickable>(R.id.textViewPickable_more).setDraggable(false)
         popupView.findViewById<TextViewPickable>(R.id.textViewPickable_less).setOnClickListener(listener)
         popupView.findViewById<TextViewPickable>(R.id.textViewPickable_equal).setOnClickListener(listener)
         popupView.findViewById<TextViewPickable>(R.id.textViewPickable_more).setOnClickListener(listener)

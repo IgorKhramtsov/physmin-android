@@ -1,4 +1,4 @@
-package com.example.physmin.views.Layouts
+package com.example.physmin.views.layouts
 
 import android.content.Context
 import android.graphics.*
@@ -9,7 +9,8 @@ import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.activities.FunctionParcelable
 import com.example.physmin.views.*
-import com.example.physmin.views.Items.ImageViewSettableBlank
+import com.example.physmin.views.items.ImageViewSettableBlank
+import com.example.physmin.views.items.RelationSignView
 
 class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
@@ -129,11 +130,10 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
         when (child) {
             is Settable -> {
                 child.setParent(this)
-                child.setOnClickListener(this)
+                if(child !is RelationSignView)
+                    child.setOnClickListener(this)
             }
         }
-
-        (child as? RelationSignView)?.setParent(this) // ??
     }
 
     override fun onChildViewRemoved(parent: View?, child: View?) {}
@@ -167,7 +167,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
     override fun onClick(clickedChild: View?) {
         if (clickedChild !is Settable) return
 
-        clickedChild.answerView = parentTestConstraintLayout.takePickedItem()
+         clickedChild.answerView = parentTestConstraintLayout.takePickedItem()
     }
 
     fun isAllChecked(): Boolean {

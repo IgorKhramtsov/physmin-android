@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.example.physmin.views.Layouts.TestConstraintLayout
+    <com.example.physmin.views.layouts.TestConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="-6dp" />
 
-    <com.example.physmin.views.Layouts.GroupSettable
+    <com.example.physmin.views.layouts.GroupSettable
         android:id="@+id/settable_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <com.example.physmin.views.Layouts.GroupPickable
+    <com.example.physmin.views.layouts.GroupPickable
         android:id="@+id/pickable_group"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -61,4 +61,4 @@
         app:layout_constraintTop_toBottomOf="@+id/settable_group"
         app:layout_constraintVertical_bias="0.25" />
 
-    </com.example.physmin.views.Layouts.TestConstraintLayout>
+    </com.example.physmin.views.layouts.TestConstraintLayout>

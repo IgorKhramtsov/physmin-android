@@ -1,4 +1,4 @@
-package com.example.physmin.views.Layouts
+package com.example.physmin.views.layouts
 
 import android.content.Context
 import android.graphics.*
@@ -12,8 +12,8 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerParcelable
 import com.example.physmin.views.*
-import com.example.physmin.views.Items.ImageViewPickable
-import com.example.physmin.views.Items.TextViewPickable
+import com.example.physmin.views.items.ImageViewPickable
+import com.example.physmin.views.items.TextViewPickable
 
 class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
@@ -60,7 +60,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(con
 
     fun addImageViewPickable(answerParcelable: FunctionAnswerParcelable) {
         val answerPic = ImageViewPickable(context, null).apply {
-            layoutParams = LayoutParams(150.dpToPx().toInt(), 110.dpToPx().toInt())
+            layoutParams = LayoutParams(150.dpToPx().toInt(), 90.dpToPx().toInt())
             graph.functions = answerParcelable.functions
             answer = answerParcelable.id
         }

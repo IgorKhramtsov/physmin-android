@@ -1,4 +1,4 @@
-package com.example.physmin.views.Items
+package com.example.physmin.views.items
 
 import android.content.Context
 import android.graphics.Canvas

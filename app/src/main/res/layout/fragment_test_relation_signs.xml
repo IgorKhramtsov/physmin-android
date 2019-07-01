@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.example.physmin.views.Layouts.TestConstraintLayout
+    <com.example.physmin.views.layouts.TestConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragments.tests.FragmentTestSign2Relation">
+
+        <com.example.physmin.views.layouts.GroupPickable
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <com.example.physmin.views.GraphView
             android:id="@+id/graphView_rs_task"
@@ -20,7 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.Layouts.GroupSettable
+    <com.example.physmin.views.layouts.GroupSettable
         android:id="@+id/settableGroup_rs"
         android:layout_width="0dp"
         android:layout_height="186dp"
@@ -30,4 +34,4 @@
         app:layout_constraintTop_toBottomOf="@+id/graphView_rs_task" />
 
 
-    </com.example.physmin.views.Layouts.TestConstraintLayout>
+    </com.example.physmin.views.layouts.TestConstraintLayout>

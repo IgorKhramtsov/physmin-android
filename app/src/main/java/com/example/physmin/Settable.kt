@@ -3,8 +3,8 @@ package com.example.physmin
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import com.example.physmin.views.Layouts.GroupSettable
-import com.example.physmin.views.Layouts.TestConstraintLayout
+import com.example.physmin.views.layouts.GroupSettable
+import com.example.physmin.views.layouts.TestConstraintLayout
 
 abstract class Settable(context: Context, attrs: AttributeSet?): View(context, attrs) {
     internal lateinit var parentSettableGroup: GroupSettable

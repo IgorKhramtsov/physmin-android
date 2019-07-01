@@ -1,10 +1,8 @@
-package com.example.physmin.views.Items
+package com.example.physmin.views.items
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable

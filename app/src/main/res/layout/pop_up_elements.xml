@@ -6,52 +6,49 @@
     android:layout_height="wrap_content"
     android:background="@color/black_semi_transparent">
 
-    <com.example.physmin.views.Items.TextViewPickable
+    <com.example.physmin.views.items.TextViewPickable
         android:id="@+id/textViewPickable_equal"
         android:layout_width="28dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:gravity="center"
-        android:text="@string/relation_sign_equal"
-        android:textColor="#fff"
-        android:textSize="30sp"
-        app:answer="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textViewPickable_less"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:textViewPickableAnswer="0"
+        app:textViewPickableText="@string/relation_sign_equal"
+        app:textViewPickableTextColor="#fff"
+        app:textViewPickableTextSize="30sp" />
 
-    <com.example.physmin.views.Items.TextViewPickable
+    <com.example.physmin.views.items.TextViewPickable
         android:id="@+id/textViewPickable_less"
         android:layout_width="28dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:gravity="center"
-        android:text="@string/relation_sign_less"
-        android:textColor="#fff"
-        android:textSize="30sp"
-        app:answer="-1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:textViewPickableAnswer="-1"
+        app:textViewPickableText="@string/relation_sign_less"
+        app:textViewPickableTextColor="#fff"
+        app:textViewPickableTextSize="30sp" />
 
-    <com.example.physmin.views.Items.TextViewPickable
+    <com.example.physmin.views.items.TextViewPickable
         android:id="@+id/textViewPickable_more"
         android:layout_width="28dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:gravity="center"
-        android:text="@string/relation_sign_more"
-        android:textColor="#fff"
-        android:textSize="30sp"
-        app:answer="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textViewPickable_equal"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:textViewPickableAnswer="1"
+        app:textViewPickableText="@string/relation_sign_more"
+        app:textViewPickableTextColor="#fff"
+        app:textViewPickableTextSize="30sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

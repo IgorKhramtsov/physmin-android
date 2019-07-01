@@ -10,11 +10,12 @@ import android.widget.Button
 import androidx.fragment.app.transaction
 import com.example.physmin.R
 import com.example.physmin.fragments.tests.*
-import com.example.physmin.views.Layouts.TestConstraintLayout
+import com.example.physmin.views.layouts.TestConstraintLayout
 import com.example.physmin.views.ProgressBarView
 import com.example.physmin.views.TimerView
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.FirebaseFunctionsException
 import kotlinx.android.synthetic.main.activity_test.*
 import org.json.JSONObject
 import java.net.SocketTimeoutException
@@ -151,6 +152,8 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
                     // TODO: Process timeout exception
                     if (task.exception is SocketTimeoutException)
                         Log.e("TestActivity", "getTest() - Timeout!")
+                    else if (task.exception is FirebaseFunctionsException)
+                        Log.e("TestActivity", "FirebaseException [${(task.exception as FirebaseFunctionsException).code}], ${(task.exception as FirebaseFunctionsException).message}")
 
                     val result = task.result?.data as String
                     result

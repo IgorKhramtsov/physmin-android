@@ -1,8 +1,8 @@
 package com.example.physmin.fragments.tests
 
 import android.content.Context
-import com.example.physmin.views.Layouts.GroupPickable
-import com.example.physmin.views.Layouts.GroupSettable
+import com.example.physmin.views.layouts.GroupPickable
+import com.example.physmin.views.layouts.GroupSettable
 
 open class FragmentTestBase : androidx.fragment.app.Fragment() {
     lateinit var settableGroup: GroupSettable
