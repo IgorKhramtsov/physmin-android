@@ -12,6 +12,7 @@ import android.widget.ImageView
 import com.example.physmin.activities.TestActivity
 import com.example.physmin.views.items.ImageViewPickable
 import com.example.physmin.views.layouts.GroupPickable
+import kotlin.math.abs
 
 abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, attrs) {
     internal lateinit var par: GroupPickable
@@ -85,19 +86,20 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
 
             }
             MotionEvent.ACTION_MOVE -> {
-                if ((Math.abs(event.rawX - touchX) > 20 || Math.abs(event.rawY - touchY) > 20) || draggedView != null) {
+                if ((abs(event.rawX - touchX) > 20 || abs(event.rawY - touchY) > 20) || draggedView != null) {
                     if (draggedView === null) createDraggedView()
+                    par.resetPickedItem()
 
                     draggedView?.let {
-                        moveTo(it, event.rawX + par!!.x + (viewX - touchX), event.rawY + par!!.y + (viewY - touchY))
+                        moveTo(it, event.rawX + par.x + (viewX - touchX), event.rawY + par.y + (viewY - touchY))
                     }
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (draggedView === null)
-                    par?.onClick(this)
+                    par.onClick(this)
                 else
-                    par?.parentTestConstraintLayout?.groupSettable?.let {
+                    par.parentTestConstraintLayout.groupSettable.let {
                         var child: View
                         var rect: RectF
 
@@ -108,9 +110,9 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                             rect = getViewBounds(child)
 
                             if (rect.contains(event.rawX, event.rawY)) {
-                                par?.onClick(this)
+                                par.onClick(this)
                                 it.onClick(child)
-                                par?.parentTestConstraintLayout?.removeView(draggedView)
+                                par.parentTestConstraintLayout.removeView(draggedView)
                                 draggedView = null
                                 return true
                             }
@@ -118,7 +120,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                     }
 
                 draggedView?.let {
-                    moveTo(it, event.rawX + par!!.x + (viewX - touchX), event.rawY + par!!.y + (viewY - touchY))
+                    moveTo(it, event.rawX + par.x + (viewX - touchX), event.rawY + par.y + (viewY - touchY))
                 }
                 draggedView?.let {
                     it.animate()
@@ -128,7 +130,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                             .start()
                 }
 
-                par?.parentTestConstraintLayout?.removeView(draggedView)
+                par.parentTestConstraintLayout.removeView(draggedView)
                 draggedView = null
                 this.visibility = VISIBLE
             }

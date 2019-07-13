@@ -142,13 +142,12 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         val childCount = childCount
-        var width = 0
+        val width = _deviceWidth
         var height = 0
         for (i in 0 until childCount) {
             val childAt = getChildAt(i)
             measureChild(childAt, widthMeasureSpec, heightMeasureSpec)
 
-            width += childAt.measuredWidth + verticalSpacing / 2
             if (height < childAt.measuredHeight)
                 height = childAt.measuredHeight
         }
@@ -158,8 +157,6 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
         height += paddingTop + paddingBottom
 
         height = View.resolveSizeAndState(height, heightMeasureSpec, 0)
-//        width = View.resolveSizeAndState(width, widthMeasureSpec, 0)
-        width = Math.round(_deviceWidth * 1.1f)
 
         setMeasuredDimension(width, height)
     }

@@ -30,9 +30,9 @@ import java.lang.Exception
 import java.net.SocketTimeoutException
 import kotlin.concurrent.schedule
 
-val ERROR_UNKNOWN = 0
-val ERROR_TIMEOUT = 1
-val ERROR_SERVER = 2
+const val ERROR_UNKNOWN = 0
+const val ERROR_TIMEOUT = 1
+const val ERROR_SERVER = 2
 
 class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseListener
 {

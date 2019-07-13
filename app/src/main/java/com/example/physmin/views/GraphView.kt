@@ -174,7 +174,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
 
         functionPath.reset()
         for (function in functions!!) {
-            Log.e("GraphView", "funcType: ${function.funcType}\r\nparams: ${function.x}, ${function.v}, ${function.a} ${function.len}")
+            Log.i("GraphView", "funcType: ${function.funcType}\r\nparams: ${function.x}, ${function.v}, ${function.a} ${function.len}")
 
             calculatedPointY = calculateFunctionValue(function, 0f) * heightScaleFactor
             functionPath.moveTo(calculatedPointX, calculatedPointY)
