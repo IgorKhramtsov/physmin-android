@@ -25,23 +25,21 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:280499204418:android:cac097e261c3671e",
+        "mobilesdk_app_id": "1:280499204418:android:03ec1dc55fa9ce2f",
         "android_client_info": {
-          "package_name": "com.example.physmin.beta"
+          "package_name": "com.example.physmin.dev"
         }
       },
       "oauth_client": [
@@ -56,15 +54,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
