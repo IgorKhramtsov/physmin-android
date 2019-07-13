@@ -8,12 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.physmin.R
 import com.example.physmin.activities.TestActivity
-import com.example.physmin.fragments.tests.FragmentTestGraph2Graph
-import com.example.physmin.fragments.tests.FragmentTestGraph2Graph2
-import com.example.physmin.fragments.tests.FragmentTestGraph2State
-import com.example.physmin.fragments.tests.FragmentTestSign2Relation
-import kotlinx.android.synthetic.main.fragment_test_hello.view.*
-import org.json.JSONObject
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -52,28 +46,28 @@ class FragmentTestHello : androidx.fragment.app.Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_test_hello, container, false)
 
         val activity = activity as TestActivity
-        val tests = (activity).tests
+        val tests = (activity).testBundle
 
 
 //        activity.showButtonNext()
 //        view.button_start_test.setOnClickListener {
 //            fragmentManager!!.beginTransaction()
-//                    .replace(R.id.test_host_fragment, parseTest(tests[0]))
+//                    .replace(R.id.test_host_fragment, parseTest(testBundle[0]))
 //                    .commit()
 //        }
 //        view.button_start_test_2.setOnClickListener {
 //            fragmentManager!!.beginTransaction()
-//                    .replace(R.id.my_nav_host_fragment, parseTest(tests[1]))
+//                    .replace(R.id.my_nav_host_fragment, parseTest(testBundle[1]))
 //                    .commit()
 //        }
 //        view.button_start_test_2_2.setOnClickListener {
 //            fragmentManager!!.beginTransaction()
-//                    .replace(R.id.my_nav_host_fragment, parseTest(tests[2]))
+//                    .replace(R.id.my_nav_host_fragment, parseTest(testBundle[2]))
 //                    .commit()
 //        }
 //        view.button_start_test_3.setOnClickListener {
 //            fragmentManager!!.beginTransaction()
-//                    .replace(R.id.my_nav_host_fragment, parseTest(tests[3]))
+//                    .replace(R.id.my_nav_host_fragment, parseTest(testBundle[3]))
 //                    .commit()
 //        }
         return view

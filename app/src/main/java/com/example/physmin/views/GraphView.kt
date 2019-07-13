@@ -15,6 +15,7 @@ import kotlin.math.abs
 import kotlin.math.min
 
 
+
 // TODO: Make arrows on axis
 
 open class GraphView(context: Context, attrs: AttributeSet?): View(context, attrs) {
@@ -169,7 +170,6 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         val widthScaleFactor = contentWidth / xAxisLength
         var calculatedPointY: Float
         var calculatedPointX = 0f
-        var globalT = 0f
         var len: Float
 
         functionPath.reset()

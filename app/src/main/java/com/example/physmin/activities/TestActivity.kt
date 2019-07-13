@@ -1,65 +1,78 @@
 package com.example.physmin.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
-import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
-import androidx.fragment.app.transaction
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.commit
+import com.example.physmin.BuildConfig
 import com.example.physmin.R
 import com.example.physmin.fragments.tests.*
+import com.example.physmin.views.LoadingHorBar
 import com.example.physmin.views.layouts.TestConstraintLayout
 import com.example.physmin.views.ProgressBarView
 import com.example.physmin.views.TimerView
+import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
 import kotlinx.android.synthetic.main.activity_test.*
+import kotlinx.android.synthetic.main.activity_test.view.*
 import org.json.JSONObject
+import java.lang.Exception
 import java.net.SocketTimeoutException
+import kotlin.concurrent.schedule
 
-class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseListener//,
-//FragmentTestHello.OnFragmentInteractionListener,
-//        FragmentTestGraph2State.OnAllDoneListener,
-//        FragmentTestGraph2Graph2.OnAllDoneListener,
-//        FragmentTestSign2Relation.OnAllDoneListener,
-//        FragmentTestGraph2Graph.OnAllDoneListener
+val ERROR_UNKNOWN = 0
+val ERROR_TIMEOUT = 1
+val ERROR_SERVER = 2
+
+class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseListener
 {
-    var tests = arrayListOf<JSONObject>()
-    //var listener: FragmentTestHello.OnAllDoneListener? = null
-    lateinit var buttonNext: Button
-    var nextTestIndex = 0
+    private lateinit var firebaseFunctions: FirebaseFunctions
+    var testBundle = arrayListOf<JSONObject>()
+
     var getTestFunctionName = "getTest"
-    lateinit var timerView: TimerView
-    private lateinit var functions: FirebaseFunctions
-    lateinit var progressBarView: ProgressBarView
     var testConstraintLayout: TestConstraintLayout? = null
+    lateinit var progressBarView: ProgressBarView
+    private lateinit var debugTextView: TextView
+    private lateinit var errorTextView: TextView
+    lateinit var timerView: TimerView
+    lateinit var buttonNext: Button
+    lateinit var loadingAnimation: LoadingHorBar
+    lateinit var floatingMenu: FloatingActionsMenu
+
+    private var nextTestIndex = 0
+    private var debugTextViewCalls = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
 
-        buttonNext = findViewById(R.id.button_test_next)
-        timerView = findViewById(R.id.Timer)
-        functions = FirebaseFunctions.getInstance("europe-west1")
-        hideButtonNext()
-        loadingHorBar.show()
-        intent.getStringExtra("GetTestFunctionName")?.let {
-            getTestFunctionName = it
-        }
-        this.progressBarView = progressBar
-        progressBarView.hide()
+        debugTextView = test_layout.debugTextView
+        errorTextView = test_layout.errorTextView
+        buttonNext = test_layout.button_test_next
+        timerView = test_layout.Timer
+        progressBarView = test_layout.progressBar
+        loadingAnimation = test_layout.loadingHorBar
+        floatingMenu = test_layout.floating_menu
 
-        getTest().addOnCompleteListener {
-            loadingHorBar.hide()
+        timerView.visibility = GONE
+        floatingMenu.visibility = GONE
+        debugTextView.visibility = GONE
 
-            if (!it.isSuccessful)
-                return@addOnCompleteListener
+        firebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
+        if(BuildConfig.FLAVOR.contains("dev"))
+            getTestFunctionName = "getTestDev"
 
-            processTests(it.result!!)
-        }
+        loadTest()
 
         // Greeting
 //        supportFragmentManager.transaction {
@@ -67,11 +80,138 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
 //        }
     }
 
+    private fun loadTest() {
+        errorTextView.visibility = GONE
+        progressBarView.hide()
+        hideButtonNext()
+        loadingAnimation.show()
+
+        fetchTestBundle().addOnCompleteListener {
+            loadingAnimation.hide()
+            if (it.isSuccessful)
+                processTestBundle(it.result!!)
+        }
+    }
+
+    private fun fetchTestBundle(): Task<String> {
+        return firebaseFunctions
+                .getHttpsCallable(getTestFunctionName)
+                .call()
+                .continueWith { task ->
+                    when {
+                        task.exception is SocketTimeoutException -> {
+                            Log.e("TestActivity", "fetchTestBundle() - Timeout!")
+                            showError(ERROR_TIMEOUT)
+                        }
+                        task.exception is FirebaseFunctionsException -> {
+                            Log.e("TestActivity", "FirebaseException [${(task.exception as FirebaseFunctionsException).code}], ${(task.exception as FirebaseFunctionsException).message}")
+                            showError(ERROR_SERVER)
+                        }
+                        task.exception is Exception -> {
+                            Log.e("TestActivity", "UnknownError ${task.exception.toString()}")
+                            showError(ERROR_UNKNOWN)
+                        }
+                    }
+
+                    val result = task.result?.data as String
+                    result
+                }
+    }
+
+    private fun processTestBundle(test: String) {
+        showButtonNext()
+        buttonNext.text = getString(R.string.messageButtonNext)
+
+        val data = JSONObject(test.substring(test.indexOf("{"), test.lastIndexOf("}") + 1)).optJSONArray("tests")
+        for (i in 0 until data!!.length())
+            testBundle.add(data.getJSONObject(i))
+
+        progressBar.segmentCount = testBundle.count()
+
+        buttonNext.setOnClickListener {
+            if (nextTestIndex >= testBundle.size)
+                onTestComplete()
+
+            timerView.visibility = VISIBLE
+            floatingMenu.visibility = VISIBLE
+            progressBarView.show()
+            supportFragmentManager.commit {
+                onTestSwitch()
+                replace(R.id.test_host_fragment, parseTest(testBundle[nextTestIndex++]))
+                timerView.restart()
+                hideButtonNext()
+            }
+        }
+    }
+
+    private fun onTestSwitch() {
+        testConstraintLayout?.let {
+
+            if (it.isAnswersCorrect()) {
+                progressBarView.addSegment()
+
+                if (progressBarView.isAllDone()) {
+                    val intent = Intent(this, TestActivity::class.java)
+                    intent.putExtra("GetTestFunctionName", "getTestDev")
+                    startActivity(intent)
+                } else Unit
+
+            } else {
+                testBundle.add(testBundle[nextTestIndex])
+
+                // TODO: create custom arrayList
+//            testBundle.removeAt(nextTestIndex)
+//            nextTestIndex--
+            }
+
+        }
+    }
+
+    fun onTestComplete() {
+        finish()
+    }
+
+    fun showDebugMessage(text: String) {
+        debugTextView.text = text
+        debugTextView.visibility = VISIBLE
+        debugTextView.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null))
+        val cachedCalls = ++debugTextViewCalls
+        java.util.Timer().schedule(5000) {
+            runOnUiThread {
+                if(debugTextViewCalls == cachedCalls) {
+                    debugTextView.text = ""
+                    debugTextView.visibility = GONE
+                    debugTextView.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
+                }
+            }
+        }
+    }
+
+    private fun showError(errorCode: Int) {
+        errorTextView.text = when(errorCode) {
+            ERROR_TIMEOUT -> getString(R.string.messageTimeoutError)
+            ERROR_SERVER -> getString(R.string.messageServerError)
+            else -> getString(R.string.messageUnknownError)
+        }
+        errorTextView.visibility = VISIBLE
+        buttonNext.text = getString(R.string.messageButtonTryAgain)
+        buttonNext.setOnClickListener { loadTest() }
+        showButtonNext()
+    }
+
+    fun showButtonNext() {
+        buttonNext.visibility = VISIBLE
+    }
+
+    fun hideButtonNext() {
+        buttonNext.visibility = GONE
+    }
+
     override fun asd() {
 
     }
 
-    fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
+    private fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
         return when (test.getString("type")) {
             "relationSings" -> parseRS(test)
             "graph2graph2" -> parseG2G2(test)
@@ -82,7 +222,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
         }
     }
 
-    fun parseRS(test: JSONObject): androidx.fragment.app.Fragment {
+    private fun parseRS(test: JSONObject): androidx.fragment.app.Fragment {
         val questionJson = test.getJSONArray("question")
         val answersJson = test.getJSONArray("answers")
 
@@ -97,7 +237,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
         return FragmentTestSign2Relation.newInstance(question, answers)
     }
 
-    fun parseG2G2(test: JSONObject): androidx.fragment.app.Fragment {
+    private fun parseG2G2(test: JSONObject): androidx.fragment.app.Fragment {
 
         val questionJson = test.getJSONObject("question")
         val answersJson = test.getJSONArray("answers")
@@ -113,7 +253,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
         return FragmentTestGraph2Graph2.newInstance(questions, answers)
     }
 
-    fun parseG2G(test: JSONObject): androidx.fragment.app.Fragment {
+    private fun parseG2G(test: JSONObject): androidx.fragment.app.Fragment {
 
         val questionJson = test.getJSONObject("question")
         val answersJson = test.getJSONArray("answers")
@@ -129,7 +269,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
         return FragmentTestGraph2Graph.newInstance(questions, answers)
     }
 
-    fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
+    private fun parseS2G(test: JSONObject): androidx.fragment.app.Fragment {
         val questionJson = test.getJSONArray("question")
         val answersJson = test.getJSONArray("answers")
 
@@ -143,71 +283,6 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
 
         return FragmentTestGraph2State.newInstance(question, answers)
     }
-
-    fun getTest(): Task<String> {
-        return functions
-                .getHttpsCallable(getTestFunctionName)
-                .call()
-                .continueWith { task ->
-                    // TODO: Process timeout exception
-                    if (task.exception is SocketTimeoutException)
-                        Log.e("TestActivity", "getTest() - Timeout!")
-                    else if (task.exception is FirebaseFunctionsException)
-                        Log.e("TestActivity", "FirebaseException [${(task.exception as FirebaseFunctionsException).code}], ${(task.exception as FirebaseFunctionsException).message}")
-
-                    val result = task.result?.data as String
-                    result
-                }
-    }
-
-    fun processTests(test: String) {
-        showButtonNext()
-
-        val data = JSONObject(test.substring(test.indexOf("{"), test.lastIndexOf("}") + 1)).optJSONArray("tests")
-        for (i in 0 until data!!.length())
-            tests.add(data.getJSONObject(i))
-
-        progressBar.segmentCount = tests.count()
-
-        buttonNext.setOnClickListener {
-            if (nextTestIndex >= tests.size)
-                return@setOnClickListener
-
-            progressBarView.show()
-            supportFragmentManager.transaction {
-                onTestSwitch()
-                replace(R.id.test_host_fragment, parseTest(tests[nextTestIndex++]))
-                timerView.restart()
-                hideButtonNext()
-            }
-
-        }
-    }
-
-    private fun onTestSwitch() {
-        testConstraintLayout?.let {
-
-            if (it.isAnswersCorrect())
-                progressBarView.addSegment()
-            else {
-                tests.add(tests[nextTestIndex])
-
-                // TODO: create custom arrayList
-//            tests.removeAt(nextTestIndex)
-//            nextTestIndex--
-            }
-        }
-    }
-
-    fun showButtonNext() {
-        buttonNext.visibility = View.VISIBLE
-    }
-
-    fun hideButtonNext() {
-        buttonNext.visibility = View.GONE
-    }
-
-
 }
 
 class FunctionParcelable(): Parcelable {
@@ -237,7 +312,7 @@ class FunctionParcelable(): Parcelable {
             v = readFloat()
             a = readFloat()
             len = readInt()
-            funcType = readString()
+            funcType = readString()?:throw Exception("Parsing funcType is null")
         }
     }
 
@@ -285,10 +360,9 @@ class QuestionParcelable(): Parcelable {
 
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
-            val intArray = createIntArray()
-//            readIntArray(intArray)
+            val intArray = createIntArray()!!
             correctIDs = intArray.toCollection(ArrayList())
-            functions = createTypedArrayList(FunctionParcelable.CREATOR)
+            functions = createTypedArrayList(FunctionParcelable.CREATOR)!!
         }
     }
 
@@ -329,7 +403,7 @@ class FunctionAnswerParcelable(): Parcelable {
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
             id = readInt()
-            functions = createTypedArrayList(FunctionParcelable.CREATOR)
+            functions = createTypedArrayList(FunctionParcelable.CREATOR)!!
         }
     }
 
@@ -375,9 +449,9 @@ class FunctionAnswerRelationSignParcelable(): Parcelable {
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
             id = readInt()
-            letter = readString()
-            leftIndex = readString()
-            rightIndex = readString()
+            letter = readString()?:throw Exception("Parsing funcType is null")
+            leftIndex = readString()?:throw Exception("Parsing funcType is null")
+            rightIndex = readString()?:throw Exception("Parsing funcType is null")
             correctSign = readInt()
         }
     }
@@ -419,7 +493,7 @@ class TextAnswerParcelable(): Parcelable {
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
             id = readInt()
-            text = readString()
+            text = readString()?:throw Exception("Parsing funcType is null")
         }
     }
 

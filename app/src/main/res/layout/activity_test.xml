@@ -8,6 +8,8 @@
     android:id="@+id/test_layout"
     >
 
+
+
     <com.example.physmin.views.ProgressBarView
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -40,7 +42,7 @@
         android:layout_height="match_parent">
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/multiple_actions"
+            android:id="@+id/floating_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -122,6 +124,24 @@
         app:layout_constraintTop_toTopOf="@+id/Menu_layout"
         tools:visibility="gone" />
 
+    <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="215dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/button_test_next"
+        app:layout_constraintEnd_toEndOf="@+id/Menu_layout"
+        app:layout_constraintStart_toStartOf="@+id/test_host_fragment"
+        app:layout_constraintTop_toTopOf="@+id/Menu_layout"
+        app:layout_constraintVertical_bias="1.0" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_test_next"
         android:layout_width="wrap_content"
@@ -136,10 +156,20 @@
         android:paddingTop="12dp"
         android:paddingRight="20dp"
         android:paddingBottom="12dp"
-        android:text="Далее"
+        android:text="@string/messageButtonNext"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/Menu_layout" />
+
+    <TextView
+        android:id="@+id/debugTextView"
+        android:layout_width="172dp"
+        android:layout_height="91dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

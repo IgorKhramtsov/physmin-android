@@ -58,11 +58,12 @@ class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(con
         setOnHierarchyChangeListener(this)
     }
 
-    fun addImageViewPickable(answerParcelable: FunctionAnswerParcelable) {
+    fun addImageViewPickable(answerParcelable: FunctionAnswerParcelable, isCorr: Boolean? = null) {
         val answerPic = ImageViewPickable(context, null).apply {
             layoutParams = LayoutParams(150.dpToPx().toInt(), 90.dpToPx().toInt())
             graph.functions = answerParcelable.functions
             answer = answerParcelable.id
+            isCorrect = isCorr
         }
 
         this.addView(answerPic)

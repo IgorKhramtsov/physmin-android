@@ -9,12 +9,15 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
+import com.example.physmin.activities.TestActivity
+import com.example.physmin.views.items.ImageViewPickable
 import com.example.physmin.views.layouts.GroupPickable
 
 abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, attrs) {
     internal lateinit var par: GroupPickable
     internal var answer = -1
     internal var picked = false
+    internal var isCorrect:Boolean? = null
     private var isDraggable = true
 
     private var touchX = 0f
@@ -23,13 +26,19 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
     private var viewY = 0f
     private var draggedView: View? = null
 
-    fun setParent(_parent: GroupPickable) { this.par = _parent }
+    fun setParent(_parent: GroupPickable) {
+        this.par = _parent
+    }
 
     fun isPicked() = picked
 
-    fun show() { this.visibility = VISIBLE }
+    fun show() {
+        this.visibility = VISIBLE
+    }
 
-    fun hide() { this.visibility = GONE }
+    fun hide() {
+        this.visibility = GONE
+    }
 
     fun setDraggable(boolean: Boolean) {
         this.isDraggable = boolean
@@ -45,8 +54,8 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
-        if(!isDraggable) {
-            if(event.action == MotionEvent.ACTION_UP)
+        if (!isDraggable) {
+            if (event.action == MotionEvent.ACTION_UP)
                 this.callOnClick()
             return true
         }
@@ -57,6 +66,23 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                 touchY = event.rawY
                 viewX = this.x
                 viewY = this.y
+
+                // Create Debug message singleton on corner
+                if(BuildConfig.FLAVOR.contains("dev")) {
+                    var text = when (this) {
+                        is ImageViewPickable -> {
+                            "x: ${this.graph.functions!![0].x}\r\n" +
+                                    "v: ${this.graph.functions!![0].v} \r\n" +
+                                    "a: ${this.graph.functions!![0].a} \r\n" +
+                                    "isCorrect: ${this.isCorrect}"
+                        }
+                        else -> {
+                            " none "
+                        }
+                    }
+                    (context as TestActivity).showDebugMessage(text)
+                }
+
             }
             MotionEvent.ACTION_MOVE -> {
                 if ((Math.abs(event.rawX - touchX) > 20 || Math.abs(event.rawY - touchY) > 20) || draggedView != null) {
@@ -77,7 +103,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
 
                         for (i in 0 until it.childCount) {
                             child = it.getChildAt(i)
-                            if (!(child is Settable))
+                            if (child !is Settable)
                                 continue
                             rect = getViewBounds(child)
 

@@ -89,6 +89,10 @@ class ProgressBarView(context: Context, attrs: AttributeSet?): View(context, att
         invalidate()
     }
 
+    fun isAllDone():Boolean {
+        return _completeSegmentCount >= segmentCount
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (!needDraw)

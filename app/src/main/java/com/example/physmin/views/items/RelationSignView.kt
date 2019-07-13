@@ -31,8 +31,8 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
     private var _rightIndex: String? = null
     private var _currentSign: String? = null
 
-    private var letterPaint: TextPaint? = null
-    private var indexPaint: TextPaint? = null
+    private var letterPaint: TextPaint
+    private var indexPaint: TextPaint
 
     private var letterWidth: Float = 0f
     private var letterHeight: Float = 0f

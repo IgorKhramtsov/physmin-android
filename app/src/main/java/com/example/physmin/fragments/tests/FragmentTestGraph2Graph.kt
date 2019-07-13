@@ -55,7 +55,7 @@ class FragmentTestGraph2Graph: FragmentTestBase() {
         }
 
         answers?.forEach {
-            pickableGroup.addImageViewPickable(it)
+            pickableGroup.addImageViewPickable(it, question!![0].correctIDs.contains(it.id))
         }
 
         val mScrollGroup = pickableGroup as GroupScrollable

@@ -19,7 +19,7 @@ class MenuItemView: View {
     private var _itemIcon: Drawable? = null
 
     private var iconBackPaint: Paint? = null
-    private var textPaint: TextPaint? = null
+    private lateinit var textPaint: TextPaint
     private var textWidth: Float = 0f
     private var textHeight: Float = 0f
 
