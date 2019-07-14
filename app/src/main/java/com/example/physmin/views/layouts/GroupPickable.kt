@@ -11,9 +11,11 @@ import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerParcelable
+import com.example.physmin.activities.TextAnswerParcelable
 import com.example.physmin.views.*
 import com.example.physmin.views.items.ImageViewPickable
 import com.example.physmin.views.items.TextViewPickable
+import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
@@ -63,10 +65,21 @@ class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(con
             layoutParams = LayoutParams(150.dpToPx().toInt(), 90.dpToPx().toInt())
             graph.functions = answerParcelable.functions
             answer = answerParcelable.id
-            isCorrect = isCorr
+            isCorrect = isCorr.toString()
         }
 
         this.addView(answerPic)
+    }
+
+    fun addTextViewPickable(answerParcelable: TextAnswerParcelable, correctIds: IntArray) {
+        val textView = TextViewPickable(this.context!!, null).apply {
+            setPadding(6.dpToPx().toInt(), 3.dpToPx().toInt(), 6.dpToPx().toInt(), 3.dpToPx().toInt())
+            answer = answerParcelable.id
+            layoutParams = LayoutParams(150.dpToPx().toInt(), LayoutParams.WRAP_CONTENT)
+            text = answerParcelable.text
+            isCorrect = correctIds.joinToString()
+        }
+        this.addView(textView)
     }
 
     fun setParent(parent: TestConstraintLayout) {

@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.ImageView
 import com.example.physmin.activities.TestActivity
 import com.example.physmin.views.items.ImageViewPickable
+import com.example.physmin.views.items.TextViewPickable
 import com.example.physmin.views.layouts.GroupPickable
 import kotlin.math.abs
 
@@ -18,7 +19,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
     internal lateinit var par: GroupPickable
     internal var answer = -1
     internal var picked = false
-    internal var isCorrect:Boolean? = null
+    internal var isCorrect = "unknown"
     private var isDraggable = true
 
     private var touchX = 0f
@@ -75,7 +76,10 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                             "x: ${this.graph.functions!![0].x}\r\n" +
                                     "v: ${this.graph.functions!![0].v} \r\n" +
                                     "a: ${this.graph.functions!![0].a} \r\n" +
-                                    "isCorrect: ${this.isCorrect}"
+                                    "answer: ${this.isCorrect}"
+                        }
+                        is TextViewPickable -> {
+                            " correct question: ${this.isCorrect}"
                         }
                         else -> {
                             " none "

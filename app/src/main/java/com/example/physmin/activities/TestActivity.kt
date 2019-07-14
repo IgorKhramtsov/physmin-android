@@ -343,10 +343,13 @@ class FunctionParcelable(): Parcelable {
 }
 
 class QuestionParcelable(): Parcelable {
+    var id: Int = 0
     var correctIDs = ArrayList<Int>()
     var functions = ArrayList<FunctionParcelable>()
 
     constructor(jsonObject: JSONObject): this() {
+        if(jsonObject.has("id"))
+            id = jsonObject.getInt("id")
         if (jsonObject.has("correctIDs"))
             jsonObject.getJSONArray("correctIDs").let {
                 for (i in 0 until it.length())
@@ -360,6 +363,7 @@ class QuestionParcelable(): Parcelable {
 
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
+            id = this.readInt()
             val intArray = createIntArray()!!
             correctIDs = intArray.toCollection(ArrayList())
             functions = createTypedArrayList(FunctionParcelable.CREATOR)!!
@@ -372,6 +376,7 @@ class QuestionParcelable(): Parcelable {
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.apply {
+            writeInt(id)
             writeIntArray(correctIDs.toIntArray())
             writeTypedList(functions)
         }

@@ -65,8 +65,9 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
 
-        if(this.getChildAt(this.childCount-1).bottom + this.top <= this.bottom)
+        if(this.childCount <= 0 || this.getChildAt(this.childCount-1).bottom + this.top <= this.bottom)
             return false
+
         var isIntercept = false//判断是否拦截
         val interceptX = ev.x//获取X坐标
         val interceptY = ev.y//获取Y坐标
@@ -103,7 +104,7 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if(this.getChildAt(this.childCount-1).bottom + this.top <= this.bottom)
+        if(this.childCount <= 0 || this.getChildAt(this.childCount-1).bottom + this.top <= this.bottom)
             return false
         val touchX = event.x
         val touchY = event.y

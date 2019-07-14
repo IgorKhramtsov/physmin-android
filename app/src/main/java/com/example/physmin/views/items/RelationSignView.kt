@@ -13,6 +13,7 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
@@ -129,7 +130,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
     private fun invalidateTextPaintAndMeasurements() {
         letterPaint?.let {
             it.textSize = 28.spToPx()
-            it.color = resources.getColor(android.R.color.primary_text_light)
+            it.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
             letterWidth = it.measureText(letter)
             letterHeight = it.fontMetrics.descent
             if(currentSign != null)
@@ -137,7 +138,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         }
         indexPaint?.let {
             it.textSize = 12.spToPx()
-            it.color = resources.getColor(android.R.color.primary_text_light)
+            it.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
             indexWidth = it.measureText(leftIndex)
         }
     }

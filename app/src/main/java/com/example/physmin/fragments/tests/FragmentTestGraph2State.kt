@@ -32,8 +32,7 @@ private const val ARG_ANSWERS = "param2"
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2State: androidx.fragment.app.Fragment() {
-    private var listener: OnFragmentInteractionListener? = null
+class FragmentTestGraph2State: FragmentTestBase() {
     private var questions: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<TextAnswerParcelable>? = null
 
@@ -49,52 +48,21 @@ class FragmentTestGraph2State: androidx.fragment.app.Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_test_state2graph, container, false)
 
-        val width = 140.dpToPx().toInt()
-        val height = 85.dpToPx().toInt()
-        var questPic: ImageViewSettable
-        val picParams = ViewGroup.LayoutParams(width, height)
+        settableGroup = view.settable_group
+        pickableGroup = view.pickable_group
 
         questions?.forEach {
-            questPic = ImageViewSettable(this.context!!, null).apply {
-                correctAnswers = it.correctIDs.toIntArray()
-                layoutParams = picParams
-                graph.functions = it.functions
-            }
-            view.settable_group.addView(questPic)
+            settableGroup.addViewSettable(it.correctIDs.toIntArray(), it.functions)
         }
 
-        val textParams = ViewGroup.LayoutParams(150.dpToPx().toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
-        var textView: TextViewPickable
         answers?.forEach {
-            textView = TextViewPickable(this.context!!, null).apply {
-                setPadding(6.dpToPx().toInt(), 3.dpToPx().toInt(), 6.dpToPx().toInt(), 3.dpToPx().toInt())
-                answer = it.id
-                layoutParams = textParams
-                text = it.text
-            }
-            view.pickable_group.addView(textView)
+            val correctIds = ArrayList<Int>()
+            questions?.forEach { question -> if (question.correctIDs.contains(it.id)) correctIds.add(question.id) }
+
+            pickableGroup.addTextViewPickable(it, correctIds.toIntArray())
         }
 
         return view
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
     }
 
     /**
@@ -113,10 +81,6 @@ class FragmentTestGraph2State: androidx.fragment.app.Fragment() {
         fun onFragmentInteraction(uri: Uri)
     }
 
-    //    interface OnAllDoneListener {
-//        fun onAllDone()
-//        fun onResetPressed()
-//    }
     companion object {
         /**
          * Use this factory method to create a new instance of
