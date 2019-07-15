@@ -27,8 +27,11 @@
     <com.example.physmin.views.layouts.GroupSettable
         android:id="@+id/settableGroup_rs"
         android:layout_width="0dp"
-        android:layout_height="186dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        app:gs_spacingHorizontal="16dp"
+        app:gs_spacingVertical="20dp"
+        app:gs_layoutType="one_column"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graphView_rs_task" />

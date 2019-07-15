@@ -14,11 +14,13 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.commit
 import com.example.physmin.BuildConfig
 import com.example.physmin.R
+import com.example.physmin.dev.fragments.FragmentTestList
 import com.example.physmin.fragments.tests.*
 import com.example.physmin.views.LoadingHorBar
 import com.example.physmin.views.layouts.TestConstraintLayout
 import com.example.physmin.views.ProgressBarView
 import com.example.physmin.views.TimerView
+import com.getbase.floatingactionbutton.FloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
@@ -69,8 +71,20 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
         debugTextView.visibility = GONE
 
         firebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
-        if(BuildConfig.FLAVOR.contains("dev"))
+        if(BuildConfig.FLAVOR.contains("dev")) {
             getTestFunctionName = "getTestDev"
+            floatingMenu.action_next.setOnClickListener { switchTest() }
+            floatingMenu.action_list.setOnClickListener {
+                supportFragmentManager.commit {
+                    addToBackStack(null)
+                    replace(R.id.test_host_fragment, FragmentTestList())
+                    floatingMenu.collapse()
+                }
+            }
+        } else {
+            floatingMenu.removeButton(this.action_list)
+            floatingMenu.removeButton(this.action_next)
+        }
 
         loadTest()
 
@@ -128,19 +142,25 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
 
         progressBar.segmentCount = testBundle.count()
 
-        buttonNext.setOnClickListener {
-            if (nextTestIndex >= testBundle.size)
-                onTestComplete()
+        buttonNext.setOnClickListener { switchTest() }
+    }
 
-            timerView.visibility = VISIBLE
-            floatingMenu.visibility = VISIBLE
-            progressBarView.show()
-            supportFragmentManager.commit {
+    fun switchTest(ind: Int? = null, suppressCallback: Boolean = false) {
+        val testIndex = ind ?: nextTestIndex++
+
+        if (testIndex >= testBundle.size)
+            onTestComplete()
+
+        timerView.visibility = VISIBLE
+        floatingMenu.visibility = VISIBLE
+        progressBarView.show()
+        supportFragmentManager.commit {
+            if (!suppressCallback)
                 onTestSwitch()
-                replace(R.id.test_host_fragment, parseTest(testBundle[nextTestIndex++]))
-                timerView.restart()
-                hideButtonNext()
-            }
+
+            replace(R.id.test_host_fragment, parseTest(testBundle[testIndex]))
+            timerView.restart()
+            hideButtonNext()
         }
     }
 

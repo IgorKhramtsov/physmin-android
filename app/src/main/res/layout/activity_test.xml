@@ -66,14 +66,6 @@
                 app:fab_title="Далее" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/action_prev"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_colorNormal="@color/primary_lighten_transparent"
-                app:fab_colorPressed="@color/primary_lighten_transparent_pressed"
-                app:fab_title="Назад" />
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

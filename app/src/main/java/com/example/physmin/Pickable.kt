@@ -70,8 +70,8 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                 viewY = this.y
 
                 // Create Debug message singleton on corner
-                if(BuildConfig.FLAVOR.contains("dev")) {
-                    var text = when (this) {
+                if(isDev()) {
+                    val text = when (this) {
                         is ImageViewPickable -> {
                             "x: ${this.graph.functions!![0].x}\r\n" +
                                     "v: ${this.graph.functions!![0].v} \r\n" +

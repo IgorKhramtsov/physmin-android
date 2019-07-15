@@ -2,7 +2,10 @@ package com.example.physmin
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import com.example.physmin.activities.TestActivity
+import com.example.physmin.views.items.RelationSignView
 import com.example.physmin.views.layouts.GroupSettable
 import com.example.physmin.views.layouts.TestConstraintLayout
 
@@ -32,4 +35,18 @@ abstract class Settable(context: Context, attrs: AttributeSet?): View(context, a
 
     abstract fun isCorrect(): Boolean
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                when(this) {
+                    is RelationSignView ->
+                        (context as TestActivity).showDebugMessage(correctAnswers.toString())
+                }
+            }
+        }
+
+        return super.onTouchEvent(event)
+
+    }
 }

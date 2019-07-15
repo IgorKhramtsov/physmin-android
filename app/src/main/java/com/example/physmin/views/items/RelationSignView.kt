@@ -21,7 +21,7 @@ import com.example.physmin.fragments.tests.toPx
 import com.example.physmin.views.spToPx
 
 
-class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: String?, lIndex: String?, rIndex: String?): Settable(context, attributeSet), View.OnClickListener, View.OnTouchListener  {
+class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: String?, lIndex: String?, rIndex: String?): Settable(context, attributeSet), OnClickListener  {
     var popupWindow: PopupWindow? = null
     var padding: Int = 0
     var location = intArrayOf(0, 0)
@@ -124,7 +124,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         invalidateTextPaintAndMeasurements()
     }
 
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean { return false }
+//    override fun onTouch(v: View?, event: MotionEvent?): Boolean { return false }
 
     // TODO: find correct color from theme
     private fun invalidateTextPaintAndMeasurements() {

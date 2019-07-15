@@ -37,6 +37,7 @@
         android:paddingBottom="8dp"
         app:gs_spacingHorizontal="16dp"
         app:gs_spacingVertical="16dp"
+        app:gs_layoutType="two_columns"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />

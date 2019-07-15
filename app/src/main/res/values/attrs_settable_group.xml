@@ -2,5 +2,6 @@
     <declare-styleable name="GroupSettable">
         <attr name="gs_spacingVertical" format="dimension" />
         <attr name="gs_spacingHorizontal" format="dimension" />
+        <attr name="gs_layoutType" format="string" />
     </declare-styleable>
 </resources>
