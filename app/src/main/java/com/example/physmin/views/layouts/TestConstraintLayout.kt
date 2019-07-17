@@ -18,12 +18,12 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet): Constr
     lateinit var groupPickable: GroupPickable
     lateinit var groupSettable: GroupSettable
     var nextTestButton: Button? = null
-    var progressBarView: ProgressBarView
 
     init {
         setOnHierarchyChangeListener(this)
-        (context as TestActivity).testConstraintLayout = this
-        progressBarView = (context as TestActivity).progressBarView
+        if(!isInEditMode) {
+            (context as TestActivity).testConstraintLayout = this
+        }
     }
 
     override fun onChildViewAdded(p0: View?, child: View) {
@@ -53,9 +53,6 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet): Constr
             (context as TestActivity).showButtonNext()
 
             groupPickable.visibility = View.GONE
-
-//            if(isAnswersCorrect())
-//                progressBarView.addSegment()
         } else {
             (context as TestActivity).hideButtonNext()
             groupPickable.visibility = View.VISIBLE
@@ -64,8 +61,8 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet): Constr
 
     public fun isAnswersCorrect(): Boolean {
         var child: View
-        for (i in 0 until this.groupSettable!!.childCount) {
-            child = this.groupSettable!!.getChildAt(i)
+        for (i in 0 until this.groupSettable.childCount) {
+            child = this.groupSettable.getChildAt(i)
             if (child is Settable) {
                 Log.i("TestConstraintLayout", "isCorrect - " + child.isCorrect().toString())
                 if (!child.isCorrect())

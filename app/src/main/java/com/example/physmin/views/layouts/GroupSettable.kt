@@ -33,7 +33,9 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
     var layoutType: Int = TWO_COLUMNS
     var blurRadius = 2.dpToPx()
     var cornerRadius = 2.dpToPx()
-    var backPanelBitmap: Bitmap? = null
+    private val backPanelBitmap: Bitmap by lazy {
+        generateShadowPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+    }
 
     private var _deviceWidth: Int = 0
 
@@ -59,10 +61,6 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): ViewGroup(co
         _deviceWidth = displaySize.x
 
         setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
-
-        this.post {
-            backPanelBitmap = generateShadowPanel(width + 10, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
-        }
 
         setOnHierarchyChangeListener(this)
     }

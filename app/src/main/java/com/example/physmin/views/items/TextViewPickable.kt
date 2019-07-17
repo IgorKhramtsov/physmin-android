@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.core.content.res.ResourcesCompat
@@ -47,6 +48,7 @@ class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context
         _paint.let {
             it.textSize = textSize
             it.color = textColor
+            it.typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
             _textMeasuredWidth = it.measureText(text)
             _textMeasuredHeight = Math.abs(it.fontMetrics.top)
         }

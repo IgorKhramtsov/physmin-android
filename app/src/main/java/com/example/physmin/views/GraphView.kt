@@ -132,6 +132,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         textPaint.let {
             it.textSize = textSize
             it.color = textColor
+            it.typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
             indexTextWidth = it.measureText(vertAxisLetter)
             indexTextHeight = abs(it.fontMetrics.ascent)
 
@@ -139,6 +140,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         smallTextPaint.let {
             it.textSize = smallTextSize
             it.color = _smallTextColor
+            it.typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
             zeroAxisTextHeight = abs(it.fontMetrics.ascent)
             upperLimitTextWidth = it.measureText((yAxisLength / 2).toString())
         }

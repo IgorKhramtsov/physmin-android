@@ -457,16 +457,18 @@ class FunctionAnswerParcelable(): Parcelable {
 class FunctionAnswerRelationSignParcelable(): Parcelable {
     var id = 0
     var letter = ""
-    var leftIndex = ""
-    var rightIndex = ""
+    var leftIndex = IntArray(2)
+    var rightIndex = IntArray(2)
     var correctSign = 0
 
     constructor(jsonObject: JSONObject): this() {
         jsonObject.apply {
             id = getInt("id")
             letter = getString("letter")
-            leftIndex = getString("leftIndex")
-            rightIndex = getString("rightIndex")
+            val leftIndArr = getJSONArray("leftIndexes")
+            leftIndex = arrayOf(leftIndArr.getInt(0), leftIndArr.getInt(1)).toIntArray()
+            val rightIndArr = getJSONArray("rightIndexes")
+            rightIndex = arrayOf(rightIndArr.getInt(0), rightIndArr.getInt(1)).toIntArray()
             correctSign = getInt("correctSign")
         }
     }
@@ -475,8 +477,10 @@ class FunctionAnswerRelationSignParcelable(): Parcelable {
         parcel?.apply {
             id = readInt()
             letter = readString()?:throw Exception("Parsing funcType is null")
-            leftIndex = readString()?:throw Exception("Parsing funcType is null")
-            rightIndex = readString()?:throw Exception("Parsing funcType is null")
+            val intArrayLeft = createIntArray()!!
+            leftIndex = intArrayLeft.toCollection(ArrayList()).toIntArray()
+            val intArrayRight = createIntArray()!!
+            rightIndex = intArrayRight.toCollection(ArrayList()).toIntArray()
             correctSign = readInt()
         }
     }
@@ -489,8 +493,8 @@ class FunctionAnswerRelationSignParcelable(): Parcelable {
         dest?.apply {
             writeInt(id)
             writeString(letter)
-            writeString(leftIndex)
-            writeString(rightIndex)
+            writeIntArray(leftIndex)
+            writeIntArray(rightIndex)
             writeInt(correctSign)
         }
     }
