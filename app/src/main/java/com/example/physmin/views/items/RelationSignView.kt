@@ -1,5 +1,6 @@
 package com.example.physmin.views.items
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -14,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.withTranslation
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
@@ -23,15 +23,16 @@ import com.example.physmin.views.spToPx
 import kotlin.math.round
 
 
+@SuppressLint("ViewConstructor")
 class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: String?, lIndexes: IntArray?, rIndexes: IntArray?): Settable(context, attributeSet), OnClickListener {
     private var isInitialized = false
 
-    var popupWindow: PopupWindow? = null
-    var padding: Int = 0
-    var textSize = 24.spToPx()
-    var textIndexSize = 12.spToPx()
-    var location = intArrayOf(0, 0)
     var correctAnswers: Int? = null
+    var popupWindow: PopupWindow? = null
+    var letterSize = 24.spToPx()
+    var indexesSize = 12.spToPx()
+    var popupLocation = intArrayOf(0, 0)
+    var popupPadding: Int = 0
 
     private var letterPaint: TextPaint
     private var indexPaint: TextPaint
@@ -82,10 +83,10 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         this.rightIndexes = rIndexes
 
         this.letter?.let {
-            if(it == "S")
+            if(it.length == 1) {
                 this.setPadding(10.toPx(), 0, 10.toPx(), 0)
-            else if(it.length == 1) // not delta
                 this.letter = it.toUpperCase()
+            }
         }
 
 
@@ -122,7 +123,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
             return
 
         letterPaint.let {
-            it.textSize = textSize
+            it.textSize = letterSize
             it.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
             it.typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
             letterWidth = it.measureText(letter)
@@ -131,10 +132,10 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
                 signWidth = it.measureText(currentSign)
         }
         indexPaint.let {
-            it.textSize = textIndexSize
+            it.textSize = indexesSize
             it.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
             it.typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
-            indexWidth = it.measureText(leftIndexes?.joinToString(""))
+            indexWidth = it.measureText(leftIndexes?.joinToString(","))
         }
     }
 
@@ -153,8 +154,8 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
     override fun onClick(view: View?) {
         if (popupWindow != null) {
             popupWindow!!.showAtLocation(this.parentTestConstraintLayout.groupPickable, 0,
-                    location[0] + padding,
-                    location[1] - round(this.height * 0.7f).toInt())
+                    popupLocation[0] + popupPadding,
+                    popupLocation[1] - round(this.height * 0.7f).toInt())
             return
         }
 
@@ -163,7 +164,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
 
         popupView.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
-        padding = (this.width - popupView.measuredWidth) / 2
+        popupPadding = (this.width - popupView.measuredWidth) / 2
 
         popupWindow = PopupWindow(popupView, FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         popupWindow!!.setBackgroundDrawable(ColorDrawable())
@@ -184,7 +185,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         popupView.findViewById<TextViewPickable>(R.id.textViewPickable_equal).setOnClickListener(listener)
         popupView.findViewById<TextViewPickable>(R.id.textViewPickable_more).setOnClickListener(listener)
 
-        this.getLocationOnScreen(location)
+        this.getLocationOnScreen(popupLocation)
 
         onClick(view)
     }
@@ -203,13 +204,13 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
                     letterPaint)
         }
         leftIndexes?.let {
-            canvas.drawText(it.joinToString(""),
+            canvas.drawText(it.joinToString(","),
                     paddingLeft + letterWidth,
                     (contentHeight / 2) + letterHeight + indexHeight,
                     indexPaint)
         }
         rightIndexes?.let {
-            canvas.drawText(it.joinToString(""),
+            canvas.drawText(it.joinToString(","),
                     contentWidth - paddingRight - indexWidth,
                     (contentHeight / 2) + letterHeight + indexHeight,
                     indexPaint)

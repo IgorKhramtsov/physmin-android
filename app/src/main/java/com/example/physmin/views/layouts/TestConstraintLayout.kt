@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
+import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.activities.TestActivity
 import com.example.physmin.views.ProgressBarView
@@ -20,6 +22,8 @@ class TestConstraintLayout(context: Context, attributeSet: AttributeSet): Constr
     var nextTestButton: Button? = null
 
     init {
+        setBackgroundColor(ResourcesCompat.getColor(resources, R.color.ui_background, null))
+
         setOnHierarchyChangeListener(this)
         if(!isInEditMode) {
             (context as TestActivity).testConstraintLayout = this

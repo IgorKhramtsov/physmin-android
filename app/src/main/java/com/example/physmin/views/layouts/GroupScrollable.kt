@@ -10,7 +10,8 @@ import android.widget.Scroller
     TODO: Make cleanup
  */
 
-open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
+open class GroupScrollable(context: Context, attrs: AttributeSet? = null):
+        BaseGroup(context, attrs) {
     //是否是水平滚动
     private var isHorizontalOrVertical = false
     //是否添加首位滑动阻尼效果
@@ -165,58 +166,6 @@ open class GroupScrollable @JvmOverloads constructor(context: Context, attrs: At
         mLastX = touchX
         mLastY = touchY
         return true
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val childCount = childCount
-        for (i in 0 until childCount) {
-            val childAt = getChildAt(i)
-            //测量每一个子控件到大小
-            measureChild(childAt, widthMeasureSpec, heightMeasureSpec)
-        }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
-
-    /**
-     * @param changed 参数changed表示view有新的尺寸或位置
-     * @param l       参数l表示相对于父view的Left位置
-     * @param t       参数t表示相对于父view的Top位置
-     * @param r       参数r表示相对于父view的Right位置
-     * @param b       参数b表示相对于父view的Bottom位置
-     */
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        if (changed) {
-            val childCount = childCount
-            for (i in 0 until childCount) {
-                val childView = getChildAt(i)
-                var left = 0
-                var top = 0
-                var right = 0
-                var bottom = 0
-                if (isHorizontalOrVertical) {
-                    left = i * measuredWidth
-                    top = 0
-                    right = i * measuredWidth + childView.measuredWidth + paddingLeft
-                    bottom = childView.measuredHeight
-                } else {
-                    left = 0
-                    top = i * childView.measuredHeight
-                    right = childView.measuredWidth
-                    bottom = i * childView.measuredHeight + childView.measuredHeight + paddingTop
-                }
-                childView.layout(left, top, right, bottom)
-            }
-
-
-            //初始化左右边界
-            leftEdge = 0
-            rightEdge = getChildCount() * measuredWidth
-            topEdge = 0
-            bottomEdge = getChildCount() * measuredHeight
-
-
-        }
     }
 
     override fun computeScroll() {

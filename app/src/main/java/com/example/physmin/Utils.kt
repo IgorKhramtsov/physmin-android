@@ -1,5 +1,8 @@
 package com.example.physmin
 
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
+
 /*  ╔════╦════════════════════════════╦═════════════════════════════╗
     ║    ║ FONT FAMILY                ║ TTF FILE                    ║
     ╠════╬════════════════════════════╬═════════════════════════════╣
@@ -20,3 +23,15 @@ package com.example.physmin
 
 
 fun isDev() = BuildConfig.FLAVOR.contains("dev")
+
+class Singleton<O, V>(initializer: () -> V): ReadOnlyProperty<O, V?> {
+    private var initializer: (() -> V)? = initializer
+    var value: V? = null
+
+    override fun getValue(thisRef: O, property: KProperty<*>): V? {
+        if (value == null)
+            value = initializer!!()
+
+        return value
+    }
+}

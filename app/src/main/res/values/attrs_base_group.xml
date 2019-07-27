@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="BaseGroup">
+        <attr name="bg_spacingVertical" format="dimension" />
+        <attr name="bg_spacingHorizontal" format="dimension" />
+        <attr name="bg_layoutType" format="string" />
+    </declare-styleable>
+</resources>

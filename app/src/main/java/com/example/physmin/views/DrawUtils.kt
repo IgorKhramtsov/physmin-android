@@ -29,7 +29,10 @@ fun generateShadowPanel(width: Int,
                         panelColor: Int,
                         shadowColor: Int,
                         view: View,
-                        shapeType: Int = ROUNDED_RECT): Bitmap {
+                        shapeType: Int = ROUNDED_RECT): Bitmap? {
+    if(width <= 0 || height <= 0)
+        return null
+
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
     val backPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
@@ -69,7 +72,7 @@ fun generateShadowPanel(width: Int,
                         blurRadius: Float,
                         panelColor: Int,
                         shadowColor: Int,
-                        view: View): Bitmap {
+                        view: View): Bitmap? {
     return generateShadowPanel(width, height, cornerRadius, blurRadius, 0f, 0f, panelColor, shadowColor, view)
 }
 

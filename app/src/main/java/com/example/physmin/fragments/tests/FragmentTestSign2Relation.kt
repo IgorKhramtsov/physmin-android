@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerRelationSignParcelable
 import com.example.physmin.activities.QuestionParcelable
+import com.example.physmin.views.dpToPx
 import com.example.physmin.views.items.RelationSignView
+import com.example.physmin.views.layouts.ONE_TWO_COLUMNS
 import com.example.physmin.views.layouts.TWO_COLUMNS
 import kotlinx.android.synthetic.main.fragment_test_relation_signs.view.*
 import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
@@ -50,7 +52,14 @@ class FragmentTestSign2Relation : FragmentTestBase() {
         val view = inflater.inflate(R.layout.fragment_test_relation_signs, container, false)
 
         settableGroup = view.settableGroup_rs
-        if(answers!!.count() % 2 == 0)
+        if(answers!!.count() == 3) {
+            settableGroup.layoutType = ONE_TWO_COLUMNS
+            settableGroup.setPadding(settableGroup.paddingLeft,
+                    16.dpToPx().toInt(),
+                    settableGroup.paddingBottom,
+                    16.dpToPx().toInt())
+        }
+        else if(answers!!.count() % 2 == 0)
             settableGroup.layoutType = TWO_COLUMNS
 
         view.graphView_rs_task.functions = questions!![0].functions

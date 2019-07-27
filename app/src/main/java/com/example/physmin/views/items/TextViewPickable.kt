@@ -100,15 +100,6 @@ class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context
 
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        if (_staticLayout === null) invalidateStaticLayout()
-        canvas.withTranslation(paddingLeft.toFloat(), paddingTop.toFloat()) {
-            _staticLayout?.draw(canvas)
-        }
-    }
-
     override fun select() {
         super.select()
 
@@ -127,4 +118,16 @@ class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context
         invalidate()
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+
+        if (_staticLayout === null) invalidateStaticLayout()
+
+        _staticLayout?.let {
+            val offset = ((height - paddingTop - paddingBottom) - it.height) / 2f
+            canvas.withTranslation(paddingLeft.toFloat(), paddingTop.toFloat() + offset) {
+                it.draw(canvas)
+            }
+        }
+    }
 }
