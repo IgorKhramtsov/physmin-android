@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Button
@@ -17,10 +18,8 @@ import com.example.physmin.R
 import com.example.physmin.dev.fragments.FragmentTestList
 import com.example.physmin.fragments.tests.*
 import com.example.physmin.views.LoadingHorBar
-import com.example.physmin.views.layouts.TestConstraintLayout
 import com.example.physmin.views.ProgressBarView
 import com.example.physmin.views.TimerView
-import com.getbase.floatingactionbutton.FloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
@@ -36,13 +35,13 @@ const val ERROR_UNKNOWN = 0
 const val ERROR_TIMEOUT = 1
 const val ERROR_SERVER = 2
 
-class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseListener
+class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
 {
     private lateinit var firebaseFunctions: FirebaseFunctions
     var testBundle = arrayListOf<JSONObject>()
 
     var getTestFunctionName = "getTest"
-    var testConstraintLayout: TestConstraintLayout? = null
+    var testController: TestController? = null
     lateinit var progressBarView: ProgressBarView
     private lateinit var debugTextView: TextView
     private lateinit var errorTextView: TextView
@@ -86,7 +85,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
             floatingMenu.removeButton(this.action_next)
         }
 
-        loadTest()
+        loadTestBundle()
 
         // Greeting
 //        supportFragmentManager.transaction {
@@ -94,7 +93,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
 //        }
     }
 
-    private fun loadTest() {
+    private fun loadTestBundle() {
         errorTextView.visibility = GONE
         progressBarView.hide()
         hideButtonNext()
@@ -165,7 +164,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
     }
 
     private fun onTestSwitch() {
-        testConstraintLayout?.let {
+        testController?.let {
 
             if (it.isAnswersCorrect()) {
                 progressBarView.addSegment()
@@ -185,10 +184,6 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
             }
 
         }
-    }
-
-    fun onTestComplete() {
-        finish()
     }
 
     fun showDebugMessage(text: String) {
@@ -215,20 +210,24 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.OnFragmentTestBaseList
         }
         errorTextView.visibility = VISIBLE
         buttonNext.text = getString(R.string.messageButtonTryAgain)
-        buttonNext.setOnClickListener { loadTest() }
+        buttonNext.setOnClickListener { loadTestBundle() }
         showButtonNext()
     }
 
-    fun showButtonNext() {
+    private fun showButtonNext() {
         buttonNext.visibility = VISIBLE
     }
 
-    fun hideButtonNext() {
+    private fun hideButtonNext() {
         buttonNext.visibility = GONE
     }
 
-    override fun asd() {
+    override fun onTestComplete() {
+        showButtonNext()
+    }
 
+    override fun onTestCompleteRejected() {
+        hideButtonNext()
     }
 
     private fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {

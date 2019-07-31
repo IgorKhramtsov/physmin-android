@@ -10,6 +10,8 @@ import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.activities.FunctionAnswerRelationSignParcelable
 import com.example.physmin.activities.FunctionParcelable
+import com.example.physmin.fragments.tests.TestController
+import com.example.physmin.settableGroupTag
 import com.example.physmin.views.*
 import com.example.physmin.views.items.ImageViewSettable
 import com.example.physmin.views.items.ImageViewSettableBlank
@@ -21,9 +23,10 @@ import kotlin.math.max
 class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
-    lateinit var parentTestConstraintLayout: TestConstraintLayout
+    lateinit var controller: TestController
 
     init {
+        tag = settableGroupTag
         setOnHierarchyChangeListener(this)
     }
 
@@ -59,17 +62,15 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
         this.addView(imageViewSettableBlank)
     }
 
-    fun setParent(parent: TestConstraintLayout) {
-        this.parentTestConstraintLayout = parent
+    fun setTestController(controller: TestController) {
+        this.controller = controller
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {
-        when (child) {
-            is Settable -> {
-                child.setParent(this)
-                if (child !is RelationSignView)
-                    child.setOnClickListener(this)
-            }
+        if (child is Settable) {
+            child.setTestController(controller)
+            if (child !is RelationSignView)
+                child.setOnClickListener(this)
         }
     }
 
@@ -78,17 +79,28 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
     override fun onClick(clickedChild: View?) {
         if (clickedChild !is Settable) return
 
-        clickedChild.answerView = parentTestConstraintLayout.takePickedItem()
+        clickedChild.answerView = controller.takePickedItem()
     }
 
     fun isAllChecked(): Boolean {
         var child: View
         for (i in 0 until this.childCount) {
             child = getChildAt(i)
-            if (child is Settable)
-                if (child.answerView == null)
-                    return false
+            if (child is Settable && child.answerView == null)
+                return false
         }
+
+        return true
+    }
+
+    fun isAllCorrect(): Boolean {
+        var child: View
+        for (i in 0 until childCount) {
+            child = getChildAt(i)
+            if (child is Settable && !child.isCorrect())
+                return false
+        }
+
         return true
     }
 }

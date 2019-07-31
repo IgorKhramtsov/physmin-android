@@ -33,6 +33,7 @@ private const val ARG_ANSWERS = "param2"
  *
  */
 class FragmentTestGraph2State: FragmentTestBase() {
+    override var layoutResource = R.layout.fragment_test_state2graph
     private var questions: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<TextAnswerParcelable>? = null
 
@@ -44,13 +45,7 @@ class FragmentTestGraph2State: FragmentTestBase() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.fragment_test_state2graph, container, false)
-
-        settableGroup = view.settable_group
-        pickableGroup = view.pickable_group
-
+    override fun onCreateViewEvent(view: View) {
         questions?.forEach {
             settableGroup.addViewSettable(it.correctIDs.toIntArray(), it.functions)
         }
@@ -61,8 +56,6 @@ class FragmentTestGraph2State: FragmentTestBase() {
 
             pickableGroup.addTextViewPickable(it, correctIds.toIntArray())
         }
-
-        return view
     }
 
     /**

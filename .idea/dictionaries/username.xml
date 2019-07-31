@@ -2,6 +2,8 @@
   <dictionary name="username">
     <words>
       <w>choosed</w>
+      <w>firebase</w>
+      <w>pickable</w>
     </words>
   </dictionary>
 </component>

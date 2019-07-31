@@ -31,23 +31,20 @@ private const val ARG_ANSWERS = "param2"
 
 class FragmentTestGraph2Graph: FragmentTestBase() {
 
+    override var layoutResource = R.layout.fragment_test_graph2graph
     private var question: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<FunctionAnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             question = it.getParcelableArrayList(ARG_QUESTION)
             answers = it.getParcelableArrayList(ARG_ANSWERS)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.fragment_test_graph2graph, container, false)
-        settableGroup = view.settableGroup_g2g
-        pickableGroup = view.pickableGroup_g2g
-
+    override fun onCreateViewEvent(view: View) {
         question?.forEach {
             settableGroup.addQuestionGraphic(it.functions)
             for (i in 0 until it.correctIDs.count())
@@ -57,14 +54,6 @@ class FragmentTestGraph2Graph: FragmentTestBase() {
         answers?.forEach {
             pickableGroup.addImageViewPickable(it, question!![0].correctIDs.contains(it.id))
         }
-
-        val mScrollGroup = pickableGroup as GroupScrollable
-        mScrollGroup.setHorizontalOrVertical(false)
-                .setStartEndScroll(true)
-                .setDuration(300)
-                .setInvalidate()
-
-        return view
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -35,6 +35,7 @@ data class Question(val letter: String, val leftIndex: String, val rightIndex: S
  *
  */
 class FragmentTestSign2Relation : FragmentTestBase() {
+    override var layoutResource = R.layout.fragment_test_relation_signs
     private var questions: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<FunctionAnswerRelationSignParcelable>? = null
 
@@ -47,19 +48,14 @@ class FragmentTestSign2Relation : FragmentTestBase() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_test_relation_signs, container, false)
-
-        settableGroup = view.settableGroup_rs
-        if(answers!!.count() == 3) {
+    override fun onCreateViewEvent(view: View) {
+        if (answers!!.count() == 3) {
             settableGroup.layoutType = ONE_TWO_COLUMNS
             settableGroup.setPadding(settableGroup.paddingLeft,
                     16.dpToPx().toInt(),
                     settableGroup.paddingBottom,
                     16.dpToPx().toInt())
-        }
-        else if(answers!!.count() % 2 == 0)
+        } else if (answers!!.count() % 2 == 0)
             settableGroup.layoutType = TWO_COLUMNS
 
         view.graphView_rs_task.functions = questions!![0].functions
@@ -67,8 +63,18 @@ class FragmentTestSign2Relation : FragmentTestBase() {
         answers?.forEach {
             settableGroup.addRelationSignView(it)
         }
+    }
 
-        return view
+    override fun onTestComplete() {
+        settableGroup.visibility = View.GONE
+
+        super.onTestComplete()
+    }
+
+    override fun onTestCompleteRejected() {
+        settableGroup.visibility = View.VISIBLE
+
+        super.onTestCompleteRejected()
     }
 
     /**

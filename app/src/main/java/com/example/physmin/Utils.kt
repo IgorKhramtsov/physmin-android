@@ -23,6 +23,8 @@ import kotlin.reflect.KProperty
 
 
 fun isDev() = BuildConfig.FLAVOR.contains("dev")
+const val pickableGroupTag = "pickableGroup"
+const val settableGroupTag = "settableGroup"
 
 class Singleton<O, V>(initializer: () -> V): ReadOnlyProperty<O, V?> {
     private var initializer: (() -> V)? = initializer

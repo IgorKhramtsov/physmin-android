@@ -153,7 +153,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
 
     override fun onClick(view: View?) {
         if (popupWindow != null) {
-            popupWindow!!.showAtLocation(this.parentTestConstraintLayout.groupPickable, 0,
+            popupWindow!!.showAtLocation(controller.pickableGroup, 0,
                     popupLocation[0] + popupPadding,
                     popupLocation[1] - round(this.height * 0.7f).toInt())
             return

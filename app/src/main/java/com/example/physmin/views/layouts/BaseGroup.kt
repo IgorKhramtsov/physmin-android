@@ -8,7 +8,9 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import com.example.physmin.Pickable
 import com.example.physmin.R
+import com.example.physmin.Settable
 import com.example.physmin.Singleton
 import com.example.physmin.views.dpToPx
 import com.example.physmin.views.generateShadowPanel

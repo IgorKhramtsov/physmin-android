@@ -1,36 +1,31 @@
 package com.example.physmin.views.layouts
 
 import android.content.Context
-import android.graphics.*
 import android.util.AttributeSet
-import android.view.Display
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
-import com.example.physmin.R
 import com.example.physmin.activities.FunctionAnswerParcelable
 import com.example.physmin.activities.TextAnswerParcelable
+import com.example.physmin.fragments.tests.TestController
+import com.example.physmin.pickableGroupTag
 import com.example.physmin.views.*
 import com.example.physmin.views.items.ImageViewPickable
 import com.example.physmin.views.items.TextViewPickable
-import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
-    lateinit var parentTestConstraintLayout: TestConstraintLayout
-    var pickedItem: Pickable? = null
-        private set(value) {
-            field?.deselect() // Deselect previous
-            field = value
-            field?.select() // Select new
-        }
+    lateinit var controller: TestController
 
     init {
         layoutType = TWO_COLUMNS
+        tag = pickableGroupTag
         setOnHierarchyChangeListener(this)
+    }
+
+    fun setTestController(controller: TestController) {
+        this.controller = controller
     }
 
     fun addImageViewPickable(answerParcelable: FunctionAnswerParcelable, isCorr: Boolean? = null) {
@@ -55,30 +50,17 @@ class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(con
         this.addView(textView)
     }
 
-    fun setParent(parent: TestConstraintLayout) {
-        this.parentTestConstraintLayout = parent
-    }
-
-    fun resetPickedItem() {
-        this.pickedItem = null
-    }
-
-    private fun pickItem(item: Pickable?) {
-        pickedItem = if (pickedItem == item) null else item
-    }
-
-    override fun onClick(p0: View?) {
-        if (p0 is Pickable) pickItem(p0)
+    override fun onClick(item: View?) {
+        if (item is Pickable)
+            controller.setPickedItem(item)
     }
 
     override fun onChildViewAdded(parent: View?, child: View) {
-        child.setOnClickListener(this)
-        (child as? TextViewPickable)?.setParent(this)
-        (child as? ImageViewPickable)?.setParent(this)
-
+        if(child is Pickable) {
+            child.setOnClickListener(this)
+            child.setTestController(controller)
+        }
     }
 
-    override fun onChildViewRemoved(parent: View?, child: View?) {
-
-    }
+    override fun onChildViewRemoved(parent: View?, child: View?) { }
 }

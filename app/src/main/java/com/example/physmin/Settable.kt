@@ -5,38 +5,32 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.example.physmin.activities.TestActivity
+import com.example.physmin.fragments.tests.TestController
 import com.example.physmin.views.items.RelationSignView
-import com.example.physmin.views.layouts.GroupSettable
-import com.example.physmin.views.layouts.TestConstraintLayout
 
 abstract class Settable(context: Context, attrs: AttributeSet?): View(context, attrs) {
-    internal lateinit var parentSettableGroup: GroupSettable
-    internal lateinit var parentTestConstraintLayout: TestConstraintLayout
+    lateinit var controller: TestController
+
     internal var answerView: Pickable? = null
         set(value) {
             field?.show() // Show prev
             field = value
-            field?.deselect() // Deselect new
             field?.hide() // Hide new
-            parentTestConstraintLayout.checkTestComplete()
+            controller.updateTestStatus()
             invalidate()
 
             onAnswerChanged(field)
         }
 
-    open fun onAnswerChanged(answerView: Pickable?) {
-
-    }
-
-    fun setParent(_parent: GroupSettable) {
-        this.parentSettableGroup = _parent
-        this.parentTestConstraintLayout = _parent.parentTestConstraintLayout
-    }
-
     abstract fun isCorrect(): Boolean
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    open fun onAnswerChanged(answerView: Pickable?) { }
 
+    fun setTestController(controller: TestController) {
+        this.controller = controller
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
                 when(this) {
@@ -47,6 +41,5 @@ abstract class Settable(context: Context, attrs: AttributeSet?): View(context, a
         }
 
         return super.onTouchEvent(event)
-
     }
 }
