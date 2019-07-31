@@ -168,6 +168,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         this.vertAxisLetter = functions!![0].funcType
 
         if (this.vertAxisLetter == "a") yAxisLength = 1f
+        else yAxisLength = 12f
         val heightScaleFactor = -(contentHeight / yAxisLength)
         val widthScaleFactor = contentWidth / xAxisLength
         var calculatedPointY: Float

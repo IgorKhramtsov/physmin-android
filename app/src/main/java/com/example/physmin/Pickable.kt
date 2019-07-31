@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -92,14 +93,16 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                     controller.resetPickedItem()
 
                     draggedView?.let {
-                        moveTo(it, event.rawX + controller.pickableGroup.x + (viewX - touchX), event.rawY + controller.pickableGroup.y + (viewY - touchY))
+                        moveTo(it,
+                                event.rawX + controller.pickableGroup.x + (viewX - touchX),
+                                event.rawY + controller.pickableGroup.y + (viewY - touchY))
                     }
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                if (draggedView === null)
+                if (draggedView === null) {
                     controller.setPickedItem(this)
-                else
+                } else {
                     controller.settableGroup.let {
                         var child: View
                         var rect: RectF
@@ -113,31 +116,28 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                             if (rect.contains(event.rawX, event.rawY)) {
                                 controller.setPickedItem(this)
                                 it.onClick(child)
-                                draggedView?.let { (it.parent as ViewGroup).removeView(it) }
-                                draggedView = null
+                                removeDraggedView()
+                                this.visibility = INVISIBLE
                                 return true
                             }
                         }
                     }
-
-                draggedView?.let {
-                    moveTo(it, event.rawX + controller.pickableGroup.x + (viewX - touchX), event.rawY + controller.pickableGroup.y + (viewY - touchY))
+                    val location = IntArray(2)
+                    this.getLocationOnScreen(location)
+                    draggedView?.let { moveTo(it, location[0].toFloat(), location[1].toFloat(), 100, Runnable { removeDraggedView() }) }
                 }
-                draggedView?.let { moveTo(it, viewX, viewY, 50) }
-                draggedView?.let { (it.parent as ViewGroup).removeView(it) }
-                draggedView = null
-                this.visibility = VISIBLE
             }
         }
 
         return true
     }
 
-    private fun moveTo(view: View, x: Float, y: Float, duration: Long = 0) {
+    private fun moveTo(view: View, x: Float, y: Float, duration: Long = 0, endAction: Runnable = Runnable {  })  {
         view.animate()
                 .x(x)
                 .y(y)
                 .setDuration(duration)
+                .withEndAction(endAction)
                 .start()
     }
 
@@ -164,6 +164,12 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
             it.bringToFront()
         }
         this.visibility = INVISIBLE
+    }
+
+    private fun removeDraggedView() {
+        draggedView?.let { (it.parent as ViewGroup).removeView(it) }
+        draggedView = null
+        this.visibility = VISIBLE
     }
 
 }
