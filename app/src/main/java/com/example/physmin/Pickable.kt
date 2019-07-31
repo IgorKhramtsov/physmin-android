@@ -65,8 +65,11 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
         picked = false
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    open fun getDebugMessage(): String {
+        return isCorrect
+    }
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isDraggable) {
             if (event.action == MotionEvent.ACTION_UP)
                 this.callOnClick()
@@ -80,29 +83,12 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                 viewX = this.x
                 viewY = this.y
 
-                // Create Debug message singleton on corner
-                if(isDev()) {
-                    val text = when (this) {
-                        is ImageViewPickable -> {
-                            "x: ${this.graph.functions!![0].x}\r\n" +
-                                    "v: ${this.graph.functions!![0].v} \r\n" +
-                                    "a: ${this.graph.functions!![0].a} \r\n" +
-                                    "answer: ${this.isCorrect}"
-                        }
-                        is TextViewPickable -> {
-                            " correct question: ${this.isCorrect}"
-                        }
-                        else -> {
-                            " none "
-                        }
-                    }
-                    (context as TestActivity).showDebugMessage(text)
-                }
-
+                if (isDev())
+                    (context as TestActivity).showDebugMessage(getDebugMessage())
             }
             MotionEvent.ACTION_MOVE -> {
                 if (draggedView != null || ((event.rawX - touchX).pow(2) + (event.rawY - touchY).pow(2) > touchSlop.pow(2))) {
-                    draggedView?:createDraggedView()
+                    draggedView ?: createDraggedView()
                     controller.resetPickedItem()
 
                     draggedView?.let {

@@ -118,6 +118,10 @@ class TextViewPickable(context: Context, attrs: AttributeSet?): Pickable(context
         invalidate()
     }
 
+    override fun getDebugMessage(): String {
+        return " correct question: ${this.isCorrect}"
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 

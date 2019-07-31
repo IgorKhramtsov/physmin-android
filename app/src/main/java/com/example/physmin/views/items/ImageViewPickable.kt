@@ -32,6 +32,12 @@ class ImageViewPickable(context: Context, attributeSet: AttributeSet?): Pickable
         this.scaleY = 1f
     }
 
+    override fun getDebugMessage(): String {
+        return "x: ${this.graph.functions!![0].x}\r\n" +
+                "v: ${this.graph.functions!![0].v} \r\n" +
+                "a: ${this.graph.functions!![0].a} \r\n" +
+                "answer: ${this.isCorrect}"
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
