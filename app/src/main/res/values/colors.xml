@@ -26,6 +26,9 @@
     <color name="graphic_position">#388E3C</color>
     <color name="graphic_velocity">#1976D2</color>
     <color name="graphic_acceleration">#F57C00</color>
+    <color name="graphic_divider">#3E000000</color>
+    <color name="graphic_selectedLeft">#D52024EE</color>
+    <color name="graphic_selectedRight">#D7EE1F4E</color>
 
     <color name="icon_back">#90C4C4C4</color>
     <color name="alpha_green">#2F058B0B</color>

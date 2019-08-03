@@ -13,6 +13,8 @@ import com.example.physmin.R
 import com.example.physmin.activities.FunctionParcelable
 import kotlin.math.abs
 import kotlin.math.min
+import android.graphics.DashPathEffect
+
 
 
 
@@ -24,14 +26,17 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
     private val xAxisLength = 12f
     private val step = 0.2f
 
-    private val positionFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_position, null)
-    private val velocityFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_velocity, null)
-    private val accelerationFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_acceleration, null)
+    private val positionFunctionColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.graphic_position, null)
+    private val velocityFunctionColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.graphic_velocity, null)
+    private val accelerationFunctionColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.graphic_acceleration, null)
 
-    private var _backColor = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
-    private var _axisColor = ResourcesCompat.getColor(resources, R.color.textColor, null)
-    private var _textColor = ResourcesCompat.getColor(resources, R.color.textColor, null)
-    private var _smallTextColor = ResourcesCompat.getColor(resources, R.color.textColorGray, null)
+    private var _backColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.graphic_back_gray, null)
+    private var _divider = ResourcesCompat.getColor(resources, com.example.physmin.R.color.graphic_divider, null)
+    private var _selectedAreaColorLeft = ResourcesCompat.getColor(resources, com.example.physmin.R.color.graphic_selectedLeft, null)
+    private var _selectedAreaColorRight = ResourcesCompat.getColor(resources, com.example.physmin.R.color.graphic_selectedRight, null)
+    private var _axisColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.textColor, null)
+    private var _textColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.textColor, null)
+    private var _smallTextColor = ResourcesCompat.getColor(resources, com.example.physmin.R.color.textColorGray, null)
     private var _verticalAxisLetter = "x"
     private var _horizontalAxisLetter = "t"
     private var _zeroAxisLetter = "0"
@@ -44,9 +49,13 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
     private var backgroundPaint: Paint
     private var axisPaint: Paint
     private var functionPaint: Paint
+    private var functionDividerPaint: Paint
+    private var selectedDividerPaintLeft: Paint
+    private var selectedDividerPaintRight: Paint
     private var textPaint: TextPaint
     private var smallTextPaint: TextPaint
     private var functionPath = Path()
+    private var functionDividers = ArrayList<Float>()
     private var indexTextWidth = 0.0f
     private var indexTextHeight = 0.0f
     private var zeroAxisTextHeight = 0f
@@ -58,6 +67,12 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
     private var contentHeight = height - (axisPaddingTop + axisPaddingBottom)
 
     private var _functions: ArrayList<FunctionParcelable>? = null
+
+    var selectedArea: ArrayList<ArrayList<Int>> = ArrayList()
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     var axisColor: Int
         get() = _axisColor
@@ -93,10 +108,11 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         get() = _functions
         set(value) {
             _functions = value
-            if (contentHeight > 0) regeneratePath()
+            regeneratePath()
         }
 
     init {
+
         textPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
             textAlign = Paint.Align.LEFT
@@ -111,6 +127,27 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         }
         functionPaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
+        }
+        selectedDividerPaintLeft = Paint().apply {
+            flags = Paint.ANTI_ALIAS_FLAG
+            color = _selectedAreaColorLeft
+            style = Paint.Style.STROKE
+            strokeWidth = 2.dpToPx()
+            pathEffect = DashPathEffect(floatArrayOf(16f, 16f), 0f)
+        }
+        selectedDividerPaintRight = Paint().apply {
+            flags = Paint.ANTI_ALIAS_FLAG
+            color = _selectedAreaColorRight
+            style = Paint.Style.STROKE
+            pathEffect = DashPathEffect(floatArrayOf(16f, 16f), 16f)
+            strokeWidth = 2.dpToPx()
+        }
+        functionDividerPaint = Paint().apply {
+            flags = Paint.ANTI_ALIAS_FLAG
+            color = _divider
+            style = Paint.Style.STROKE
+            strokeWidth = 2.dpToPx()
+            pathEffect = DashPathEffect(floatArrayOf(16f, 16f), 0f)
         }
         backgroundPaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG
@@ -161,11 +198,13 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         }
     }
 
-    fun regeneratePath() {
+    private fun regeneratePath() {
         if (contentHeight <= 0 || functions === null)
             return
 
         this.vertAxisLetter = functions!![0].funcType
+        if(functions!!.count() > 1)
+            this.setLayerType(LAYER_TYPE_SOFTWARE, null)
 
         if (this.vertAxisLetter == "a") yAxisLength = 1f
         else yAxisLength = 12f
@@ -176,12 +215,14 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         var len: Float
 
         functionPath.reset()
+        functionDividers.clear()
         for (function in functions!!) {
             Log.i("GraphView", "funcType: ${function.funcType}\r\nparams: ${function.x}, ${function.v}, ${function.a} ${function.len}")
 
             calculatedPointY = calculateFunctionValue(function, 0f) * heightScaleFactor
             functionPath.moveTo(calculatedPointX, calculatedPointY)
 
+            functionDividers.add(calculatedPointX)
             len = function.len.toFloat()
 
             var localT = 0f
@@ -198,9 +239,8 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
 
                 functionPath.lineTo(calculatedPointX, calculatedPointY)
             }
-
         }
-
+        functionDividers.add(calculatedPointX)
     }
 
     private fun calculateFunctionValue(function: FunctionParcelable, t: Float): Float {
@@ -233,13 +273,31 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
 
         functionPath.let {
             canvas.withTranslation(axisPaddingLeft, height / 2f) {
-                canvas.drawPath(it, functionPaint)
+                canvas.drawPath(functionPath, functionPaint)
             }
             canvas.drawText((yAxisLength / 2).toString(),
                     upperLimitTextWidth / 3,
                     axisPaddingTop + zeroAxisTextHeight / 2,
                     smallTextPaint)
+            if (functionDividers.count() > 2)
+                functionDividers.forEachIndexed { index, divider ->
+                    canvas.withTranslation(axisPaddingLeft, axisPaddingTop) {
+                        if (selectedArea.count() > 0 && selectedArea[0].contains(index)) {
+                            canvas.drawLine(divider, 0f, divider, contentHeight, selectedDividerPaintLeft)
+                            if (selectedArea[1].contains(index))
+                                canvas.drawLine(divider, 0f, divider, contentHeight, selectedDividerPaintRight)
+                        } else if (selectedArea.count() > 0 && selectedArea[1].contains(index)) {
+                            canvas.drawLine(divider, 0f, divider, contentHeight, selectedDividerPaintRight)
+                        } else {
+                            canvas.drawLine(divider, 0f, divider, contentHeight, functionDividerPaint)
+                        }
+                        canvas.drawText(index.toString(),
+                                if (index ==functionDividers.count() - 1) divider - 25f else divider + 15f,
+                                contentHeight - 10f, textPaint)
+                    }
+                }
         }
+
         vertAxisLetter.let {
             canvas.drawText(it,
                     axisPaddingLeft + indexTextWidth / 2,

@@ -24,7 +24,6 @@ interface TestController {
     fun setPickedItem(item: Pickable?)
     fun resetPickedItem()
     fun isAnswersCorrect(): Boolean
-    fun getRootView(): View?
 }
 
 abstract class FragmentTestBase : androidx.fragment.app.Fragment(), TestController/*, TestCompletingListener*/ {
@@ -108,10 +107,6 @@ abstract class FragmentTestBase : androidx.fragment.app.Fragment(), TestControll
 
     override fun isAnswersCorrect(): Boolean {
         return settableGroup.isAllCorrect()
-    }
-
-    override fun getRootView(): View? {
-        return this.view
     }
 
     interface TestCompletingListener {

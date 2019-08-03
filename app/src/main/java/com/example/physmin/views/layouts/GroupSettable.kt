@@ -17,6 +17,7 @@ import com.example.physmin.views.items.ImageViewSettable
 import com.example.physmin.views.items.ImageViewSettableBlank
 import com.example.physmin.views.items.RelationSignView
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.max
 
 
@@ -30,10 +31,11 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
         setOnHierarchyChangeListener(this)
     }
 
-    fun addRelationSignView(answer: FunctionAnswerRelationSignParcelable) {
+    fun addRelationSignView(answer: FunctionAnswerRelationSignParcelable, graphView: GraphView? = null) {
         val relationSignView = RelationSignView(this.context!!, null, answer.letter,
                 answer.leftIndex, answer.rightIndex)
         relationSignView.correctAnswers = answer.correctSign
+        relationSignView.graphView = graphView
         this.addView(relationSignView)
     }
 

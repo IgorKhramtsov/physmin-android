@@ -61,7 +61,7 @@ class FragmentTestSign2Relation : FragmentTestBase() {
         view.graphView_rs_task.functions = questions!![0].functions
 
         answers?.forEach {
-            settableGroup.addRelationSignView(it)
+            settableGroup.addRelationSignView(it, view.graphView_rs_task)
         }
     }
 

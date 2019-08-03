@@ -19,6 +19,7 @@ import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
 import com.example.physmin.fragments.tests.toPx
+import com.example.physmin.views.GraphView
 import com.example.physmin.views.spToPx
 import kotlin.math.round
 
@@ -33,6 +34,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
     var indexesSize = 12.spToPx()
     var popupLocation = intArrayOf(0, 0)
     var popupPadding: Int = 0
+    var graphView: GraphView? = null
 
     private var letterPaint: TextPaint
     private var indexPaint: TextPaint
@@ -156,6 +158,10 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
             popupWindow!!.showAtLocation(controller.pickableGroup, 0,
                     popupLocation[0] + popupPadding,
                     popupLocation[1] - round(this.height * 0.7f).toInt())
+            val array = ArrayList<ArrayList<Int>>()
+            array.add(arrayListOf(leftIndexes!![0], leftIndexes!![1]))
+            array.add(arrayListOf(rightIndexes!![0], rightIndexes!![1]))
+            graphView?.selectedArea = array
             return
         }
 
@@ -170,6 +176,9 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         popupWindow!!.setBackgroundDrawable(ColorDrawable())
         popupWindow!!.isOutsideTouchable = true
         popupWindow!!.isTouchable = true
+        popupWindow!!.setOnDismissListener {
+            graphView?.selectedArea = ArrayList()
+        }
 
         val listener = OnClickListener { choosed_view ->
             answerView = if (answerView == choosed_view) null else (choosed_view as TextViewPickable)
