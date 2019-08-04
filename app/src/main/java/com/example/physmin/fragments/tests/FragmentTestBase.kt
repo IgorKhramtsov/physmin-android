@@ -47,6 +47,7 @@ abstract class FragmentTestBase : androidx.fragment.app.Fragment(), TestControll
 
         if(context !is TestActivity) throw Error("${this.javaClass.name} can be created only in TestActivity!")
         listener = context
+        context.testController = this // TODO: this is bad. Think how to do it better.
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
