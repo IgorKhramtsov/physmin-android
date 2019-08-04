@@ -73,6 +73,11 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
             field = value
             invalidate()
         }
+    var needShowDividers: Boolean = false
+    set(value) {
+        field = value
+        invalidate()
+    }
 
     var axisColor: Int
         get() = _axisColor
@@ -112,6 +117,9 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         }
 
     init {
+        val a = context.obtainStyledAttributes(attrs, R.styleable.GraphView, 0, 0)
+        needShowDividers = a.getBoolean(R.styleable.GraphView_needShowDividers, false)
+        a.recycle()
 
         textPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
@@ -279,7 +287,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
                     upperLimitTextWidth / 3,
                     axisPaddingTop + zeroAxisTextHeight / 2,
                     smallTextPaint)
-            if (functionDividers.count() > 2)
+            if (functionDividers.count() > 2 && needShowDividers)
                 functionDividers.forEachIndexed { index, divider ->
                     canvas.withTranslation(axisPaddingLeft, axisPaddingTop) {
                         if (selectedArea.count() > 0 && selectedArea[0].contains(index)) {

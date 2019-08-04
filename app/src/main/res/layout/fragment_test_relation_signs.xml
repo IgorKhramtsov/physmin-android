@@ -44,7 +44,8 @@
             android:id="@+id/graphView_rs_task"
             android:layout_width="match_parent"
             android:layout_height="130dp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            app:needShowDividers="true" />
     </com.example.physmin.views.layouts.BaseGroup>
 
 
