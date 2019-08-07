@@ -21,7 +21,9 @@ import com.example.physmin.BuildConfig
 import com.example.physmin.R
 import com.example.physmin.TestBundle
 import com.example.physmin.dev.fragments.FragmentTestList
+import com.example.physmin.fragments.FragmentTestComplete
 import com.example.physmin.fragments.tests.*
+import com.example.physmin.isDev
 import com.example.physmin.views.LoadingHorBar
 import com.example.physmin.views.ProgressBarView
 import com.example.physmin.views.TimerView
@@ -40,8 +42,7 @@ const val ERROR_UNKNOWN = 0
 const val ERROR_TIMEOUT = 1
 const val ERROR_SERVER = 2
 
-class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
-{
+class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener {
     private lateinit var firebaseFunctions: FirebaseFunctions
     lateinit var testBundle: TestBundle
 
@@ -74,7 +75,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
         debugTextView.visibility = GONE
 
         firebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
-        if(BuildConfig.FLAVOR.contains("dev")) {
+        if (BuildConfig.FLAVOR.contains("dev")) {
             getTestFunctionName = "getTestDev"
             floatingMenu.action_next.setOnClickListener { switchTest() }
             floatingMenu.action_list.setOnClickListener {
@@ -151,16 +152,15 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     }
 
     fun switchTest(test: JSONObject? = null, suppressCallback: Boolean = false) {
-        if (testBundle.isEnd())
-            onTestComplete()
-
         timerView.visibility = VISIBLE
         floatingMenu.visibility = VISIBLE
         progressBarView.show()
-        supportFragmentManager.commit {
-            if (!suppressCallback)
-                onTestSwitch()
+        if (!suppressCallback)
+            onTestSwitch()
+        if(testBundle.isEnd())
+            return
 
+        supportFragmentManager.commit {
             replace(R.id.test_host_fragment, parseTest(test ?: testBundle.pop()))
             timerView.restart()
             hideButtonNext()
@@ -169,14 +169,10 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
 
     private fun onTestSwitch() {
         testController?.also {
-            if (it.isAnswersCorrect()) {
+            if (it.isAnswersCorrect() || isDev()) {
                 progressBarView.addSegment()
-
-                if (progressBarView.isAllDone()) {
-                    val intent = Intent(this, TestActivity::class.java)
-                    intent.putExtra("GetTestFunctionName", "getTestDev")
-                    startActivity(intent)
-                }
+                if(progressBarView.isAllDone())
+                    onBundleComplete()
             } else {
                 testBundle.pushCurrentToBack()
             }
@@ -184,17 +180,16 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     }
 
     override fun onBackPressed() {
-        if(supportFragmentManager.backStackEntryCount == 0)
+        if (supportFragmentManager.backStackEntryCount == 0)
             AlertDialog.Builder(this)
                     .setTitle("Вы уверены?")
                     .setMessage("Ваш прогресс будет потерян")
                     .setPositiveButton("Да") { _, _ ->
                         super.onBackPressed()
                     }
-                    .setNegativeButton("Отмена") {_, _ -> }
+                    .setNegativeButton("Отмена") { _, _ -> }
                     .show()
         else {
-//            (test_host_fragment.view as ViewGroup).removeAllViews()
             supportFragmentManager.popBackStack()
         }
     }
@@ -206,7 +201,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
         val cachedCalls = ++debugTextViewCalls
         java.util.Timer().schedule(5000) {
             runOnUiThread {
-                if(debugTextViewCalls == cachedCalls) {
+                if (debugTextViewCalls == cachedCalls) {
                     debugTextView.text = ""
                     debugTextView.visibility = GONE
                     debugTextView.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, null))
@@ -216,7 +211,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     }
 
     private fun showError(errorCode: Int) {
-        errorTextView.text = when(errorCode) {
+        errorTextView.text = when (errorCode) {
             ERROR_TIMEOUT -> getString(R.string.messageTimeoutError)
             ERROR_SERVER -> getString(R.string.messageServerError)
             else -> getString(R.string.messageUnknownError)
@@ -235,6 +230,20 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
         buttonNext.visibility = GONE
     }
 
+    fun onBundleComplete() {
+//        showButtonNext()
+//        onTestSwitch()
+//        buttonNext.setOnClickListener {
+            supportFragmentManager.commit {
+                replace(R.id.test_host_fragment, FragmentTestComplete())
+                timerView.visibility = GONE
+                progressBarView.visibility = GONE
+                floatingMenu.visibility = GONE
+                hideButtonNext()
+            }
+//        }
+    }
+
     override fun onTestComplete() {
         showButtonNext()
     }
@@ -242,6 +251,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     override fun onTestCompleteRejected() {
         hideButtonNext()
     }
+
 
     private fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
         return when (test.getString("type")) {
@@ -344,7 +354,7 @@ class FunctionParcelable(): Parcelable {
             v = readFloat()
             a = readFloat()
             len = readInt()
-            funcType = readString()?:throw Exception("Parsing funcType is null")
+            funcType = readString() ?: throw Exception("Parsing funcType is null")
         }
     }
 
@@ -380,7 +390,7 @@ class QuestionParcelable(): Parcelable {
     var functions = ArrayList<FunctionParcelable>()
 
     constructor(jsonObject: JSONObject): this() {
-        if(jsonObject.has("id"))
+        if (jsonObject.has("id"))
             id = jsonObject.getInt("id")
         if (jsonObject.has("correctIDs"))
             jsonObject.getJSONArray("correctIDs").let {
@@ -488,7 +498,7 @@ class FunctionAnswerRelationSignParcelable(): Parcelable {
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
             id = readInt()
-            letter = readString()?:throw Exception("Parsing funcType is null")
+            letter = readString() ?: throw Exception("Parsing funcType is null")
             val intArrayLeft = createIntArray()!!
             leftIndex = intArrayLeft.toCollection(ArrayList()).toIntArray()
             val intArrayRight = createIntArray()!!
@@ -534,7 +544,7 @@ class TextAnswerParcelable(): Parcelable {
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
             id = readInt()
-            text = readString()?:throw Exception("Parsing funcType is null")
+            text = readString() ?: throw Exception("Parsing funcType is null")
         }
     }
 

@@ -37,7 +37,7 @@ class TestBundle(array: ArrayList<JSONObject>) {
 
     fun isMoreTests(): Boolean = iterator?.nextItem != null
 
-    fun isEnd(): Boolean = iterator == null
+    fun isEnd(): Boolean = iterator?.nextItem == null
 
     fun pushCurrentToBack() {
         if (iterator == null)

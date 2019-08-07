@@ -12,6 +12,7 @@
 
     <string name="messageButtonTryAgain">Повторить</string>
     <string name="messageButtonNext">Далее</string>
+    <string name="messageButtonContinue">Продолжить</string>
 
     <string name="relation_sign_more">\u003E</string>
     <string name="relation_sign_less">\u003C</string>

@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.TestActivity"
-    android:id="@+id/test_layout"
-    >
-
-
+    android:id="@+id/test_layout">
 
     <com.example.physmin.views.ProgressBarView
         android:id="@+id/progressBar"
@@ -32,9 +29,6 @@
         app:defaultNavHost="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
-
-
-
 
     <RelativeLayout
         android:id="@+id/Menu_layout"
@@ -82,7 +76,6 @@
                 app:fab_title="Помощь от Роки" />
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
 
     </RelativeLayout>
 

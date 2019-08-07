@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_testing.*
 import org.json.JSONArray
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity(), FragmentSubjectKinematic.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +20,5 @@ class MainActivity : AppCompatActivity(), FragmentSubjectKinematic.OnFragmentInt
             val intent = Intent(this, TestActivity::class.java)
             startActivity(intent)
         }
-    }
-
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
