@@ -8,9 +8,11 @@ import androidx.core.content.res.ResourcesCompat
 import com.example.physmin.Pickable
 import com.example.physmin.R
 import com.example.physmin.Settable
+import com.example.physmin.Singleton
 import com.example.physmin.views.GraphView
 import com.example.physmin.views.dpToPx
 import com.example.physmin.views.generateInsideShadowPanel
+import com.example.physmin.views.generateShadowPanel
 
 class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Settable(context, attributeSet) {
 
@@ -22,7 +24,9 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Se
     var blurRadius = 4.dpToPx()
     var cornerRadius = 2.dpToPx()
 
-    private var generatedPanel: Bitmap? = null
+    private val generatedPanel: Bitmap? by Singleton {
+        generateShadowPanel(width, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+    }
 
     override fun onAnswerChanged(answerView: Pickable?) {
         super.onAnswerChanged(answerView)
@@ -38,12 +42,6 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Se
             return false
 
         return correctAnswers!!.contains(answerView!!.answer)
-    }
-
-    init {
-        this.post {
-            generatedPanel = generateInsideShadowPanel(width, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
-        }
     }
 
     override fun onDraw(canvas: Canvas) {

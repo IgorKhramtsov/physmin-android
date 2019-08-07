@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.physmin.Pickable
 import com.example.physmin.activities.TestActivity
 import com.example.physmin.pickableGroupTag
@@ -26,7 +27,7 @@ interface TestController {
     fun isAnswersCorrect(): Boolean
 }
 
-abstract class FragmentTestBase : androidx.fragment.app.Fragment(), TestController/*, TestCompletingListener*/ {
+abstract class FragmentTestBase : Fragment(), TestController {
     abstract var layoutResource: Int
 
     lateinit var listener: TestCompletingListener
@@ -51,6 +52,8 @@ abstract class FragmentTestBase : androidx.fragment.app.Fragment(), TestControll
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        container?.removeAllViews() // Fragment overlapping fix.
+
         val view: View = inflater.inflate(layoutResource, container, false)
         settableGroup = view.findViewWithTag(settableGroupTag)
         settableGroup.setTestController(this)

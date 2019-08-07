@@ -28,7 +28,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.example.physmin.views.layouts.BaseGroup
         android:id="@+id/relationSign_BaseGroup"

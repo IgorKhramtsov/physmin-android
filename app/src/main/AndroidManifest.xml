@@ -13,8 +13,8 @@
             android:name=".activities.TestActivity"
             android:label="@string/title_activity_test"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Test" />
-        <activity android:name=".Cinematics" />
+        <!--<activity android:name=".Test" />-->
+        <!--<activity android:name=".Cinematics" />-->
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.example.physmin.activities
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,12 +10,16 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.example.physmin.BuildConfig
 import com.example.physmin.R
+import com.example.physmin.TestBundle
 import com.example.physmin.dev.fragments.FragmentTestList
 import com.example.physmin.fragments.tests.*
 import com.example.physmin.views.LoadingHorBar
@@ -38,7 +43,7 @@ const val ERROR_SERVER = 2
 class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
 {
     private lateinit var firebaseFunctions: FirebaseFunctions
-    var testBundle = arrayListOf<JSONObject>()
+    lateinit var testBundle: TestBundle
 
     var getTestFunctionName = "getTest"
     var testController: TestController? = null
@@ -50,7 +55,6 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     lateinit var loadingAnimation: LoadingHorBar
     lateinit var floatingMenu: FloatingActionsMenu
 
-    private var nextTestIndex = 0
     private var debugTextViewCalls = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +79,8 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
             floatingMenu.action_next.setOnClickListener { switchTest() }
             floatingMenu.action_list.setOnClickListener {
                 supportFragmentManager.commit {
-                    addToBackStack(null)
-                    replace(R.id.test_host_fragment, FragmentTestList())
+                    replace(R.id.test_host_fragment, FragmentTestList(testBundle.getAsArray()))
+                    addToBackStack("home")
                     floatingMenu.collapse()
                 }
             }
@@ -136,18 +140,18 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
         buttonNext.text = getString(R.string.messageButtonNext)
 
         val data = JSONObject(test.substring(test.indexOf("{"), test.lastIndexOf("}") + 1)).optJSONArray("tests")
+        val array = arrayListOf<JSONObject>()
         for (i in 0 until data!!.length())
-            testBundle.add(data.getJSONObject(i))
+            array.add(data.getJSONObject(i))
+        testBundle = TestBundle(array)
 
-        progressBar.segmentCount = testBundle.count()
+        progressBar.segmentCount = array.count()
 
         buttonNext.setOnClickListener { switchTest() }
     }
 
-    fun switchTest(ind: Int? = null, suppressCallback: Boolean = false) {
-        val testIndex = ind ?: nextTestIndex++
-
-        if (testIndex >= testBundle.size)
+    fun switchTest(test: JSONObject? = null, suppressCallback: Boolean = false) {
+        if (testBundle.isEnd())
             onTestComplete()
 
         timerView.visibility = VISIBLE
@@ -157,15 +161,14 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
             if (!suppressCallback)
                 onTestSwitch()
 
-            replace(R.id.test_host_fragment, parseTest(testBundle[testIndex]))
+            replace(R.id.test_host_fragment, parseTest(test ?: testBundle.pop()))
             timerView.restart()
             hideButtonNext()
         }
     }
 
     private fun onTestSwitch() {
-        testController?.let {
-
+        testController?.also {
             if (it.isAnswersCorrect()) {
                 progressBarView.addSegment()
 
@@ -173,16 +176,26 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
                     val intent = Intent(this, TestActivity::class.java)
                     intent.putExtra("GetTestFunctionName", "getTestDev")
                     startActivity(intent)
-                } else Unit
-
+                }
             } else {
-                testBundle.add(testBundle[nextTestIndex])
-
-                // TODO: create custom arrayList
-//            testBundle.removeAt(nextTestIndex)
-//            nextTestIndex--
+                testBundle.pushCurrentToBack()
             }
+        }
+    }
 
+    override fun onBackPressed() {
+        if(supportFragmentManager.backStackEntryCount == 0)
+            AlertDialog.Builder(this)
+                    .setTitle("Вы уверены?")
+                    .setMessage("Ваш прогресс будет потерян")
+                    .setPositiveButton("Да") { _, _ ->
+                        super.onBackPressed()
+                    }
+                    .setNegativeButton("Отмена") {_, _ -> }
+                    .show()
+        else {
+//            (test_host_fragment.view as ViewGroup).removeAllViews()
+            supportFragmentManager.popBackStack()
         }
     }
 
