@@ -25,7 +25,7 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Se
     var cornerRadius = 2.dpToPx()
 
     private val generatedPanel: Bitmap? by Singleton {
-        generateShadowPanel(width, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
+        generateInsideShadowPanel(width, height, cornerRadius, blurRadius, _backColor, _backShadowColor, this)
     }
 
     override fun onAnswerChanged(answerView: Pickable?) {
