@@ -3,19 +3,24 @@ package com.example.physmin.views
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
 import com.example.physmin.R
+import kotlinx.android.synthetic.main.menuitem_popup.view.*
 
-class MenuItemView: View {
+class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs),
+        View.OnClickListener
+{
 
     private var _itemTitle: String? = null
-    private var _itemBack_icon: Drawable? = null
+    private var _itemBackIcon: Drawable? = null
     private var _itemIcon: Drawable? = null
 
     private var iconBackPaint: Paint? = null
@@ -28,6 +33,12 @@ class MenuItemView: View {
     private val iconBackWidth = 73
     private val iconBackHeight = 82
 
+    lateinit var popupWindow: PopupWindow
+    var popupLocation = intArrayOf(0, 0)
+
+    var onTestButtonClick: (()->Unit)? = null
+    var onLearnButtonClick: (()->Unit)? = null
+
     var itemTitle: String?
         get() = _itemTitle
         set(value) {
@@ -35,9 +46,9 @@ class MenuItemView: View {
             invalidateTextPaintAndMeasurements()
         }
     var itemBack_icon: Drawable?
-        get() = _itemBack_icon
+        get() = _itemBackIcon
         set(value) {
-            _itemBack_icon = value
+            _itemBackIcon = value
             invalidateTextPaintAndMeasurements()
         }
     var itemIcon: Drawable?
@@ -47,35 +58,17 @@ class MenuItemView: View {
             invalidateTextPaintAndMeasurements()
         }
 
-    constructor(context: Context): super(context) {
-        init(null, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
-        init(attrs, 0)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int): super(context, attrs, defStyle) {
-        init(attrs, defStyle)
-    }
-
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
+    init {
         // Load attributes
-        val a = context.obtainStyledAttributes(
-                attrs, R.styleable.MenuItemView, defStyle, 0)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.MenuItemView, 0, 0)
 
-        _itemTitle = a.getString(
-                R.styleable.MenuItemView_itemTitle)
-
-
+        _itemTitle = a.getString(R.styleable.MenuItemView_itemTitle)
         if (a.hasValue(R.styleable.MenuItemView_itemBack_icon)) {
-            _itemBack_icon = a.getDrawable(
-                    R.styleable.MenuItemView_itemBack_icon)
-            _itemBack_icon?.callback = this
+            _itemBackIcon = a.getDrawable(R.styleable.MenuItemView_itemBack_icon)
+            _itemBackIcon?.callback = this
         }
         if (a.hasValue(R.styleable.MenuItemView_itemIcon)) {
-            _itemIcon = a.getDrawable(
-                    R.styleable.MenuItemView_itemIcon)
+            _itemIcon = a.getDrawable(R.styleable.MenuItemView_itemIcon)
             _itemIcon?.callback = this
         }
 
@@ -89,7 +82,7 @@ class MenuItemView: View {
         iconBackPaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
         }
-        // Update TextPaint and text measurements from attributes
+        setOnClickListener(this)
         invalidateTextPaintAndMeasurements()
     }
 
@@ -104,6 +97,33 @@ class MenuItemView: View {
             it.color = ResourcesCompat.getColor(resources, R.color.icon_back, null)
             it.style = Paint.Style.FILL
         }
+    }
+
+    override fun onClick(p0: View?) {
+        if (::popupWindow.isInitialized) {
+            popupWindow.showAsDropDown(this)
+            return
+        }
+        val popupView = inflate(context, R.layout.menuitem_popup, null)
+        popupView.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+//        popupView.animation = AnimationUtils.loadAnimation(context, R.anim.popup_anim)
+        popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        popupWindow.setBackgroundDrawable(ColorDrawable())
+        popupWindow.isOutsideTouchable = true
+        popupWindow.isTouchable = true
+        popupView.menuitem_test.setOnClickListener {
+            popupWindow.dismiss()
+            onTestButtonClick?.invoke()
+        }
+        popupView.menuitem_learn.setOnClickListener {
+            popupWindow.dismiss()
+            onLearnButtonClick?.invoke()
+        }
+
+        this.getLocationOnScreen(popupLocation)
+
+        onClick(p0)
     }
 
     override fun onDraw(canvas: Canvas) {
