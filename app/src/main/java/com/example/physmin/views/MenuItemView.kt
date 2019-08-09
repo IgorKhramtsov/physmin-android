@@ -1,8 +1,6 @@
 package com.example.physmin.views
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.TextPaint
@@ -12,19 +10,21 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
-import com.example.physmin.R
 import kotlinx.android.synthetic.main.menuitem_popup.view.*
+import kotlin.math.roundToInt
+import android.graphics.*
+import com.example.physmin.R
+
 
 class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs),
-        View.OnClickListener
-{
+        View.OnClickListener {
 
     private var _itemTitle: String? = null
     private var _itemBackIcon: Drawable? = null
     private var _itemIcon: Drawable? = null
 
     private var iconBackPaint: Paint? = null
-    private lateinit var textPaint: TextPaint
+    private var textPaint: TextPaint
     private var textWidth: Float = 0f
     private var textHeight: Float = 0f
 
@@ -36,8 +36,24 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     lateinit var popupWindow: PopupWindow
     var popupLocation = intArrayOf(0, 0)
 
-    var onTestButtonClick: (()->Unit)? = null
-    var onLearnButtonClick: (()->Unit)? = null
+    var isDisabled: Boolean = false
+        set(value) {
+            field = value
+            if (value) {
+                val greyFilter = PorterDuffColorFilter(ResourcesCompat.getColor(resources, R.color.disabled_filter, null), PorterDuff.Mode.MULTIPLY)
+                this._itemBackIcon?.colorFilter = greyFilter
+                this._itemIcon?.colorFilter = greyFilter
+                this.textPaint.color = ResourcesCompat.getColor(resources, R.color.textColorDisabled, null)
+            } else {
+                this._itemBackIcon?.clearColorFilter()
+                this._itemIcon?.clearColorFilter()
+                this.textPaint.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
+            }
+            invalidate()
+        }
+
+    var onTestButtonClick: (() -> Unit)? = null
+    var onLearnButtonClick: (() -> Unit)? = null
 
     var itemTitle: String?
         get() = _itemTitle
@@ -45,7 +61,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             _itemTitle = value
             invalidateTextPaintAndMeasurements()
         }
-    var itemBack_icon: Drawable?
+    var itemBackIcon: Drawable?
         get() = _itemBackIcon
         set(value) {
             _itemBackIcon = value
@@ -59,7 +75,6 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
         }
 
     init {
-        // Load attributes
         val a = context.obtainStyledAttributes(attrs, R.styleable.MenuItemView, 0, 0)
 
         _itemTitle = a.getString(R.styleable.MenuItemView_itemTitle)
@@ -74,7 +89,6 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
 
         a.recycle()
 
-        // Set up a default TextPaint object
         textPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
             textAlign = Paint.Align.CENTER
@@ -87,7 +101,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     }
 
     private fun invalidateTextPaintAndMeasurements() {
-        textPaint?.let {
+        textPaint.let {
             it.textSize = 20.spToPx()
             it.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
             textWidth = it.measureText(itemTitle)
@@ -100,14 +114,16 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     }
 
     override fun onClick(p0: View?) {
+        if(isDisabled)
+            return
+
         if (::popupWindow.isInitialized) {
             popupWindow.showAsDropDown(this)
             return
         }
-        val popupView = inflate(context, R.layout.menuitem_popup, null)
+        val popupView = inflate(context, com.example.physmin.R.layout.menuitem_popup, null)
         popupView.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
-//        popupView.animation = AnimationUtils.loadAnimation(context, R.anim.popup_anim)
         popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         popupWindow.setBackgroundDrawable(ColorDrawable())
         popupWindow.isOutsideTouchable = true
@@ -145,18 +161,18 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             }
         }
 
-        itemBack_icon?.let {
+        itemBackIcon?.let {
             canvas.withTranslation(width / 2f, 0f) {
-                it.setBounds(-Math.round((iconBackWidth/2).dpToPx()),0,
-                        Math.round((iconBackWidth/2).dpToPx()), Math.round((iconBackHeight).dpToPx()))
+                it.setBounds(-(iconBackWidth / 2).dpToPx().roundToInt(), 0,
+                        (iconBackWidth / 2).dpToPx().roundToInt(), (iconBackHeight).dpToPx().roundToInt())
                 it.draw(canvas)
             }
         }
-        itemBack_icon?.minimumHeight
+        itemBackIcon?.minimumHeight
         itemIcon?.let {
             canvas.withTranslation(width / 2f, 0f) {
-                it.setBounds(-Math.round((iconWidth / 2).dpToPx()), Math.round((10).dpToPx()),
-                        Math.round((iconWidth / 2).dpToPx()), Math.round((10 + iconHeight).dpToPx()))
+                it.setBounds(-(iconWidth / 2).dpToPx().roundToInt(), (10).dpToPx().roundToInt(),
+                        (iconWidth / 2).dpToPx().roundToInt(), (10 + iconHeight).dpToPx().roundToInt())
                 it.draw(canvas)
             }
         }

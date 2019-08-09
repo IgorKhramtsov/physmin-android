@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_testing.*
 import org.json.JSONArray
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,5 +20,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, TestActivity::class.java)
             startActivity(intent)
         }
+
+        menuItemView_rotation.isDisabled = true
+        menuItemView_graphics.isDisabled = true
     }
 }

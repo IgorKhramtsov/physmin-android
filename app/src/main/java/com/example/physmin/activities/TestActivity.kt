@@ -180,7 +180,12 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0)
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            if (progressBarView.getCompletedCount() <= 0) {
+                super.onBackPressed()
+                return
+            }
+
             AlertDialog.Builder(this)
                     .setTitle("Вы уверены?")
                     .setMessage("Ваш прогресс будет потерян")
@@ -189,7 +194,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
                     }
                     .setNegativeButton("Отмена") { _, _ -> }
                     .show()
-        else {
+        } else {
             supportFragmentManager.popBackStack()
         }
     }

@@ -89,6 +89,8 @@ class ProgressBarView(context: Context, attrs: AttributeSet?): View(context, att
         invalidate()
     }
 
+    fun getCompletedCount() = _completeSegmentCount
+
     fun isAllDone():Boolean {
         return _completeSegmentCount >= segmentCount
     }
