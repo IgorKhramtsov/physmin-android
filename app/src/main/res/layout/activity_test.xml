@@ -7,7 +7,7 @@
     tools:context=".activities.TestActivity"
     android:id="@+id/test_layout">
 
-    <com.example.physmin.views.ProgressBarView
+    <com.physmin.android.views.ProgressBarView
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
@@ -79,7 +79,7 @@
 
     </RelativeLayout>
 
-    <com.example.physmin.views.TimerView
+    <com.physmin.android.views.TimerView
         android:id="@+id/Timer"
         style="?android:attr/progressBarStyle"
         android:layout_marginStart="8dp"
@@ -94,7 +94,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/Menu_layout"
         app:layout_constraintStart_toStartOf="@+id/Menu_layout" />
 
-    <com.example.physmin.views.LoadingHorBar
+    <com.physmin.android.views.LoadingHorBar
         android:id="@+id/loadingHorBar"
         android:layout_width="170dp"
         android:layout_height="40dp"

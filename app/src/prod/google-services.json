@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:280499204418:android:eeeccaae27dbe91a",
+        "mobilesdk_app_id": "1:280499204418:android:69ca5e6801408d43",
         "android_client_info": {
-          "package_name": "com.example.physmin"
+          "package_name": "com.physmin.android"
         }
       },
       "oauth_client": [
@@ -25,15 +25,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

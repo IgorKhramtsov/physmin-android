@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="-6dp" />
 
-    <com.example.physmin.views.layouts.GroupSettable
+    <com.physmin.android.views.layouts.GroupSettable
         android:id="@+id/settable_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <com.example.physmin.views.layouts.GroupPickable
+    <com.physmin.android.views.layouts.GroupPickable
         android:id="@+id/pickable_group"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

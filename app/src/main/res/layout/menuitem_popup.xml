@@ -5,9 +5,11 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/menuitem_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:paddingBottom="16dp"
         android:background="@drawable/popup_bg"
         android:orientation="vertical">
 
@@ -16,11 +18,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="16dp"
+            android:layout_marginRight="20dp"
             android:gravity="center_horizontal"
-            android:paddingLeft="36dp"
-            android:paddingRight="36dp"
-            android:text="Тест"
+            android:text="Тестирование"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/textColor"
             android:textSize="24sp" />
@@ -35,9 +37,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="16dp"
             android:gravity="center_horizontal"
-            android:paddingLeft="36dp"
-            android:paddingRight="36dp"
-            android:text="Лекции"
+            android:text="Обучение"
             android:textColor="@color/textColor"
             android:textSize="24sp" />
     </LinearLayout>

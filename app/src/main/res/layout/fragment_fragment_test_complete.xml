@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.physmin.fragments.FragmentTestComplete">
+    tools:context="com.physmin.android.fragments.FragmentTestComplete">
 
     <LinearLayout
         android:layout_width="wrap_content"

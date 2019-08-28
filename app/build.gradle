@@ -6,7 +6,7 @@ android {
     buildDir = "$rootDir/build/"
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.example.physmin"
+        applicationId "com.physmin.android"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1 // Hidden from user
@@ -35,8 +35,11 @@ android {
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/graphics'] } }
     buildToolsVersion '29.0.1'
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -51,15 +54,15 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.core:core-ktx:1.2.0-alpha02'
-    implementation 'androidx.fragment:fragment-ktx:1.2.0-alpha01'
-    implementation 'com.google.firebase:firebase-core:17.0.1'
-    implementation 'com.google.firebase:firebase-functions:18.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0-alpha03'
+    implementation 'androidx.fragment:fragment-ktx:1.2.0-alpha02'
+    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-functions:19.0.0'
     implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation "com.airbnb.android:lottie:3.0.7"
     testImplementation 'junit:junit:4.13-beta-3'
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha01'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
 }
 

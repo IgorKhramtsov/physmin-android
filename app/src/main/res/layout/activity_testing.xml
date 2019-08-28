@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.physmin.activities.TestingActivity">
+    tools:context="com.physmin.android.activities.TestingActivity">
 
     <TextView
         android:id="@+id/textView5"
@@ -22,8 +22,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.MenuItemView
-        android:id="@+id/menuItemView_concept"
+    <com.physmin.android.views.MenuItemView
+        android:id="@+id/menuItemView_concepts"
         android:layout_width="127dp"
         android:layout_height="113dp"
         android:layout_marginStart="8dp"
@@ -39,8 +39,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <com.example.physmin.views.MenuItemView
-        android:id="@+id/menuItemView_graphics"
+    <com.physmin.android.views.MenuItemView
+        android:id="@+id/menuItemView_graphs"
         android:layout_width="127dp"
         android:layout_height="113dp"
         android:layout_marginStart="8dp"
@@ -56,7 +56,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <com.example.physmin.views.MenuItemView
+    <com.physmin.android.views.MenuItemView
         android:id="@+id/menuItemView_rotation"
         android:layout_width="127dp"
         android:layout_height="113dp"
@@ -66,7 +66,7 @@
         app:itemTitle="Вращение"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/menuItemView_graphics" />
+        app:layout_constraintTop_toBottomOf="@+id/menuItemView_graphs" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

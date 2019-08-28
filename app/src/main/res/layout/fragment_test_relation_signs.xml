@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.layouts.GroupPickable
+    <com.physmin.android.views.layouts.GroupPickable
         android:id="@+id/groupPickable"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.layouts.BaseGroup
+    <com.physmin.android.views.layouts.BaseGroup
         android:id="@+id/relationSign_BaseGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -41,16 +41,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6">
 
-        <com.example.physmin.views.GraphView
+        <com.physmin.android.views.GraphView
             android:id="@+id/graphView_rs_task"
             android:layout_width="match_parent"
             android:layout_height="130dp"
             android:layout_marginTop="8dp"
             app:needShowDividers="true" />
-    </com.example.physmin.views.layouts.BaseGroup>
+    </com.physmin.android.views.layouts.BaseGroup>
 
 
-    <com.example.physmin.views.layouts.GroupSettable
+    <com.physmin.android.views.layouts.GroupSettable
         android:id="@+id/settableGroup_rs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
