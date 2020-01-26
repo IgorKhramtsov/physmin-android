@@ -31,8 +31,10 @@ class ImageViewSettableBlank(context: Context, attributeSet: AttributeSet?) : Se
     override fun onAnswerChanged(answerView: Pickable?) {
         super.onAnswerChanged(answerView)
 
-        if(answerView != null)
+        if(answerView != null) {
             this.graph.functions = (answerView as ImageViewPickable).graph.functions
+            this.graph.runAnimation(this)
+        }
         else
             this.graph.functions = null
     }

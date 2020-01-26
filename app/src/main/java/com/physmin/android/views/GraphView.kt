@@ -340,7 +340,6 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         contentWidth = width - (axisPaddingLeft + axisPaddingRight)
         contentHeight = height - (axisPaddingTop + axisPaddingBottom)
         if (functionPath.isEmpty) regeneratePath()
-        //if (!animationFinished && !valueAnimator.isRunning) runAnimation()
 
         drawRoundRect(backgroundPaint, canvas, width, height, 3f,0f)
 
