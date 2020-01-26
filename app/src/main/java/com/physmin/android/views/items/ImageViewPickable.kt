@@ -4,15 +4,13 @@ import android.content.Context
 import android.graphics.Canvas
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import com.physmin.android.Pickable
 import com.physmin.android.views.GraphView
 
 class ImageViewPickable(context: Context, attributeSet: AttributeSet?): Pickable(context, attributeSet) {
 
     var graph = GraphView(context, null)
-
-    init {
-    }
 
     override fun select() {
         picked = true
@@ -39,6 +37,18 @@ class ImageViewPickable(context: Context, attributeSet: AttributeSet?): Pickable
                 "answer: ${this.isCorrect}"
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val height = resolveSizeAndState(height, heightMeasureSpec, 0)
+        val width = resolveSizeAndState(width, widthMeasureSpec, 0)
+        graph.measure(widthMeasureSpec, heightMeasureSpec)
+
+        // TODO: idk, is it needed here
+        setMeasuredDimension(width, height)
+    }
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        graph.runAnimation(this)
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 

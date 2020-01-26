@@ -7,6 +7,7 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import androidx.core.graphics.withTranslation
 import com.physmin.android.Pickable
 import com.physmin.android.Settable
@@ -20,6 +21,8 @@ class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Settabl
     private var paint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
     private var staticLayout: StaticLayout? = null
 
+    private var answerTextSize = 14.spToPx()
+
     override fun isCorrect(): Boolean {
         if(answerView == null || correctAnswers == null)
             return false
@@ -28,7 +31,7 @@ class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Settabl
     }
 
     init {
-        paint.textSize = 14.spToPx()
+        paint.textSize = answerTextSize
     }
 
     override fun onAnswerChanged(answerView: Pickable?) {
@@ -51,6 +54,20 @@ class ImageViewSettable(context: Context, attributeSet: AttributeSet?) : Settabl
                     .setAlignment(Layout.Alignment.ALIGN_CENTER).build()
         else
             StaticLayout(text, paint, width - paddingRight - paddingLeft, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val height = resolveSizeAndState(height, heightMeasureSpec, 0)
+        val width = resolveSizeAndState(width, widthMeasureSpec, 0)
+        graph.measure(widthMeasureSpec, heightMeasureSpec)
+
+        // TODO: idk, is it needed here
+        setMeasuredDimension(width, height)
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        graph.runAnimation(this)
     }
 
     override fun onDraw(canvas: Canvas) {

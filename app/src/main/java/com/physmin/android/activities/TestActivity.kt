@@ -34,6 +34,8 @@ import com.google.firebase.functions.FirebaseFunctionsException
 import kotlinx.android.synthetic.main.activity_test.*
 import kotlinx.android.synthetic.main.activity_test.view.*
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 import java.net.SocketTimeoutException
 import kotlin.concurrent.schedule
@@ -116,22 +118,26 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
                 .getHttpsCallable(getTestFunctionName)
                 .call()
                 .continueWith { task ->
-                    when {
-                        task.exception is SocketTimeoutException -> {
+                    when (task.exception) {
+                        is SocketTimeoutException -> {
                             Log.e("TestActivity", "fetchTestBundle() - Timeout!")
                             showError(ERROR_TIMEOUT)
                         }
-                        task.exception is FirebaseFunctionsException -> {
+                        is FirebaseFunctionsException -> {
                             Log.e("TestActivity", "FirebaseException [${(task.exception as FirebaseFunctionsException).code}], ${(task.exception as FirebaseFunctionsException).message}")
                             showError(ERROR_SERVER)
                         }
-                        task.exception is Exception -> {
+                        is Exception -> {
                             Log.e("TestActivity", "UnknownError ${task.exception.toString()}")
                             showError(ERROR_UNKNOWN)
                         }
                     }
 
                     val result = task.result?.data as String
+                    val file = File(this.applicationContext.filesDir,"test_bundle.json")
+                    FileOutputStream(file).use { stream ->
+                        stream.write(result.toByteArray())
+                    }
                     result
                 }
     }
@@ -261,9 +267,9 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     private fun parseTest(test: JSONObject): androidx.fragment.app.Fragment {
         return when (test.getString("type")) {
             "relationSings" -> parseRS(test)
-            "graph2graph2" -> parseG2G2(test)
-            "graph2state" -> parseS2G(test)
-            "graph2graph" -> parseG2G(test)
+            "G2G2" -> parseG2G2(test)
+            "G2S" -> parseS2G(test)
+            "G2G" -> parseG2G(test)
             // TODO: Log error
             else -> parseG2G2(test)
         }

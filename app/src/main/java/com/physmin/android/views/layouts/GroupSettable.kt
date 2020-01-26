@@ -33,35 +33,41 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
 
     fun addRelationSignView(answer: FunctionAnswerRelationSignParcelable, graphView: GraphView? = null) {
         val relationSignView = RelationSignView(this.context!!, null, answer.letter,
-                answer.leftIndex, answer.rightIndex)
-        relationSignView.correctAnswers = answer.correctSign
-        relationSignView.graphView = graphView
+                answer.leftIndex, answer.rightIndex).apply {
+
+            this.correctAnswers = answer.correctSign
+            this.graphView = graphView
+        }
+
         this.addView(relationSignView)
     }
 
     fun addQuestionGraphic(functions: ArrayList<FunctionParcelable>) {
-        val graphView = GraphView(context, null)
-        graphView.functions = functions
-        graphView.layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
+        val graphView = GraphView(context, null).apply {
+            this.functions = functions
+        }
+        val layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
 
-        this.addView(graphView)
+        this.addView(graphView, layoutParams)
     }
 
     fun addViewSettable(correctIds: IntArray, functions: ArrayList<FunctionParcelable>) {
         val questView = ImageViewSettable(this.context, null).apply {
             correctAnswers = correctIds
-            layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
             graph.functions = functions
         }
-        this.addView(questView)
+
+        val layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
+        this.addView(questView, layoutParams)
     }
 
     fun addQuestionBlankView(correctAnswers: IntArray) {
-        val imageViewSettableBlank = ImageViewSettableBlank(context, null)
-        imageViewSettableBlank.correctAnswers = correctAnswers
-        imageViewSettableBlank.layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
+        val imageViewSettableBlank = ImageViewSettableBlank(context, null).apply {
+            this.correctAnswers = correctAnswers
+        }
 
-        this.addView(imageViewSettableBlank)
+        val layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
+        this.addView(imageViewSettableBlank, layoutParams)
     }
 
     fun setTestController(controller: TestController) {

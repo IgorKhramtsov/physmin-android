@@ -121,8 +121,6 @@ open class BaseGroup(context: Context, attributeSet: AttributeSet? = null):
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
         val childCount = childCount
         var width = 0
         var height = 0

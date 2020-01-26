@@ -6,8 +6,8 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_main2">Main2Activity</string>
 
-    <string name="messageTimeoutError">Не удалось подключится к серверу, проверьте ваше соединение.</string>
-    <string name="messageServerError">Сервер временно недоступен, попробуйте еще раз.</string>
+    <string name="messageTimeoutError">External Error. Не удалось подключится к серверу, проверьте ваше соединение.</string>
+    <string name="messageServerError">Internal Error. Сервер временно недоступен, попробуйте еще раз.</string>
     <string name="messageUnknownError">Произошла неизвестная ошибка.</string>
 
     <string name="messageButtonTryAgain">Повторить</string>

@@ -28,7 +28,7 @@
 
     <com.physmin.android.views.layouts.GroupSettable
         android:id="@+id/settableGroup_g2g"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"

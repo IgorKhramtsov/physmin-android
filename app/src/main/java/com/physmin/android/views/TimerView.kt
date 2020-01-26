@@ -51,13 +51,14 @@ class TimerView(context: Context, attrs: AttributeSet?): View(context, attrs) {
         paintText = TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply { textSize = 20f.dpToPx() }
         _timeTextHeight = abs(paintText.fontMetrics.top)
 
+        val view = this
         this.post {
             generateVisualElements()
 
             valueAnimator = ValueAnimator.ofFloat(0f, 360f / 60f).apply {
                 addUpdateListener {
                     _wheelDelta = it.animatedValue as Float
-                    invalidate()
+                    view.invalidate()
                 }
                 this.doOnEnd {
                     _wheelLen -= _wheelDelta

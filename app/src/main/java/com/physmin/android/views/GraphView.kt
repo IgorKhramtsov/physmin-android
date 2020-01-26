@@ -1,21 +1,21 @@
 package com.physmin.android.views
 
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
-import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.animation.OvershootInterpolator
+import androidx.core.animation.doOnEnd
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
 import com.physmin.android.R
 import com.physmin.android.activities.FunctionParcelable
 import kotlin.math.abs
 import kotlin.math.min
-import android.graphics.DashPathEffect
-
-
 
 
 // TODO: Make arrows on axis
@@ -26,17 +26,17 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
     private val xAxisLength = 12f
     private val step = 0.2f
 
-    private val positionFunctionColor = ResourcesCompat.getColor(resources, com.physmin.android.R.color.graphic_position, null)
-    private val velocityFunctionColor = ResourcesCompat.getColor(resources, com.physmin.android.R.color.graphic_velocity, null)
-    private val accelerationFunctionColor = ResourcesCompat.getColor(resources, com.physmin.android.R.color.graphic_acceleration, null)
+    private val positionFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_position, null)
+    private val velocityFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_velocity, null)
+    private val accelerationFunctionColor = ResourcesCompat.getColor(resources, R.color.graphic_acceleration, null)
 
-    private var _backColor = ResourcesCompat.getColor(resources, com.physmin.android.R.color.graphic_back_gray, null)
-    private var _divider = ResourcesCompat.getColor(resources, com.physmin.android.R.color.graphic_divider, null)
-    private var _selectedAreaColorLeft = ResourcesCompat.getColor(resources, com.physmin.android.R.color.graphic_selectedLeft, null)
-    private var _selectedAreaColorRight = ResourcesCompat.getColor(resources, com.physmin.android.R.color.graphic_selectedRight, null)
-    private var _axisColor = ResourcesCompat.getColor(resources, com.physmin.android.R.color.textColor, null)
-    private var _textColor = ResourcesCompat.getColor(resources, com.physmin.android.R.color.textColor, null)
-    private var _smallTextColor = ResourcesCompat.getColor(resources, com.physmin.android.R.color.textColorGray, null)
+    private var _backColor = ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null)
+    private var _divider = ResourcesCompat.getColor(resources, R.color.graphic_divider, null)
+    private var _selectedAreaColorLeft = ResourcesCompat.getColor(resources, R.color.graphic_selectedLeft, null)
+    private var _selectedAreaColorRight = ResourcesCompat.getColor(resources, R.color.graphic_selectedRight, null)
+    private var _axisColor = ResourcesCompat.getColor(resources, R.color.textColor, null)
+    private var _textColor = ResourcesCompat.getColor(resources, R.color.textColor, null)
+    private var _smallTextColor = ResourcesCompat.getColor(resources, R.color.textColorGray, null)
     private var _verticalAxisLetter = "x"
     private var _horizontalAxisLetter = "t"
     private var _zeroAxisLetter = "0"
@@ -54,8 +54,13 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
     private var selectedDividerPaintRight: Paint
     private var textPaint: TextPaint
     private var smallTextPaint: TextPaint
+
     private var functionPath = Path()
     private var functionDividers = ArrayList<Float>()
+    private var pathAnimator = ValueAnimator()
+    private var textAnimator = ValueAnimator()
+    private var pathAnimationDuration = 600L
+    private var textAnimationDuration = 400L
     private var indexTextWidth = 0.0f
     private var indexTextHeight = 0.0f
     private var zeroAxisTextHeight = 0f
@@ -135,6 +140,8 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         }
         functionPaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
+            style = Paint.Style.STROKE
+            strokeWidth = 2.dpToPx()
         }
         selectedDividerPaintLeft = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
@@ -155,37 +162,48 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
             color = _divider
             style = Paint.Style.STROKE
             strokeWidth = 2.dpToPx()
-            pathEffect = DashPathEffect(floatArrayOf(16f, 16f), 0f)
+            pathEffect = getPathEffect(0f)
         }
         backgroundPaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG
             style = Paint.Style.FILL
             color = backColor
         }
-        this.post {
-            if (height <= 0)
-                return@post
-            contentWidth = width - axisPaddingLeft - axisPaddingRight
-            contentHeight = height - axisPaddingTop - axisPaddingBottom
-            regeneratePath()
-        }
-
         invalidateTextPaintAndMeasurements()
+
+        post {
+            runAnimation()
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val height = resolveSizeAndState(height, heightMeasureSpec, 0)
+        val width = resolveSizeAndState(width, widthMeasureSpec, 0)
+
+        setMeasuredDimension(width, height)
+        contentWidth = width - axisPaddingLeft - axisPaddingRight
+        contentHeight = height - axisPaddingTop - axisPaddingBottom
+        functionPaint.pathEffect = getPathEffect(0f)
+        regeneratePath()
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        runAnimation()
     }
 
     private fun invalidateTextPaintAndMeasurements() {
         textPaint.let {
-            it.textSize = textSize
             it.color = textColor
             it.typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
+            it.textSize = 0f
             indexTextWidth = it.measureText(vertAxisLetter)
             indexTextHeight = abs(it.fontMetrics.ascent)
-
         }
         smallTextPaint.let {
-            it.textSize = smallTextSize
             it.color = _smallTextColor
             it.typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
+            it.textSize = 0f
             zeroAxisTextHeight = abs(it.fontMetrics.ascent)
             upperLimitTextWidth = it.measureText((yAxisLength / 2).toString())
         }
@@ -201,8 +219,6 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
                 "a" -> accelerationFunctionColor
                 else -> Color.RED
             }
-            it.style = Paint.Style.STROKE
-            it.strokeWidth = 2.dpToPx()
         }
     }
 
@@ -212,12 +228,12 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
 
         this.vertAxisLetter = functions!![0].funcType
         if(functions!!.count() > 1)
-            this.setLayerType(LAYER_TYPE_SOFTWARE, null)
+            this.setLayerType(LAYER_TYPE_SOFTWARE, null) // why?
 
         if (this.vertAxisLetter == "a") yAxisLength = 1f
         else yAxisLength = 12f
         val heightScaleFactor = -(contentHeight / yAxisLength)
-        val widthScaleFactor = contentWidth / xAxisLength
+        val widthScaleFactor = contentWidth / (xAxisLength / step)
         var calculatedPointY: Float
         var calculatedPointX = 0f
         var len: Float
@@ -237,7 +253,7 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
             while (localT < len || (len.isZero() && calculatedPointX < contentWidth)) {
                 localT = min(localT + step, len)
 
-                calculatedPointX += step * widthScaleFactor
+                calculatedPointX += widthScaleFactor
                 calculatedPointY = calculateFunctionValue(function, localT) * heightScaleFactor
 
                 if (abs(calculatedPointY) > contentHeight / 2f) {
@@ -259,6 +275,64 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         }
     }
 
+    fun runAnimation(view: View = this) {
+        pathAnimator.apply {
+            this.setInterpolator { v -> getInterpolation(v) }
+            duration = pathAnimationDuration
+            this.setValues(PropertyValuesHolder.ofFloat("phase", 0f, 1f))
+            this.addUpdateListener {
+                val phase = it.getAnimatedValue("phase") as Float
+                functionPaint.pathEffect = getPathEffect(phase)
+                view.invalidate()
+            }
+        }.start()
+        textAnimator.apply {
+            this.interpolator = OvershootInterpolator()
+            duration = textAnimationDuration
+            this.setValues(PropertyValuesHolder.ofFloat("txSize", 0f, textSize),
+                    PropertyValuesHolder.ofFloat("smTxSize", 0f, smallTextSize))
+            this.addUpdateListener {
+                val smTxSize = it.getAnimatedValue("smTxSize") as Float
+                val txSize = it.getAnimatedValue("txSize")as Float
+                textPaint.textSize = txSize
+                indexTextWidth = textPaint.measureText(vertAxisLetter)
+                indexTextHeight = abs(textPaint.fontMetrics.ascent)
+                smallTextPaint.textSize = smTxSize
+                zeroAxisTextHeight = abs(smallTextPaint.fontMetrics.ascent)
+                upperLimitTextWidth = smallTextPaint.measureText((yAxisLength / 2).toString())
+                invalidate()
+            }
+            startDelay = pathAnimationDuration / 4
+        }.start()
+    }
+
+    private fun getPathEffect(phase: Float):DashPathEffect {
+        Log.d("shit", "contentWi = $contentWidth")
+        val pathLength = PathMeasure(functionPath, false).length
+//        val pathLength = contentWidth - (functions?.count()?:1)
+
+        return DashPathEffect(floatArrayOf(pathLength, pathLength),
+                ((1 - phase) * pathLength).coerceAtLeast(0f))
+    }
+
+    var t: Float = 0f
+    fun getInterpolation(argT:Float, b:Float = 0f, c: Float= 1f, d:Float = 0.7f):Float {
+        // source: http://robertpenner.com/easing/
+        t = argT / d
+        return if (t < 1 / 2.75f) {
+            c * (7.5625f * t * t) + b
+        } else if (t < (2 / 2.75f)) {
+            t -= (1.5f / 2.75f)
+            c * (7.5625f * t * t + .75f) + b
+        } else if (t < (2.5 / 2.75)) {
+            t -= (2.25f / 2.75f)
+            c * (7.5625f * t * t + .9375f) + b
+        } else {
+            t -= (2.625f / 2.75f)
+            c * (7.5625f * t * t + .984375f) + b
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val width = canvas.width
@@ -266,11 +340,9 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         contentWidth = width - (axisPaddingLeft + axisPaddingRight)
         contentHeight = height - (axisPaddingTop + axisPaddingBottom)
         if (functionPath.isEmpty) regeneratePath()
+        //if (!animationFinished && !valueAnimator.isRunning) runAnimation()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(), 3f, 3f, backgroundPaint)
-        else
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
+        drawRoundRect(backgroundPaint, canvas, width, height, 3f,0f)
 
         canvas.drawLine(axisPaddingLeft, axisPaddingTop,
                 axisPaddingLeft, height - axisPaddingBottom,
@@ -326,4 +398,5 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         }
 
     }
+
 }
