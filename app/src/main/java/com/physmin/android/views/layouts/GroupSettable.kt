@@ -33,7 +33,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
 
     fun addRelationSignView(answer: FunctionAnswerRelationSignParcelable, graphView: GraphView? = null) {
         val relationSignView = RelationSignView(this.context!!, null, answer.letter,
-                answer.leftIndex, answer.rightIndex).apply {
+                answer.leftSegment, answer.rightSegment).apply {
 
             this.correctAnswers = answer.correctSign
             this.graphView = graphView

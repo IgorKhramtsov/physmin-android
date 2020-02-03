@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#6E44FF</color>
     <color name="colorPrimaryDark">#222A68</color>
-    <color name="colorAccent">#FF4419</color>
+    <color name="colorAccent">#D038FF</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="background">#F6F6F6</color>
     <color name="half_black">#808080</color>
@@ -33,11 +33,11 @@
     <color name="icon_back">#90C4C4C4</color>
     <color name="alpha_green">#2F058B0B</color>
 
-    <color name="disabled_filter">#8FCFCFCF</color>
+    <color name="disabled_filter">#DBCFCFCF</color>
 
     <color name="textColor">#DE000000</color>
     <color name="textColorGray">#AD000000</color>
-    <color name="textColorDisabled">#8B000000</color>
+    <color name="textColorDisabled">#47000000</color>
 
     <!--FABs-->
     <color name="primary_transparent">@color/colorPrimary</color>

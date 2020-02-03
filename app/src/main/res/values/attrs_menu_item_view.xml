@@ -1,8 +1,8 @@
 <resources>
     <declare-styleable name="MenuItemView">
         <attr name="itemTitle" format="string" />
-        <attr name="itemBack_icon" format="color|reference" />
-        <attr name="itemIcon" format="color|reference" />
+        <attr name="itemBack_icon" format="reference" />
+        <attr name="itemIcon" format="reference" />
         <attr name="disabled" format="boolean" />
         <attr name="type" format="string" />
     </declare-styleable>

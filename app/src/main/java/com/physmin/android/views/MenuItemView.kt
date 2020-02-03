@@ -13,12 +13,13 @@ import androidx.core.graphics.withTranslation
 import kotlinx.android.synthetic.main.menuitem_popup.view.*
 import kotlin.math.roundToInt
 import android.graphics.*
+import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.marginTop
 import com.physmin.android.R
-import java.util.*
+import com.physmin.android.fragments.tests.toPx
+import java.lang.Error
 import kotlin.math.abs
 
 
@@ -51,28 +52,36 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     private var iconWidth = 0f
     private var iconHeight = 0f
 
+    private var completingPercent = 0f
+    private val disabledAlpha = 68
+    private var progressBackPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
+    private var progressFrontPaint  = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
+    private var progressFinishedDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
+            intArrayOf(ResourcesCompat.getColor(resources, R.color.colorPrimary, null),
+                    ResourcesCompat.getColor(resources, R.color.colorAccent, null)))
+
     private val actionList: MutableMap<String, () -> Unit> = mutableMapOf()
     var popupWindow: PopupWindow? = null
     var popupLocation = intArrayOf(0, 0)
 
-    var isDisabled: Boolean = false
+    private var isDisabled: Boolean = true
         set(value) {
             field = value
             if (value) {
-                val greyFilter = PorterDuffColorFilter(ResourcesCompat.getColor(resources, R.color.disabled_filter, null), PorterDuff.Mode.MULTIPLY)
-                this._itemBackIcon?.colorFilter = greyFilter
-                this._itemIcon?.colorFilter = greyFilter
-                this.textPaint.color = ResourcesCompat.getColor(resources, R.color.textColorDisabled, null)
+                itemBackIcon?.alpha = disabledAlpha
+                itemIcon?.alpha = disabledAlpha
+                progressBackPaint.alpha = disabledAlpha
+                progressFrontPaint.alpha = disabledAlpha
+                textPaint.color = ResourcesCompat.getColor(resources, R.color.textColorDisabled, null)
             } else {
-                this._itemBackIcon?.clearColorFilter()
-                this._itemIcon?.clearColorFilter()
-                this.textPaint.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
+                itemBackIcon?.alpha = 255
+                itemIcon?.alpha = 255
+                progressBackPaint.alpha = 255
+                progressFrontPaint.alpha = 255
+                textPaint.color = ResourcesCompat.getColor(resources, R.color.textColor, null)
             }
             invalidate()
         }
-
-    var onTestButtonClick: (() -> Unit)? = null
-    var onLearnButtonClick: (() -> Unit)? = null
 
     var itemTitle: String?
         get() = _itemTitle
@@ -93,7 +102,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             invalidateTextPaintAndMeasurements()
         }
 
-    fun isHorizontal() = type == "Horizontal"
+    private fun isHorizontal() = type == "Horizontal"
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.MenuItemView, 0, 0)
@@ -102,14 +111,37 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
         if (a.hasValue(R.styleable.MenuItemView_type))
             type = a.getString(R.styleable.MenuItemView_type)!!
         if (a.hasValue(R.styleable.MenuItemView_itemBack_icon))
-            _itemBackIcon = a.getDrawable(R.styleable.MenuItemView_itemBack_icon)?.also { it.callback = this }
+            _itemBackIcon = a.getDrawable(R.styleable.MenuItemView_itemBack_icon)?.also {
+                it.mutate()
+                it.callback = this
+            }
+
         if (a.hasValue(R.styleable.MenuItemView_itemIcon))
-            _itemIcon = a.getDrawable(R.styleable.MenuItemView_itemIcon)?.also { _itemIcon?.callback = this }
+            _itemIcon = a.getDrawable(R.styleable.MenuItemView_itemIcon)?.also {
+                it.mutate()
+                it.callback = this
+            }
 
         textPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
             textAlign = if(isHorizontal()) Paint.Align.LEFT else Paint.Align.CENTER
         }
+        progressFrontPaint.apply {
+            color = ResourcesCompat.getColor(resources, R.color.colorPrimary, null)
+            strokeCap = Paint.Cap.ROUND
+            strokeWidth = 4.dpToPx()
+        }
+        progressBackPaint.apply {
+            color = ResourcesCompat.getColor(resources, R.color.progressBack, null)
+            strokeCap = Paint.Cap.ROUND
+            strokeWidth = 4.dpToPx()
+        }
+        progressFinishedDrawable.apply {
+            shape = GradientDrawable.RECTANGLE
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+            cornerRadius = 4.dpToPx()
+        }
+
         isDisabled = a.getBoolean(R.styleable.MenuItemView_disabled, true)
 
         a.recycle()
@@ -119,9 +151,16 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
         invalidateTextPaintAndMeasurements()
     }
 
+    fun setComplenteessPercent(percent: Float) {
+        if(percent < 0)
+            throw Error("completeness percent < 0")
+        this.completingPercent = percent
+        invalidate()
+    }
+
     private fun invalidateTextPaintAndMeasurements() {
         textPaint.let {
-            it.textSize = 20.spToPx()
+            it.textSize = 18.spToPx()
             it.color = ResourcesCompat.getColor(resources, if (isDisabled) R.color.textColorDisabled else R.color.textColor, null)
             textWidth = it.measureText(itemTitle)
             textDescent = abs(it.fontMetrics.descent)
@@ -130,29 +169,15 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     }
 
     private fun invalidateIconBack() {
-        val availableWidth = this.width.toFloat()
-        val availableHeight = if (isHorizontal())
-            this.height.toFloat()
-        else
-            this.height - textHeight - 8.dpToPx()
-
         val constWidth = if (isHorizontal()) backHorWidthConst else backVertWidthConst
         val constHeight = if (isHorizontal()) backHorHeightConst else backVertHeightConst
         val constWidthFront = if (isHorizontal()) iconHorWidthConst else iconVertWidthConst
         val constHeightFront = if (isHorizontal()) iconHorHeightConst else iconVertHeightConst
 
-        var theoreticalWidth = availableWidth
-        var theoreticalHeight = constHeight.toFloat() / constWidth * theoreticalWidth
-
-        if (theoreticalHeight > availableHeight) {
-            theoreticalHeight = availableHeight
-            theoreticalWidth = constWidth.toFloat() / constHeight * theoreticalHeight
-        }
-
-        iconBackWidth = theoreticalWidth
-        iconBackHeight = theoreticalHeight
-        iconWidth = theoreticalWidth * constWidthFront.toFloat() / constWidth
-        iconHeight = theoreticalHeight * constHeightFront.toFloat() / constHeight
+        iconBackWidth = constWidth.dpToPx()
+        iconBackHeight = constHeight.dpToPx()
+        iconWidth = constWidthFront.dpToPx()
+        iconHeight = constHeightFront.dpToPx()
     }
 
     fun setAction(name: String, action: () -> Unit) {
@@ -209,25 +234,9 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        val paddingLeft = paddingLeft
-        val paddingTop = paddingTop
-        val paddingRight = paddingRight
-        val paddingBottom = paddingBottom
-
-        val contentWidth = width - paddingLeft - paddingRight
-        val contentHeight = height - paddingTop - paddingBottom
-
         if (iconBackHeight == 0f || iconBackWidth == 0f) invalidateIconBack()
 
         if (isHorizontal()) {
-            itemTitle?.let {
-                canvas.drawText(it, iconBackWidth + 22.dpToPx(), (height / 2f) + textDescent, textPaint)
-            }
-
             itemBackIcon?.let {
                 canvas.withTranslation(0f, height / 2f) {
                     it.setBounds(0,
@@ -237,6 +246,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
                     it.draw(canvas)
                 }
             }
+
             itemIcon?.let {
                 canvas.withTranslation(0f, height / 2f) {
                     it.setBounds(-(iconWidth / 2).roundToInt(),
@@ -246,11 +256,11 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
                     it.draw(canvas)
                 }
             }
-        } else {
-            itemTitle?.let {
-                canvas.drawText(it, contentWidth / 2f, height - textDescent, textPaint)
-            }
 
+            itemTitle?.let {
+                canvas.drawText(it, iconBackWidth + 22.dpToPx(), (height / 2f) + textDescent, textPaint)
+            }
+        } else {
             itemBackIcon?.let {
                 canvas.withTranslation(width / 2f, 0f) {
                     it.setBounds(-(iconBackWidth / 2).roundToInt(),
@@ -268,6 +278,26 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
                             (10 + iconHeight).roundToInt())
                     it.draw(canvas)
                 }
+            }
+
+            canvas.withTranslation(width / 2f, 0f) {
+                if (completingPercent >= 1) {
+                    //canvas.drawLine(0f, iconBackHeight + 7.dpToPx(), width.toFloat(), iconBackHeight + 7.dpToPx(), examPaint)
+                    progressFinishedDrawable.let {
+                        it.setBounds(-(iconBackWidth / 2).roundToInt(),
+                                iconBackHeight.roundToInt() + 7.toPx(),
+                                (iconBackWidth / 2).roundToInt(),
+                                iconBackHeight.roundToInt() + 7.toPx() + 4.toPx())
+                        it.draw(canvas)
+                    }
+                } else {
+                    canvas.drawLine(-(iconBackWidth / 2), iconBackHeight + 7.dpToPx(), (iconBackWidth / 2), iconBackHeight + 7.dpToPx(), progressBackPaint)
+                    canvas.drawLine(-(iconBackWidth / 2), iconBackHeight + 7.dpToPx(), -(iconBackWidth / 2) + (iconBackWidth * (completingPercent)), iconBackHeight + 7.dpToPx(), progressFrontPaint)
+                }
+            }
+
+            itemTitle?.let {
+                canvas.drawText(it, width / 2f, height - textDescent, textPaint)
             }
         }
 

@@ -82,14 +82,12 @@
     <com.physmin.android.views.TimerView
         android:id="@+id/Timer"
         style="?android:attr/progressBarStyle"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         android:max="60"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:minWidth="50dp"
-        android:minHeight="50dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/Menu_layout"
         app:layout_constraintStart_toStartOf="@+id/Menu_layout" />

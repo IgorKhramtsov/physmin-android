@@ -103,10 +103,10 @@ class TimerView(context: Context, attrs: AttributeSet?): View(context, attrs) {
         createStaticLayout()
 
         _hsvWheelRect = RectF().apply {
-            left = 0f + hsvWheelStrokeWidth / 2f
-            top = 0f + hsvWheelStrokeWidth / 2f
-            right = width - hsvWheelStrokeWidth / 2f
-            bottom = height - hsvWheelStrokeWidth / 2f
+            left = 0f + hsvWheelStrokeWidth
+            top = 0f + hsvWheelStrokeWidth
+            right = width - hsvWheelStrokeWidth
+            bottom = height - hsvWheelStrokeWidth
         }
 
         _backShadowPanelBitmap = generateShadowPanel(width.toInt(), height.toInt(),
@@ -134,15 +134,12 @@ class TimerView(context: Context, attrs: AttributeSet?): View(context, attrs) {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        var height = resolveSizeAndState(height, heightMeasureSpec, 0)
+        var width = resolveSizeAndState(width, widthMeasureSpec, 0)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            val height = this.minimumHeight + shadowBlurRadius.toInt() + shadowOffsetY.toInt()
-            val width = this.minimumWidth + shadowBlurRadius.toInt() + shadowOffsetX.toInt()
-            setMeasuredDimension(width, height)
-        } else {
-            TODO("VERSION.SDK_INT < JELLY_BEAN")
-        }
+        height += shadowBlurRadius.toInt() + shadowOffsetY.toInt()
+        width += shadowBlurRadius.toInt() + shadowOffsetX.toInt()
+        setMeasuredDimension(width, height)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -160,7 +157,8 @@ class TimerView(context: Context, attrs: AttributeSet?): View(context, attrs) {
         }
 
         _staticLayout?.let {
-            canvas.withTranslation(paddingLeft.toFloat(), paddingTop + (_timeTextHeight / 2f)) {
+            canvas.withTranslation((this.width - shadowOffsetX) / 2f - it.width / 2f,
+                    (this.height - shadowOffsetY) / 2f - it.height / 2f) {
                 it.draw(canvas)
             }
         }

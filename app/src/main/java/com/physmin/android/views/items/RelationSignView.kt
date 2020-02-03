@@ -2,6 +2,7 @@ package com.physmin.android.views.items
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -15,11 +16,16 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.withTranslation
+import androidx.core.view.setPadding
 import com.physmin.android.Pickable
 import com.physmin.android.R
 import com.physmin.android.Settable
+import com.physmin.android.Singleton
 import com.physmin.android.fragments.tests.toPx
 import com.physmin.android.views.GraphView
+import com.physmin.android.views.dpToPx
+import com.physmin.android.views.generateShadowPanel
 import com.physmin.android.views.spToPx
 import kotlin.math.round
 
@@ -30,8 +36,8 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
 
     var correctAnswers: Int? = null
     var popupWindow: PopupWindow? = null
-    var letterSize = 24.spToPx()
-    var indexesSize = 12.spToPx()
+    var letterSize = 20.spToPx()
+    var indexesSize = 10.spToPx()
     var popupLocation = intArrayOf(0, 0)
     var popupPadding: Int = 0
     var graphView: GraphView? = null
@@ -47,6 +53,14 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
 
     var contentWidth = width
     var contentHeight = height
+
+    private var _backColor: Int = ResourcesCompat.getColor(resources, R.color.ui_panel, null)
+    private var _backShadowColor: Int = ResourcesCompat.getColor(resources, R.color.ui_shadow, null)
+    var blurRadius = 2.5f.dpToPx()
+    var cornerRadius = 0f
+    private val backPanelBitmap: Bitmap? by Singleton {
+        generateShadowPanel(width, height, cornerRadius, blurRadius, 2.dpToPx(), 2.dpToPx(), _backColor, _backShadowColor, this)
+    }
 
     override fun isCorrect(): Boolean {
         if (answerView == null || correctAnswers == null)
@@ -73,7 +87,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
             invalidateTextPaintAndMeasurements()
         }
 
-    var currentSign: String? = null
+    var currentSign: String? = "?"
         set(value) {
             field = value
             invalidateTextPaintAndMeasurements()
@@ -92,7 +106,8 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         }
 
 
-        layoutParams = ViewGroup.LayoutParams(120.toPx(), 50.toPx())
+        layoutParams = ViewGroup.LayoutParams(130.toPx(), 46.toPx())
+        this.setPadding(15.toPx(), 0,15.toPx(), 0)
 
         letterPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
@@ -116,7 +131,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
             answerView?.answer == -1 -> currentSign = context.getString(R.string.relation_sign_less)
             answerView?.answer == 0 -> currentSign = context.getString(R.string.relation_sign_equal)
             answerView?.answer == 1 -> currentSign = context.getString(R.string.relation_sign_more)
-            else -> currentSign = null
+            else -> currentSign = "?"
         }
     }
 
@@ -201,6 +216,10 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        backPanelBitmap?.let {
+            canvas.drawBitmap(it, 0f, 0f, null)
+        }
 
         letter?.let {
             canvas.drawText(it,
