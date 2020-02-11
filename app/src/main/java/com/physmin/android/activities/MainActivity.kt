@@ -56,6 +56,22 @@ class MainActivity: AppCompatActivity() {
         menuItemView_progressive_concepts.setAction("Обучение") {}
 
         startAuthActivity()
+
+        this.textViewSignOut.setOnClickListener { signOut() }
+        this.textViewRegistration.setOnClickListener { upgradeAnonymousAcc() }
+
+    }
+
+    private fun upgradeAnonymousAcc() {
+        startAuthActivity(true)
+    }
+
+    private fun signOut() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener {
+            if (it.isSuccessful) startAuthActivity()
+            else Toast.makeText(this, "Произошла ошибка.", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -67,12 +83,17 @@ class MainActivity: AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
                 updateProfileInfo()
+
+                if (FirebaseAuth.getInstance().currentUser!!.metadata!!.creationTimestamp == FirebaseAuth.getInstance().currentUser!!.metadata!!.lastSignInTimestamp)
+                    firstLogin()
+
             } else {
                 if (response?.error != null) {
                     Toast.makeText(this, "Произошла ошибка " + response.error!!.message, Toast.LENGTH_SHORT).show()
                     startAuthActivity()
                 } else {
-                    this.finish()
+                    if(FirebaseAuth.getInstance().currentUser == null) // if it`s not an upgrading event
+                        this.finish()
                     return
                 }
 
@@ -84,26 +105,29 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    private fun startAuthActivity() {
-        if (FirebaseAuth.getInstance().currentUser != null) {
+    private fun firstLogin() {
+        Log.d("FirebaseAuth", "firstLogin")
+        TODO("not implemented")
+    }
+
+    private fun startAuthActivity(upgrading: Boolean = false) {
+        if (FirebaseAuth.getInstance().currentUser != null && !upgrading) {
             FirebaseAuth.getInstance().currentUser!!.reload()
-            Log.d("firebase auth", "startAuthActivity: user already logged")
+            Log.d("FirebaseAuth", "startAuthActivity: user already logged")
             updateProfileInfo()
             return
         }
 
         val providers = arrayListOf(
                 AuthUI.IdpConfig.EmailBuilder().build(),
-                AuthUI.IdpConfig.GoogleBuilder().build(),
-                AuthUI.IdpConfig.AnonymousBuilder().build()
+                AuthUI.IdpConfig.GoogleBuilder().build()
         )
+        if(!upgrading) providers.add(AuthUI.IdpConfig.AnonymousBuilder().build())
 
         // Create and launch sign-in intent
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .build(),
+        val builder = AuthUI.getInstance().createSignInIntentBuilder()
+        if (upgrading) builder.enableAnonymousUsersAutoUpgrade()
+        startActivityForResult(builder.setAvailableProviders(providers).build(),
                 RC_SIGN_IN)
     }
 
@@ -120,8 +144,7 @@ class MainActivity: AppCompatActivity() {
             textViewStatistics.setTextColor(ContextCompat.getColor(this, R.color.textColorLightDisabled))
             textViewSettings.isClickable = false
             textViewSettings.setTextColor(ContextCompat.getColor(this, R.color.textColorLightDisabled))
-        }
-        else {
+        } else {
             var initials = ""
             if (user.displayName != null) {
                 val words = user.displayName!!.split(' ')
@@ -137,7 +160,7 @@ class MainActivity: AppCompatActivity() {
             textViewName.text = user.displayName
             textViewInitials.text = initials
             textViewEmail.text = user.email
-            textViewEmailVerification.visibility = if (user.isEmailVerified)  View.GONE else View.VISIBLE
+            textViewEmailVerification.visibility = if (user.isEmailVerified) View.GONE else View.VISIBLE
             textViewStatistics.isClickable = true
             textViewStatistics.setTextColor(ContextCompat.getColor(this, R.color.textColorLight))
             textViewSettings.isClickable = true
