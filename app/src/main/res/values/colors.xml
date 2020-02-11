@@ -38,6 +38,13 @@
     <color name="textColor">#DE000000</color>
     <color name="textColorGray">#AD000000</color>
     <color name="textColorDisabled">#47000000</color>
+    <color name="textColorLight">#F6F6F6</color>
+    <color name="textColorLightSecond">#B8F6F6F6</color>
+    <color name="textColorLightThird">#A3F6F6F6</color>
+    <color name="textColorLightFour">#78F6F6F6</color>
+    <color name="textColorLightDisabled">#8FF6F6F6</color>
+    <color name="textShadow">#26000000</color>
+
 
     <!--FABs-->
     <color name="primary_transparent">@color/colorPrimary</color>

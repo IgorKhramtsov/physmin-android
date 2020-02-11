@@ -3,15 +3,15 @@
     package="com.physmin.android">
 
     <application
+        android:name="com.physmin.android.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme" />
+            android:name=".activities.MainActivity" />
         <!--<activity android:name=".Test" />-->
         <!--<activity android:name=".Cinematics" />-->
     </application>
