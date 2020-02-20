@@ -1,5 +1,6 @@
 package com.physmin.android.views
 
+import FunctionParcelable
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.content.Context
@@ -13,7 +14,6 @@ import androidx.core.animation.doOnEnd
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
 import com.physmin.android.R
-import com.physmin.android.activities.FunctionParcelable
 import kotlin.math.abs
 import kotlin.math.min
 

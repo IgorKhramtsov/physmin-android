@@ -16,13 +16,11 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.withTranslation
-import androidx.core.view.setPadding
 import com.physmin.android.Pickable
 import com.physmin.android.R
 import com.physmin.android.Settable
 import com.physmin.android.Singleton
-import com.physmin.android.fragments.tests.toPx
+import com.physmin.android.fragments.tasks.toPx
 import com.physmin.android.views.GraphView
 import com.physmin.android.views.dpToPx
 import com.physmin.android.views.generateShadowPanel

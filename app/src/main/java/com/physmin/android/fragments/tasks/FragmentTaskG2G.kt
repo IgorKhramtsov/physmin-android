@@ -1,40 +1,42 @@
-package com.physmin.android.fragments.tests
+package com.physmin.android.fragments.tasks
 
+import FunctionAnswerParcelable
+import QuestionParcelable
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.physmin.android.R
-import com.physmin.android.activities.FunctionAnswerParcelable
-import com.physmin.android.activities.QuestionParcelable
-import com.physmin.android.views.layouts.GroupScrollable
-import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
 
+
+// TODO: Rename parameter arguments, choose names which match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_QUESTION = "param1"
 private const val ARG_ANSWERS = "param2"
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [FragmentTestGraph2Graph2.OnFragmentInteractionListener] interface
+ * [FragmentTestGraph2Graph.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [FragmentTestGraph2Graph2.newInstance] factory method to
+ * Use the [FragmentTestGraph2Graph.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2Graph2: FragmentTestBase() {
-    override var layoutResource = R.layout.fragment_test_graph2graph_2
+
+class FragmentTestGraph2Graph: FragmentTestBase() {
+
+    override var layoutResource = R.layout.fragment_test_graph2graph
     private var question: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<FunctionAnswerParcelable>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             question = it.getParcelableArrayList(ARG_QUESTION)
-            answers = it.getParcelableArrayList<FunctionAnswerParcelable>(ARG_ANSWERS)
+            answers = it.getParcelableArrayList(ARG_ANSWERS)
         }
     }
 
@@ -51,13 +53,13 @@ class FragmentTestGraph2Graph2: FragmentTestBase() {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
+//    fun onButtonPressed(uri: Uri) {
 //        listener?.onFragmentInteraction(uri)
-    }
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
+//        if (context is OnAllDoneListener) {
 //            listener = context
 //        } else {
 //            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -96,12 +98,11 @@ class FragmentTestGraph2Graph2: FragmentTestBase() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentTestGraph2Graph2.
+         * @return A new instance of fragment FragmentTestGraph2Graph.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(question: ArrayList<QuestionParcelable>, answers: ArrayList<FunctionAnswerParcelable>) =
-                FragmentTestGraph2Graph2().apply {
+                FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putParcelableArrayList(ARG_QUESTION, question)
                         putParcelableArrayList(ARG_ANSWERS, answers)

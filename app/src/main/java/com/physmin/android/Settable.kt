@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.physmin.android.activities.TestActivity
-import com.physmin.android.fragments.tests.TestController
+import com.physmin.android.fragments.tasks.TestController
 import com.physmin.android.views.items.RelationSignView
 
 abstract class Settable(context: Context, attrs: AttributeSet?): View(context, attrs) {

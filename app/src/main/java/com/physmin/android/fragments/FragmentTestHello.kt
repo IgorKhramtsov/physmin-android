@@ -46,7 +46,7 @@ class FragmentTestHello : androidx.fragment.app.Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_test_hello, container, false)
 
         val activity = activity as TestActivity
-        val tests = (activity).testBundle
+        val tests = (activity).tasksList
 
 
 //        activity.showButtonNext()

@@ -18,7 +18,7 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.physmin.android.R
-import com.physmin.android.fragments.tests.toPx
+import com.physmin.android.fragments.tasks.toPx
 import java.lang.Error
 import kotlin.math.abs
 

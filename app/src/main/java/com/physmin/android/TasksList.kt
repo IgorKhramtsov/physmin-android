@@ -2,17 +2,18 @@ package com.physmin.android
 
 import org.json.JSONObject
 
-data class TestItem(val jsonObject: JSONObject, var nextItem: TestItem? = null)
+typealias TaskObject = HashMap<String, *>
+data class TestItem(val taskObject: TaskObject, var nextItem: TestItem? = null)
 
-class TestBundle(array: ArrayList<JSONObject>) {
+class TasksList(array: ArrayList<HashMap<String, *>>) {
     var iterator: TestItem? = null
     lateinit var last: TestItem
 
     init {
-        setBundle(array)
+        setTasks(array)
     }
 
-    fun setBundle(array: ArrayList<JSONObject>) {
+    private fun setTasks(array: ArrayList<HashMap<String, *>>) {
         if (array.count() == 0)
             throw Error("Array is empty!")
 
@@ -27,12 +28,12 @@ class TestBundle(array: ArrayList<JSONObject>) {
         iterator = first
     }
 
-    fun pop(): JSONObject {
+    fun pop(): TaskObject {
         if (iterator!!.nextItem == null)
             throw Error("Cant pop, iterator is null. (reach the end of array)")
 
         iterator = iterator!!.nextItem
-        return iterator!!.jsonObject
+        return iterator!!.taskObject
     }
 
     fun isMoreTests(): Boolean = iterator?.nextItem != null
@@ -43,18 +44,18 @@ class TestBundle(array: ArrayList<JSONObject>) {
         if (iterator == null)
             return
 
-        last.nextItem = TestItem(iterator!!.jsonObject)
+        last.nextItem = TestItem(iterator!!.taskObject)
         last = last.nextItem!!
     }
 
-    fun getAsArray(): Array<JSONObject> {
-        if(iterator == null)
+    fun getAsArray(): Array<TaskObject> {
+        if (iterator == null)
             throw Error("iterator is null!")
 
         val lastPos = iterator
-        val list = ArrayList<JSONObject>()
-        while(iterator != null) {
-            list.add(iterator!!.jsonObject)
+        val list = ArrayList<TaskObject>()
+        while (iterator != null) {
+            list.add(iterator!!.taskObject)
             iterator = iterator!!.nextItem
         }
         iterator = lastPos

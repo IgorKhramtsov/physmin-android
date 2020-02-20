@@ -1,4 +1,4 @@
-package com.physmin.android.fragments.tests
+package com.physmin.android.fragments.tasks
 
 import android.content.Context
 import android.os.Bundle

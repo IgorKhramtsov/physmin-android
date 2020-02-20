@@ -1,20 +1,13 @@
-package com.physmin.android.fragments.tests
+package com.physmin.android.fragments.tasks
 
-import android.content.Context
+import QuestionParcelable
+import TextAnswerParcelable
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.physmin.android.R
-import com.physmin.android.activities.QuestionParcelable
-import com.physmin.android.activities.TextAnswerParcelable
-import com.physmin.android.views.items.ImageViewSettable
-import com.physmin.android.views.items.TextViewPickable
-import com.physmin.android.views.dpToPx
-import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 

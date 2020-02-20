@@ -11,12 +11,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.physmin.android.R
+import com.physmin.android.TaskObject
 import com.physmin.android.activities.TestActivity
 import kotlinx.android.synthetic.dev.fragment_test_list.view.*
 import org.json.JSONObject
 
 
-class FragmentTestList(_testsList: Array<JSONObject>): Fragment() {
+class FragmentTestList(_testsList: Array<TaskObject>): Fragment() {
     lateinit var testActivity: TestActivity
     var testsList = _testsList
 
@@ -32,10 +33,10 @@ class FragmentTestList(_testsList: Array<JSONObject>): Fragment() {
         container?.removeAllViews()
         val view = inflater.inflate(R.layout.fragment_test_list, container, false)
 
-        for ((iter, test) in testsList.withIndex()) {
+        for ((iter, task) in testsList.withIndex()) {
             view.test_list.addView(Button(this.context).apply {
-                text = "$iter: ${test.getString("type")}"
-                setOnClickListener { testActivity.switchTest(test, true) }
+                text = "$iter: ${task["type"]}"
+                setOnClickListener { testActivity.switchTest(task, true) }
             })
         }
 

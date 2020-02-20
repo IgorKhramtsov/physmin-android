@@ -1,14 +1,13 @@
 package com.physmin.android.views.layouts
 
+import FunctionAnswerParcelable
+import TextAnswerParcelable
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.physmin.android.Pickable
-import com.physmin.android.activities.FunctionAnswerParcelable
-import com.physmin.android.activities.TextAnswerParcelable
-import com.physmin.android.fragments.tests.TestController
+import com.physmin.android.fragments.tasks.TestController
 import com.physmin.android.pickableGroupTag
 import com.physmin.android.views.*
 import com.physmin.android.views.items.ImageViewPickable

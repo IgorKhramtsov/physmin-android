@@ -37,13 +37,7 @@ class MainActivity: AppCompatActivity() {
         setContentView(R.layout.activity_tests_subjects)
 
         if (BuildConfig.DEBUG) {
-            val language_code = "ru"
-            val dm: DisplayMetrics = resources.getDisplayMetrics()
-            val conf: Configuration = resources.getConfiguration()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                conf.setLocale(Locale(language_code.toLowerCase()))
-            }
-            resources.updateConfiguration(conf, dm)
+            changeLocaleRu()
         }
 
         drawerLayout.setScrimColor(Color.TRANSPARENT)
@@ -62,11 +56,25 @@ class MainActivity: AppCompatActivity() {
 
     }
 
+    private fun changeLocaleRu() {
+        val language_code = "ru"
+        val dm: DisplayMetrics = resources.getDisplayMetrics()
+        val conf: Configuration = resources.getConfiguration()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            conf.setLocale(Locale(language_code.toLowerCase()))
+        }
+        resources.updateConfiguration(conf, dm)
+    }
+
     private fun upgradeAnonymousAcc() {
         startAuthActivity(true)
     }
 
     private fun signOut() {
+        if (FirebaseAuth.getInstance().currentUser?.isAnonymous == true) {
+            FirebaseAuth.getInstance().currentUser!!.delete()
+        }
+
         AuthUI.getInstance().signOut(this).addOnCompleteListener {
             if (it.isSuccessful) startAuthActivity()
             else Toast.makeText(this, "Произошла ошибка.", Toast.LENGTH_SHORT).show()
@@ -89,10 +97,13 @@ class MainActivity: AppCompatActivity() {
 
             } else {
                 if (response?.error != null) {
-                    Toast.makeText(this, "Произошла ошибка " + response.error!!.message, Toast.LENGTH_SHORT).show()
+                    if (response.error!!.errorCode == ErrorCodes.ANONYMOUS_UPGRADE_MERGE_CONFLICT)
+                        Toast.makeText(this, "Ошибка. Пользователь уже существует. Выйдите из аккаунта гостя. ", Toast.LENGTH_LONG).show()
+                    else
+                        Toast.makeText(this, "Произошла ошибка. " + response.error!!.message, Toast.LENGTH_SHORT).show()
                     startAuthActivity()
                 } else {
-                    if(FirebaseAuth.getInstance().currentUser == null) // if it`s not an upgrading event
+                    if (FirebaseAuth.getInstance().currentUser == null) // if it`s not an upgrading event
                         this.finish()
                     return
                 }
@@ -107,7 +118,7 @@ class MainActivity: AppCompatActivity() {
 
     private fun firstLogin() {
         Log.d("FirebaseAuth", "firstLogin")
-        TODO("not implemented")
+        // TODO("not implemented")
     }
 
     private fun startAuthActivity(upgrading: Boolean = false) {
@@ -122,7 +133,7 @@ class MainActivity: AppCompatActivity() {
                 AuthUI.IdpConfig.EmailBuilder().build(),
                 AuthUI.IdpConfig.GoogleBuilder().build()
         )
-        if(!upgrading) providers.add(AuthUI.IdpConfig.AnonymousBuilder().build())
+        if (!upgrading) providers.add(AuthUI.IdpConfig.AnonymousBuilder().build())
 
         // Create and launch sign-in intent
         val builder = AuthUI.getInstance().createSignInIntentBuilder()
@@ -136,7 +147,7 @@ class MainActivity: AppCompatActivity() {
         if (user.isAnonymous) {
             textViewEmail.visibility = View.GONE
             textViewEmailVerification.visibility = View.GONE
-            textViewSignOut.visibility = View.GONE
+            textViewSignOut.visibility = View.VISIBLE
             textViewRegistration.visibility = View.VISIBLE
             textViewName.text = "Гость"
             textViewInitials.text = "Г"

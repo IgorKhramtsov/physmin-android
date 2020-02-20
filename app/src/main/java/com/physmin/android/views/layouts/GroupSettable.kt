@@ -1,24 +1,18 @@
 package com.physmin.android.views.layouts
 
+import FunctionParcelable
+import RSAnswerParcelable
 import android.content.Context
-import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.*
-import androidx.core.content.res.ResourcesCompat
-import com.physmin.android.R
 import com.physmin.android.Settable
-import com.physmin.android.activities.FunctionAnswerRelationSignParcelable
-import com.physmin.android.activities.FunctionParcelable
-import com.physmin.android.fragments.tests.TestController
+import com.physmin.android.fragments.tasks.TestController
 import com.physmin.android.settableGroupTag
 import com.physmin.android.views.*
 import com.physmin.android.views.items.ImageViewSettable
 import com.physmin.android.views.items.ImageViewSettableBlank
 import com.physmin.android.views.items.RelationSignView
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.max
 
 
 class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(context, attributeSet),
@@ -31,7 +25,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
         setOnHierarchyChangeListener(this)
     }
 
-    fun addRelationSignView(answer: FunctionAnswerRelationSignParcelable, graphView: GraphView? = null) {
+    fun addRelationSignView(answer: RSAnswerParcelable, graphView: GraphView? = null) {
         val relationSignView = RelationSignView(this.context!!, null, answer.letter,
                 answer.leftSegment, answer.rightSegment).apply {
 

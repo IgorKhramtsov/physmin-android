@@ -7,19 +7,13 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.physmin.android.activities.TestActivity
-import com.physmin.android.fragments.tests.TestController
-import com.physmin.android.views.items.ImageViewPickable
-import com.physmin.android.views.items.TextViewPickable
-import com.physmin.android.views.layouts.GroupPickable
-import java.util.zip.Inflater
-import kotlin.math.abs
+import com.physmin.android.fragments.tasks.TestController
 import kotlin.math.pow
 
 abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, attrs) {
