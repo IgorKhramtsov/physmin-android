@@ -1,5 +1,6 @@
 package com.physmin.android.activities
 
+import FirebaseAuthManager
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
@@ -17,6 +18,7 @@ import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
 import com.physmin.android.App
@@ -32,7 +34,6 @@ import kotlin.collections.HashMap
 
 class MainActivity: AppCompatActivity() {
 
-    private var RC_SIGN_IN: Int = 0
     private var functions: FirebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
 
     private val topicMap: Map<String, MenuItemView> by lazy {
@@ -43,9 +44,12 @@ class MainActivity: AppCompatActivity() {
         )
     }
 
+    lateinit var authManager: FirebaseAuthManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tests_subjects)
+        authManager = FirebaseAuthManager(this)
 
         drawerLayout.setScrimColor(Color.TRANSPARENT)
         drawerLayout.drawerElevation = 8f
@@ -53,18 +57,11 @@ class MainActivity: AppCompatActivity() {
             changeLocaleRu()
         }
 
-        startAuthActivity()
+        this.textViewSignOut.setOnClickListener { authManager.signOut() }
+        this.textViewRegistration.setOnClickListener { authManager.upgradeAnonymousAcc() }
 
+        authManager.startAuthActivity()
         loadProgress()
-
-
-
-
-
-
-        this.textViewSignOut.setOnClickListener { signOut() }
-        this.textViewRegistration.setOnClickListener { upgradeAnonymousAcc() }
-
     }
 
     private fun loadProgress() {
@@ -125,91 +122,13 @@ class MainActivity: AppCompatActivity() {
                 }
     }
 
-    private fun setItemViewAction(item: MenuItemView, actionName: String, topicPath: String) {
-        item.setAction(actionName) {
-            val intent = Intent(this, TestActivity::class.java)
-            intent.putExtra("topic", topicPath)
-            startActivity(intent)
-        }
-    }
-
-    private fun upgradeAnonymousAcc() {
-        startAuthActivity(true)
-    }
-
-    private fun signOut() {
-        if (FirebaseAuth.getInstance().currentUser?.isAnonymous == true) {
-            FirebaseAuth.getInstance().currentUser!!.delete()
-        }
-
-        AuthUI.getInstance().signOut(this).addOnCompleteListener {
-            if (it.isSuccessful) startAuthActivity()
-            else Toast.makeText(this, "Произошла ошибка.", Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
-            if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-                updateProfileInfo()
-
-                if (FirebaseAuth.getInstance().currentUser!!.metadata!!.creationTimestamp == FirebaseAuth.getInstance().currentUser!!.metadata!!.lastSignInTimestamp)
-                    firstLogin()
-
-            } else {
-                if (response?.error != null) {
-                    if (response.error!!.errorCode == ErrorCodes.ANONYMOUS_UPGRADE_MERGE_CONFLICT)
-                        Toast.makeText(this, "Ошибка. Пользователь уже существует. Выйдите из аккаунта гостя. ", Toast.LENGTH_LONG).show()
-                    else
-                        Toast.makeText(this, "Произошла ошибка. " + response.error!!.message, Toast.LENGTH_SHORT).show()
-                    startAuthActivity()
-                } else {
-                    if (FirebaseAuth.getInstance().currentUser == null) // if it`s not an upgrading event
-                        this.finish()
-                    return
-                }
-
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
-            }
-        }
+        authManager.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun firstLogin() {
-        Log.d("FirebaseAuth", "firstLogin")
-        // TODO("not implemented")
-    }
-
-    private fun startAuthActivity(upgrading: Boolean = false) {
-        if (FirebaseAuth.getInstance().currentUser != null && !upgrading) {
-            FirebaseAuth.getInstance().currentUser!!.reload()
-            updateProfileInfo()
-            return
-        }
-
-        val providers = arrayListOf(
-                AuthUI.IdpConfig.EmailBuilder().build(),
-                AuthUI.IdpConfig.GoogleBuilder().build()
-        )
-        if (!upgrading) providers.add(AuthUI.IdpConfig.AnonymousBuilder().build())
-
-        // Create and launch sign-in intent
-        val builder = AuthUI.getInstance().createSignInIntentBuilder()
-        if (upgrading) builder.enableAnonymousUsersAutoUpgrade()
-        startActivityForResult(builder.setAvailableProviders(providers).build(),
-                RC_SIGN_IN)
-    }
-
-    private fun updateProfileInfo() {
-        val user = FirebaseAuth.getInstance().currentUser!!
+    fun updateProfileInfo(user: FirebaseUser) {
         if (user.isAnonymous) {
             textViewEmail.visibility = View.GONE
             textViewEmailVerification.visibility = View.GONE
@@ -222,13 +141,7 @@ class MainActivity: AppCompatActivity() {
             textViewSettings.isClickable = false
             textViewSettings.setTextColor(ContextCompat.getColor(this, R.color.textColorLightDisabled))
         } else {
-            var initials = ""
-            if (user.displayName != null) {
-                val words = user.displayName!!.split(' ')
-                words.forEach { str ->
-                    initials += str[0].toUpperCase() + "."
-                }
-            }
+            val initials = getInitials(user.displayName)
 
             textViewEmail.visibility = View.VISIBLE
             textViewSignOut.visibility = View.VISIBLE
@@ -243,6 +156,14 @@ class MainActivity: AppCompatActivity() {
             textViewSettings.isClickable = true
             textViewSettings.setTextColor(ContextCompat.getColor(this, R.color.textColorLight))
         }
+    }
+
+    private fun getInitials(name: String?): String {
+        var initials = ""
+        name?.split(' ')?.forEach { str ->
+            initials += str[0].toUpperCase() + "."
+        }
+        return initials
     }
 
 
