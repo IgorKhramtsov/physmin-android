@@ -10,20 +10,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/ui_background"
         tools:context="com.physmin.android.activities.MainActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:title="@string/app_name"
-            app:titleTextAppearance="@style/AppTheme.ActionBarStyle.TitleTextStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/AppTheme.ActionBarStyle.TitleTextStyle" />
 
         <TextView
             android:id="@+id/textView5"
@@ -31,10 +32,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="Поступательное движение"
+            android:textColor="@color/textColor"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,10 +48,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="39dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="Вращательное движение"
+            android:textColor="@color/textColor"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.506"

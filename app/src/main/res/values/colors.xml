@@ -15,6 +15,7 @@
     <color name="ui_background">#F6F6F6</color>
     <color name="ui_panel">#fff</color>
     <color name="ui_shadow">#26000000</color>
+    <color name="ui_shadow25">#40000000</color>
 
     <color name="loading_back">#996E44FF</color>
     <color name="loading_front">#6E44FF</color>

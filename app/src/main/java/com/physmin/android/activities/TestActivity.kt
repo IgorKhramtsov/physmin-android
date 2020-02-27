@@ -49,14 +49,16 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
     lateinit var buttonNext: Button
     lateinit var loadingAnimation: LoadingHorBar
     lateinit var floatingMenu: FloatingActionsMenu
-    var API_LINKS: API = API_prod()
-    val topic = "Concepts"
+
+    var topic: String = ""
 
     private var debugTextViewCalls = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
+
+        topic = intent?.getStringExtra("topic") ?: throw Exception("topic is null")
 
         debugTextView = test_layout.debugTextView
         errorTextView = test_layout.errorTextView
@@ -72,7 +74,6 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
 
         firebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
         if (isDev()) {
-            API_LINKS = API_debug()
             floatingMenu.action_next.setOnClickListener { switchTest() }
             floatingMenu.action_list.setOnClickListener {
                 supportFragmentManager.commit {
@@ -107,41 +108,12 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
         }
     }
 
-    private fun fetchTestBundle(): Task<String> {
-        return firebaseFunctions
-                .getHttpsCallable(API_LINKS.getTest)
-                .call()
-                .continueWith { task ->
-                    when (task.exception) {
-                        is SocketTimeoutException -> {
-                            Log.e("TestActivity", "fetchTestBundle() - Timeout!")
-                            showError(ERROR_TIMEOUT)
-                        }
-                        is FirebaseFunctionsException -> {
-                            Log.e("TestActivity", "FirebaseException [${(task.exception as FirebaseFunctionsException).code}], ${(task.exception as FirebaseFunctionsException).message}")
-                            showError(ERROR_SERVER)
-                        }
-                        is Exception -> {
-                            Log.e("TestActivity", "UnknownError ${task.exception.toString()}")
-                            showError(ERROR_UNKNOWN)
-                        }
-                    }
-
-                    val result = task.result?.data as String
-                    val file = File(this.applicationContext.filesDir, "test_bundle.json")
-                    FileOutputStream(file).use { stream ->
-                        stream.write(result.toByteArray())
-                    }
-                    result
-                }
-    }
-
     private fun fetchTopicExercise(topic: String): Task<HashMap<String, *>> {
         val data = hashMapOf(
                 "topic" to topic
         )
         return firebaseFunctions
-                .getHttpsCallable(API_LINKS.getExercise)
+                .getHttpsCallable((application as App).API_LINKS.getExercise)
                 .call(data)
                 .continueWith { task ->
                     when (task.exception) {

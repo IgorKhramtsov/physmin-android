@@ -55,7 +55,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     private var completingPercent = 0f
     private val disabledAlpha = 68
     private var progressBackPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
-    private var progressFrontPaint  = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
+    private var progressFrontPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
     private var progressFinishedDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
             intArrayOf(ResourcesCompat.getColor(resources, R.color.colorPrimary, null),
                     ResourcesCompat.getColor(resources, R.color.colorAccent, null)))
@@ -124,7 +124,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
 
         textPaint = TextPaint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
-            textAlign = if(isHorizontal()) Paint.Align.LEFT else Paint.Align.CENTER
+            textAlign = if (isHorizontal()) Paint.Align.LEFT else Paint.Align.CENTER
         }
         progressFrontPaint.apply {
             color = ResourcesCompat.getColor(resources, R.color.colorPrimary, null)
@@ -151,8 +151,12 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
         invalidateTextPaintAndMeasurements()
     }
 
+    /// percent in 0..1
+    /// if percent in [0..1) - user should receive exercise bundle
+    /// if percent == 1 - user should receive exam bundle
+    /// if percent > 1 - user complete topic
     fun setComplenteessPercent(percent: Float) {
-        if(percent < 0)
+        if (percent < 0)
             throw Error("completeness percent < 0")
         this.completingPercent = percent
         invalidate()
@@ -182,7 +186,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
 
     fun setAction(name: String, action: () -> Unit) {
         actionList[name] = action
-        if(actionList.count() > 0)
+        if (actionList.count() > 0)
             this.isDisabled = false
         popupWindow = null
     }
@@ -198,7 +202,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             return
 
         if (popupWindow != null) {
-            popupWindow?.showAsDropDown(this)
+            popupWindow?.showAsDropDown(this, -14.dpToPx().toInt(), -24.dpToPx().toInt())
             return
         }
         val popupView = inflate(context, R.layout.menuitem_popup, null) as ViewGroup
@@ -211,16 +215,14 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
         }
 
         popupView.menuitem_actions.removeAllViews()
-        for ((name,action) in actionList) {
-            popupView.menuitem_actions.addView(TextView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
-                    it.topMargin = 16.dpToPx().roundToInt()
-                    it.leftMargin = 20.dpToPx().roundToInt()
-                    it.rightMargin = 20.dpToPx().roundToInt()
+        for ((name, action) in actionList) {
+            popupView.menuitem_actions.addView(CustomButton(context, null).apply {
+                layoutParams = LinearLayout.LayoutParams(150.dpToPx().toInt(), 37.dpToPx().toInt()).also {
                     it.gravity = Gravity.CENTER_HORIZONTAL
+                    it.bottomMargin = 8.dpToPx().toInt()
                 }
                 text = name
-                textSize = 24f
+                textSize = 15f
                 setOnClickListener {
                     popupWindow?.dismiss()
                     action.invoke()
@@ -240,9 +242,9 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             itemBackIcon?.let {
                 canvas.withTranslation(0f, height / 2f) {
                     it.setBounds(0,
-                            -(iconBackHeight/2).roundToInt(),
+                            -(iconBackHeight / 2).roundToInt(),
                             (iconBackWidth).roundToInt(),
-                            (iconBackHeight/2).roundToInt())
+                            (iconBackHeight / 2).roundToInt())
                     it.draw(canvas)
                 }
             }
@@ -281,8 +283,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             }
 
             canvas.withTranslation(width / 2f, 0f) {
-                if (completingPercent >= 1) {
-                    //canvas.drawLine(0f, iconBackHeight + 7.dpToPx(), width.toFloat(), iconBackHeight + 7.dpToPx(), examPaint)
+                if (completingPercent > 1) {
                     progressFinishedDrawable.let {
                         it.setBounds(-(iconBackWidth / 2).roundToInt(),
                                 iconBackHeight.roundToInt() + 7.toPx(),

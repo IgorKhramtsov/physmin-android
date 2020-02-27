@@ -31,7 +31,7 @@ fun generateShadowPanel(width: Int,
                         shadowColor: Int,
                         view: View,
                         shapeType: Int = ROUNDED_RECT): Bitmap? {
-    if(width <= 0 || height <= 0)
+    if (width <= 0 || height <= 0)
         return null
 
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
@@ -39,10 +39,7 @@ fun generateShadowPanel(width: Int,
     val backPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
     backPaint.color = panelColor
 
-    val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
-    shadowPaint.color = shadowColor
-    val blurFilter = BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.SOLID)
-    shadowPaint.maskFilter = blurFilter
+    backPaint.setShadowLayer(blurRadius, offsetX, offsetY, shadowColor)
 
     var generatedBitmap = Bitmap.createBitmap(width + (2 * blurRadius - abs(offsetX)).toInt(),
             height + (2 * blurRadius - abs(offsetY)).toInt(),
@@ -51,16 +48,14 @@ fun generateShadowPanel(width: Int,
 
     when (shapeType) {
         ROUNDED_RECT -> {
-            canvas.withTranslation (offsetX, offsetY) {
-                drawRoundRect(shadowPaint, canvas, width - offsetX.toInt(), height - offsetY.toInt(), cornerRadius, blurRadius)
+            canvas.withTranslation(-offsetX, -offsetY) {
+                drawRoundRect(backPaint, canvas, width, height, cornerRadius, blurRadius)
             }
-            drawRoundRect(backPaint, canvas, width, height, cornerRadius, blurRadius)
         }
         CIRCLE -> {
-            canvas.withTranslation (offsetX, offsetY) {
-                drawCircle(shadowPaint, canvas, width - offsetX.toInt(), height - offsetY.toInt(), blurRadius)
+            canvas.withTranslation(offsetX, offsetY) {
+                drawCircle(backPaint, canvas, width, height, blurRadius)
             }
-            drawCircle(backPaint, canvas, width, height, blurRadius)
         }
     }
 
@@ -86,7 +81,7 @@ fun generateInsideShadowPanel(width: Int,
                               panelColor: Int,
                               shadowColor: Int,
                               view: View): Bitmap? {
-    if(width <= 0 || height <= 0)
+    if (width <= 0 || height <= 0)
         return null
 
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
@@ -115,6 +110,7 @@ fun generateInsideShadowPanel(width: Int,
 fun drawRoundRect(paint: Paint, canvas: Canvas, width: Int, height: Int, cornerRadius: Float, blurRadius: Float) {
     drawRoundRect(paint, canvas, width, height, cornerRadius, blurRadius, 0f, 0f)
 }
+
 fun drawRoundRect(paint: Paint, canvas: Canvas, width: Int, height: Int, cornerRadius: Float, blurRadius: Float, offsetX: Float, offsetY: Float) {
     paint.let {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -137,7 +133,7 @@ fun drawRoundRect(paint: Paint, canvas: Canvas, width: Int, height: Int, cornerR
 
 fun drawCircle(paint: Paint, canvas: Canvas, width: Int, height: Int, blurRadius: Float) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        canvas.drawArc(blurRadius,blurRadius,width.toFloat() - blurRadius, height.toFloat() - blurRadius,0f,360f, true, paint )
+        canvas.drawArc(blurRadius, blurRadius, width.toFloat() - blurRadius, height.toFloat() - blurRadius, 0f, 360f, true, paint)
     }
     //canvas.drawCircle((width - blurRadius) / 2f, (height - blurRadius) / 2f, (Math.max(width, height) - blurRadius) / 2f, paint)
 }

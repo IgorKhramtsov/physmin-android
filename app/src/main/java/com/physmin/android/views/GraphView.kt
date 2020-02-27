@@ -241,7 +241,6 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
         functionPath.reset()
         functionDividers.clear()
         for (function in functions!!) {
-            Log.i("GraphView", "funcType: ${function.funcType}\r\nparams: ${function.x}, ${function.v}, ${function.a} ${function.len}")
 
             calculatedPointY = calculateFunctionValue(function, 0f) * heightScaleFactor
             functionPath.moveTo(calculatedPointX, calculatedPointY)
@@ -307,7 +306,6 @@ open class GraphView(context: Context, attrs: AttributeSet?): View(context, attr
     }
 
     private fun getPathEffect(phase: Float):DashPathEffect {
-        Log.d("shit", "contentWi = $contentWidth")
         val pathLength = PathMeasure(functionPath, false).length
 //        val pathLength = contentWidth - (functions?.count()?:1)
 

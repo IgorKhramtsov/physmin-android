@@ -1,4 +1,4 @@
 <resources>
-    <declare-styleable name="LoadingHorBar">
+    <declare-styleable name="CustomButton">
     </declare-styleable>
 </resources>

@@ -26,10 +26,21 @@ fun isDev() = BuildConfig.FLAVOR.contains("dev")
 const val pickableGroupTag = "pickableGroup"
 const val settableGroupTag = "settableGroup"
 
-interface API { val getExercise: String; val getTest: String }
+interface API {
+    val getExercise: String
+    val getTest: String
+    val getUserProgress: String
+}
 
-data class API_prod(override val getExercise: String = "api-v1-getExerciseBundle", override val getTest: String = "getTest"): API
-data class API_debug(override val getExercise: String = "api-v1-getExerciseBundle", override val getTest: String = "getTestDev"): API
+data class API_prod(override val getExercise: String = "api-v1-getExerciseBundle",
+                    override val getTest: String = "getTest",
+                    override val getUserProgress: String = "api-v1-getUserProgress"
+): API
+
+data class API_debug(override val getExercise: String = "api-v1-getExerciseBundle",
+                     override val getTest: String = "getTestDev",
+                     override val getUserProgress: String = "api-v1-getUserProgress"
+): API
 
 class Singleton<O, V>(initializer: () -> V): ReadOnlyProperty<O, V?> {
     private var initializer: (() -> V)? = initializer
