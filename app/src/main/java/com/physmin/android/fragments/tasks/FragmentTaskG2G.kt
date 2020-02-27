@@ -8,12 +8,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import com.physmin.android.R
+import com.physmin.android.views.dpToPx
 
 
 // TODO: Rename parameter arguments, choose names which match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_QUESTION = "param1"
 private const val ARG_ANSWERS = "param2"
+private const val ARG_ANS_COUNT = "param3"
 
 /**
  * A simple [Fragment] subclass.
@@ -30,6 +32,7 @@ class FragmentTestGraph2Graph: FragmentTestBase() {
     override var layoutResource = R.layout.fragment_test_graph2graph
     private var question: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<FunctionAnswerParcelable>? = null
+    private var correctAnswersCount: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +40,17 @@ class FragmentTestGraph2Graph: FragmentTestBase() {
         arguments?.let {
             question = it.getParcelableArrayList(ARG_QUESTION)
             answers = it.getParcelableArrayList(ARG_ANSWERS)
+            correctAnswersCount = it.getInt(ARG_ANS_COUNT)
         }
+
     }
 
     override fun onCreateViewEvent(view: View) {
+        if (correctAnswersCount == 2) {
+            settableGroup.setLayoutType("one_two_columns")
+            settableGroup.verticalSpacing = 20.dpToPx().toInt()
+        }
+
         question?.forEach {
             settableGroup.addQuestionGraphic(it.functions)
             for (i in 0 until it.correctIDs.count())
@@ -101,11 +111,12 @@ class FragmentTestGraph2Graph: FragmentTestBase() {
          * @return A new instance of fragment FragmentTestGraph2Graph.
          */
         @JvmStatic
-        fun newInstance(question: ArrayList<QuestionParcelable>, answers: ArrayList<FunctionAnswerParcelable>) =
+        fun newInstance(question: ArrayList<QuestionParcelable>, answers: ArrayList<FunctionAnswerParcelable>, correctAnswersCount: Int) =
                 FragmentTestGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putParcelableArrayList(ARG_QUESTION, question)
                         putParcelableArrayList(ARG_ANSWERS, answers)
+                        putInt(ARG_ANS_COUNT, correctAnswersCount)
                     }
                 }
     }

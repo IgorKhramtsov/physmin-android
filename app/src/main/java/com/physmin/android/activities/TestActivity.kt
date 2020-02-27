@@ -2,8 +2,6 @@ package com.physmin.android.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -23,12 +21,9 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
 import com.physmin.android.*
-import kotlinx.android.synthetic.main.activity_test.*
-import kotlinx.android.synthetic.main.activity_test.view.*
-import org.json.JSONObject
+import kotlinx.android.synthetic.main.activity_task_player.*
+import kotlinx.android.synthetic.main.activity_task_player.view.*
 import parseTask
-import java.io.File
-import java.io.FileOutputStream
 import java.lang.Exception
 import java.net.SocketTimeoutException
 import kotlin.concurrent.schedule
@@ -38,7 +33,7 @@ const val ERROR_TIMEOUT = 1
 const val ERROR_SERVER = 2
 
 class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener {
-    private lateinit var firebaseFunctions: FirebaseFunctions
+    private val firebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
     lateinit var tasksList: TasksList
 
     var testController: TestController? = null
@@ -56,7 +51,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test)
+        setContentView(R.layout.activity_task_player)
 
         topic = intent?.getStringExtra("topic") ?: throw Exception("topic is null")
 
@@ -72,7 +67,6 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
         floatingMenu.visibility = GONE
         debugTextView.visibility = GONE
 
-        firebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
         if (isDev()) {
             floatingMenu.action_next.setOnClickListener { switchTest() }
             floatingMenu.action_list.setOnClickListener {

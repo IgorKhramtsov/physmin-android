@@ -103,7 +103,7 @@ open class BaseGroup(context: Context, attributeSet: AttributeSet? = null):
             else
                 curLeft += verticalSpacing / 2
 
-            if(layoutType == ONE_TWO_COLUMNS) {
+            if (layoutType == ONE_TWO_COLUMNS) {
                 maxHeightInRow = max(child.measuredHeight,
                         if ((i - 1) % 2 == 0) getChildAt((i - 1) + 1).measuredHeight else getChildAt((i - 1) - 1).measuredHeight)
             } else {
@@ -142,8 +142,7 @@ open class BaseGroup(context: Context, attributeSet: AttributeSet? = null):
                     if (i % 2 == 0) { // first in row
                         height += maxHeightRow + horizontalSpacing
                         maxHeightRow = 0
-                    }
-                    else { // last in row
+                    } else { // last in row
                         width = max(width, maxRowWidth)
                         maxRowWidth = 0
                     }
@@ -153,7 +152,7 @@ open class BaseGroup(context: Context, attributeSet: AttributeSet? = null):
                         height += maxHeightRow + horizontalSpacing
                         maxHeightRow = 0
                     }
-                    if(i % 2 == 0) { // last in row
+                    if (i % 2 == 0) { // last in row
                         width = max(width, maxRowWidth)
                         maxRowWidth = 0
                     }

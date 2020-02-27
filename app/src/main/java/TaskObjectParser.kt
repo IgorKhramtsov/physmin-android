@@ -20,6 +20,7 @@ fun parseTask(task: TaskObject): androidx.fragment.app.Fragment {
 private fun parseG2G(task: TaskObject): androidx.fragment.app.Fragment {
     val questionObject = task["question"] as HashMap<String, *>
     val answersObject = task["answers"] as ArrayList<HashMap<String, *>>
+    val correctAnswersCount = task["correctAnswersCount"] as Int
 
     val questions = ArrayList<QuestionParcelable>()
     val answers = ArrayList<FunctionAnswerParcelable>()
@@ -29,7 +30,7 @@ private fun parseG2G(task: TaskObject): androidx.fragment.app.Fragment {
         answers.add(FunctionAnswerParcelable(answersObject[i]))
     }
 
-    return FragmentTestGraph2Graph.newInstance(questions, answers)
+    return FragmentTestGraph2Graph.newInstance(questions, answers, correctAnswersCount)
 }
 
 

@@ -1,7 +1,6 @@
 package com.physmin.android.activities
 
 import FirebaseAuthManager
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -10,14 +9,9 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.ErrorCodes
-import com.firebase.ui.auth.IdpResponse
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
@@ -25,7 +19,7 @@ import com.physmin.android.App
 import com.physmin.android.BuildConfig
 import com.physmin.android.R
 import com.physmin.android.views.MenuItemView
-import kotlinx.android.synthetic.main.activity_tests_subjects.*
+import kotlinx.android.synthetic.main.activity_menu_subjects.*
 import java.lang.Exception
 import java.net.SocketTimeoutException
 import java.util.*
@@ -35,7 +29,7 @@ import kotlin.collections.HashMap
 class MainActivity: AppCompatActivity() {
 
     private var functions: FirebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
-
+    private val authManager: FirebaseAuthManager = FirebaseAuthManager(this)
     private val topicMap: Map<String, MenuItemView> by lazy {
         mapOf(
                 "/Subjects/Mechanics/Branches/Kinematics/Chapters/ProgressiveMovement/Topics/Concepts" to menuItemView_progressive_concepts,
@@ -44,12 +38,9 @@ class MainActivity: AppCompatActivity() {
         )
     }
 
-    lateinit var authManager: FirebaseAuthManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tests_subjects)
-        authManager = FirebaseAuthManager(this)
+        setContentView(R.layout.activity_menu_subjects)
 
         drawerLayout.setScrimColor(Color.TRANSPARENT)
         drawerLayout.drawerElevation = 8f

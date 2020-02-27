@@ -12,7 +12,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.physmin.android.R
 import com.physmin.android.activities.MainActivity
-import kotlinx.android.synthetic.main.activity_tests_subjects.*
+import kotlinx.android.synthetic.main.activity_menu_subjects.*
 
 class FirebaseAuthManager(cntx: MainActivity) {
     private var RC_SIGN_IN: Int = 0

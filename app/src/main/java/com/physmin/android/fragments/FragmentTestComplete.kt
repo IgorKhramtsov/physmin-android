@@ -1,16 +1,13 @@
 package com.physmin.android.fragments
 
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.physmin.android.R
-import com.physmin.android.activities.MainActivity
-import com.physmin.android.activities.TestActivity
-import kotlinx.android.synthetic.main.fragment_fragment_test_complete.view.*
+import kotlinx.android.synthetic.main.fragment_test_complete.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,7 +35,7 @@ class FragmentTestComplete: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_fragment_test_complete, container, false)
+        val view = inflater.inflate(R.layout.fragment_test_complete, container, false)
         view.button_test_completed.setOnClickListener {
             activity!!.finish()
         }
