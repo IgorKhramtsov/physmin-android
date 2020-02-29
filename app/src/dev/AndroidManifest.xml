@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.TestActivity"
+            android:name=".activities.TaskPlayerActivity"
             android:label="@string/title_activity_test"/>
         <activity
             android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"

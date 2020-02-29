@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.physmin.android.R
-import com.physmin.android.activities.TestActivity
+import com.physmin.android.activities.TaskPlayerActivity
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -45,9 +45,7 @@ class FragmentTestHello : androidx.fragment.app.Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_test_hello, container, false)
 
-        val activity = activity as TestActivity
-        val tests = (activity).tasksList
-
+        val activity = activity as TaskPlayerActivity
 
 //        activity.showButtonNext()
 //        view.button_start_test.setOnClickListener {

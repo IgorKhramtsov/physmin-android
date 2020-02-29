@@ -1,13 +1,15 @@
+package com.physmin.android
+
 import android.os.Parcel
 import android.os.Parcelable
-import com.physmin.android.TaskObject
-import com.physmin.android.fragments.tasks.FragmentTestGraph2Graph
-import com.physmin.android.fragments.tasks.FragmentTestGraph2State
-import com.physmin.android.fragments.tasks.FragmentTestSign2Relation
+import com.physmin.android.fragments.tasks.FragmentTaskBase
+import com.physmin.android.fragments.tasks.FragmentTaskGraph2Graph
+import com.physmin.android.fragments.tasks.FragmentTaskGraph2State
+import com.physmin.android.fragments.tasks.FragmentTaskRS
 import java.lang.Exception
 
 
-fun parseTask(task: TaskObject): androidx.fragment.app.Fragment {
+fun parseTask(task: TaskObject): FragmentTaskBase {
     return when (task["type"]) {
         "RS" -> parseRS(task)
         "S2G" -> parseS2G(task)
@@ -17,10 +19,11 @@ fun parseTask(task: TaskObject): androidx.fragment.app.Fragment {
     }
 }
 
-private fun parseG2G(task: TaskObject): androidx.fragment.app.Fragment {
+private fun parseG2G(task: TaskObject): FragmentTaskBase {
     val questionObject = task["question"] as HashMap<String, *>
     val answersObject = task["answers"] as ArrayList<HashMap<String, *>>
     val correctAnswersCount = task["correctAnswersCount"] as Int
+    val taskId = task["taskID"] as Int
 
     val questions = ArrayList<QuestionParcelable>()
     val answers = ArrayList<FunctionAnswerParcelable>()
@@ -30,13 +33,13 @@ private fun parseG2G(task: TaskObject): androidx.fragment.app.Fragment {
         answers.add(FunctionAnswerParcelable(answersObject[i]))
     }
 
-    return FragmentTestGraph2Graph.newInstance(questions, answers, correctAnswersCount)
+    return FragmentTaskGraph2Graph.newInstance(questions, answers, correctAnswersCount, taskId)
 }
 
-
-private fun parseS2G(task: TaskObject): androidx.fragment.app.Fragment {
+private fun parseS2G(task: TaskObject): FragmentTaskBase {
     val questionObject = task["question"] as ArrayList<HashMap<String, *>>
     val answersObject = task["answers"] as ArrayList<HashMap<String, *>>
+    val taskId = task["taskID"] as Int
 
     val question = ArrayList<QuestionParcelable>()
     val answers = ArrayList<TextAnswerParcelable>()
@@ -46,12 +49,13 @@ private fun parseS2G(task: TaskObject): androidx.fragment.app.Fragment {
     for (i in 0 until answersObject.count())
         answers.add(TextAnswerParcelable(answersObject[i]))
 
-    return FragmentTestGraph2State.newInstance(question, answers)
+    return FragmentTaskGraph2State.newInstance(question, answers, taskId)
 }
 
-private fun parseRS(task: TaskObject): androidx.fragment.app.Fragment {
+private fun parseRS(task: TaskObject): FragmentTaskBase {
     val questionObject = task["question"] as ArrayList<HashMap<String, *>>
     val answersObject = task["answers"] as ArrayList<HashMap<String, *>>
+    val taskId = task["taskID"] as Int
 
     val question = ArrayList<QuestionParcelable>()
     val answers = ArrayList<RSAnswerParcelable>()
@@ -61,7 +65,7 @@ private fun parseRS(task: TaskObject): androidx.fragment.app.Fragment {
     for (i in 0 until answersObject.count())
         answers.add(RSAnswerParcelable(answersObject[i]))
 
-    return FragmentTestSign2Relation.newInstance(question, answers)
+    return FragmentTaskRS.newInstance(question, answers, taskId)
 }
 
 fun getFloatFromNumber(x: Any?): Float {
@@ -152,7 +156,7 @@ class QuestionParcelable(): Parcelable {
             id = this.readInt()
             val intArray = createIntArray()!!
             correctIDs = intArray.toCollection(ArrayList())
-            functions = createTypedArrayList(FunctionParcelable.CREATOR)!!
+            functions = createTypedArrayList(FunctionParcelable)!!
         }
     }
 
@@ -194,7 +198,7 @@ class FunctionAnswerParcelable(): Parcelable {
     constructor(parcel: Parcel?): this() {
         parcel?.apply {
             id = readInt()
-            functions = createTypedArrayList(FunctionParcelable.CREATOR)!!
+            functions = createTypedArrayList(FunctionParcelable)!!
         }
     }
 

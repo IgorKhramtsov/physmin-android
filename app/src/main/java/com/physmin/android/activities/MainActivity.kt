@@ -1,6 +1,6 @@
 package com.physmin.android.activities
 
-import FirebaseAuthManager
+import com.physmin.android.FirebaseAuthManager
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -18,6 +18,7 @@ import com.google.firebase.functions.FirebaseFunctionsException
 import com.physmin.android.App
 import com.physmin.android.BuildConfig
 import com.physmin.android.R
+import com.physmin.android.fragments.RC_SUCC
 import com.physmin.android.views.MenuItemView
 import kotlinx.android.synthetic.main.activity_menu_subjects.*
 import java.lang.Exception
@@ -25,6 +26,7 @@ import java.net.SocketTimeoutException
 import java.util.*
 import kotlin.collections.HashMap
 
+const val RC_PLAY_BUNDLE = 1
 
 class MainActivity: AppCompatActivity() {
 
@@ -37,6 +39,7 @@ class MainActivity: AppCompatActivity() {
                 "/Subjects/Mechanics/Branches/Kinematics/Chapters/ProgressiveMovement/Topics/Final" to menuItemView_progressive_final
         )
     }
+    private var userProgressObject: HashMap<String, *>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,29 +65,39 @@ class MainActivity: AppCompatActivity() {
                 return@addOnCompleteListener
             }
             val res = it.result!!
+            userProgressObject = res
 
-            var data: HashMap<String, Int>
-            var completion: Float
-            for (topic in topicMap) {
-                if (!res.contains(topic.key))
-                    continue
-                if (res[topic.key] !is HashMap<*, *>) {
-                    Log.e("MainActivity", "loadProgress: fetched data[${topic.key}] is not a HashMap")
-                    continue
-                }
-                data = res[topic.key] as HashMap<String, Int>
-                completion = data["completed"]!!.toFloat() / data["totalExercise"]!!.toFloat()
+            updateProgress()
+        }
+    }
 
-                topic.value.setComplenteessPercent(completion)
-                if (completion <= 1)
-                    topic.value.setAction(if (completion < 1) "Практика" else "Контрольный тест") {
-                        val intent = Intent(this, TestActivity::class.java)
-                        intent.putExtra("topic", topic.key)
-                        startActivity(intent)
-                    }
-                topic.value.setAction("Обучение") {}
+    private fun updateProgress() {
+        val userProgressObject = this.userProgressObject ?: return
+
+        var data: HashMap<String, Int>
+        var completion: Float
+        var isExam: Boolean
+        for (topic in topicMap) {
+            if (!userProgressObject.contains(topic.key))
+                continue
+            if (userProgressObject[topic.key] !is HashMap<*, *>) {
+                Log.e("MainActivity", "loadProgress: fetched data[${topic.key}] is not a HashMap")
+                continue
             }
+            data = userProgressObject[topic.key] as HashMap<String, Int>
+            completion = data["completed"]!!.toFloat() / data["totalExercise"]!!.toFloat()
+            isExam = (completion == 1f)
 
+            topic.value.setComplenteessPercent(completion)
+            topic.value.clearActions()
+            if (completion <= 1)
+                topic.value.setAction(if (isExam) "Контрольный тест" else "Практика") {
+                    val intent = Intent(this, TaskPlayerActivity::class.java)
+                    intent.putExtra("topicPath", topic.key)
+                    intent.putExtra("isExam", isExam)
+                    startActivityForResult(intent, RC_PLAY_BUNDLE)
+                }
+            topic.value.setAction("Обучение") {}
         }
     }
 
@@ -116,7 +129,17 @@ class MainActivity: AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        authManager.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_PLAY_BUNDLE) {
+            if (resultCode == RC_SUCC) {
+                val topicPath = data!!.getStringExtra("topicPath")!!
+                val data = (userProgressObject!![topicPath] as HashMap<String, Any>)
+                data["completed"] = (data["completed"] as Int).inc()
+                updateProgress()
+            }
+
+        } else {
+            authManager.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     fun updateProfileInfo(user: FirebaseUser) {

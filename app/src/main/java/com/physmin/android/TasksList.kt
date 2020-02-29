@@ -1,11 +1,10 @@
 package com.physmin.android
 
-import org.json.JSONObject
-
 typealias TaskObject = HashMap<String, *>
 data class TestItem(val taskObject: TaskObject, var nextItem: TestItem? = null)
 
 class TasksList(array: ArrayList<HashMap<String, *>>) {
+    val count = array.count()
     var iterator: TestItem? = null
     lateinit var last: TestItem
 

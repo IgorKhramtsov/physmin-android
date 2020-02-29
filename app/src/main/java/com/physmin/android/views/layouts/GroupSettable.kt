@@ -1,12 +1,12 @@
 package com.physmin.android.views.layouts
 
-import FunctionParcelable
-import RSAnswerParcelable
+import com.physmin.android.FunctionParcelable
+import com.physmin.android.RSAnswerParcelable
 import android.content.Context
 import android.util.AttributeSet
 import android.view.*
 import com.physmin.android.Settable
-import com.physmin.android.fragments.tasks.TestController
+import com.physmin.android.fragments.tasks.TaskController
 import com.physmin.android.settableGroupTag
 import com.physmin.android.views.*
 import com.physmin.android.views.items.ImageViewSettable
@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(context, attributeSet),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
-    lateinit var controller: TestController
+    lateinit var controller: TaskController
 
     init {
         tag = settableGroupTag
@@ -64,7 +64,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
         this.addView(imageViewSettableBlank, layoutParams)
     }
 
-    fun setTestController(controller: TestController) {
+    fun setTestController(controller: TaskController) {
         this.controller = controller
     }
 

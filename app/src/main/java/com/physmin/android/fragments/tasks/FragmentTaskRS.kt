@@ -1,7 +1,7 @@
 package com.physmin.android.fragments.tasks
 
-import RSAnswerParcelable
-import QuestionParcelable
+import com.physmin.android.RSAnswerParcelable
+import com.physmin.android.QuestionParcelable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -16,20 +16,22 @@ import kotlinx.android.synthetic.main.fragment_test_relation_signs.view.*
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_QUESTS = "param1"
 private const val ARG_ANSWERS = "param2"
+private const val ARG_ID = "param4"
 
 data class Question(val letter: String, val leftIndex: String, val rightIndex: String, val corrSign: Int)
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [FragmentTestSign2Relation.OnFragmentInteractionListener] interface
+ * [FragmentTaskRS.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [FragmentTestSign2Relation.newInstance] factory method to
+ * Use the [FragmentTaskRS.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class FragmentTestSign2Relation : FragmentTestBase() {
+class FragmentTaskRS : FragmentTaskBase() {
     override var layoutResource = R.layout.fragment_test_relation_signs
+    override var taskType = "RS"
     private var questions: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<RSAnswerParcelable>? = null
 
@@ -39,6 +41,7 @@ class FragmentTestSign2Relation : FragmentTestBase() {
         arguments?.let {
             questions = it.getParcelableArrayList<QuestionParcelable>(ARG_QUESTS)
             answers = it.getParcelableArrayList<RSAnswerParcelable>(ARG_ANSWERS)
+            taskId = it.getInt(ARG_ID)
         }
     }
 
@@ -94,12 +97,14 @@ class FragmentTestSign2Relation : FragmentTestBase() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(questions: ArrayList<QuestionParcelable>, answers: ArrayList<RSAnswerParcelable>) =
-                FragmentTestSign2Relation().apply {
+        fun newInstance(questions: ArrayList<QuestionParcelable>,
+                        answers: ArrayList<RSAnswerParcelable>,
+                        taskId: Int) =
+                FragmentTaskRS().apply {
                     arguments = Bundle().apply {
                         putParcelableArrayList(ARG_QUESTS, questions)
                         putParcelableArrayList(ARG_ANSWERS, answers)
-
+                        putInt(ARG_ID, taskId)
                     }
                 }
     }

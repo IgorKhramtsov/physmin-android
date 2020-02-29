@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/ui_background"
     android:isScrollContainer="false"
-    tools:context=".fragments.tasks.FragmentTestGraph2Graph">
+    tools:context=".fragments.tasks.FragmentTaskGraph2Graph">
 
 
     <TextView

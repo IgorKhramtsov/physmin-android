@@ -1,7 +1,7 @@
 package com.physmin.android.fragments.tasks
 
-import FunctionAnswerParcelable
-import QuestionParcelable
+import com.physmin.android.FunctionAnswerParcelable
+import com.physmin.android.QuestionParcelable
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -16,20 +16,22 @@ import com.physmin.android.views.dpToPx
 private const val ARG_QUESTION = "param1"
 private const val ARG_ANSWERS = "param2"
 private const val ARG_ANS_COUNT = "param3"
+private const val ARG_ID = "param4"
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [FragmentTestGraph2Graph.OnFragmentInteractionListener] interface
+ * [FragmentTaskGraph2Graph.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [FragmentTestGraph2Graph.newInstance] factory method to
+ * Use the [FragmentTaskGraph2Graph.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
 
-class FragmentTestGraph2Graph: FragmentTestBase() {
+class FragmentTaskGraph2Graph: FragmentTaskBase() {
 
     override var layoutResource = R.layout.fragment_test_graph2graph
+    override var taskType = "G2G"
     private var question: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<FunctionAnswerParcelable>? = null
     private var correctAnswersCount: Int = 1
@@ -41,6 +43,7 @@ class FragmentTestGraph2Graph: FragmentTestBase() {
             question = it.getParcelableArrayList(ARG_QUESTION)
             answers = it.getParcelableArrayList(ARG_ANSWERS)
             correctAnswersCount = it.getInt(ARG_ANS_COUNT)
+            taskId = it.getInt(ARG_ID)
         }
 
     }
@@ -111,12 +114,16 @@ class FragmentTestGraph2Graph: FragmentTestBase() {
          * @return A new instance of fragment FragmentTestGraph2Graph.
          */
         @JvmStatic
-        fun newInstance(question: ArrayList<QuestionParcelable>, answers: ArrayList<FunctionAnswerParcelable>, correctAnswersCount: Int) =
-                FragmentTestGraph2Graph().apply {
+        fun newInstance(question: ArrayList<QuestionParcelable>,
+                        answers: ArrayList<FunctionAnswerParcelable>,
+                        correctAnswersCount: Int,
+                        taskId: Int) =
+                FragmentTaskGraph2Graph().apply {
                     arguments = Bundle().apply {
                         putParcelableArrayList(ARG_QUESTION, question)
                         putParcelableArrayList(ARG_ANSWERS, answers)
                         putInt(ARG_ANS_COUNT, correctAnswersCount)
+                        putInt(ARG_ID, taskId)
                     }
                 }
     }

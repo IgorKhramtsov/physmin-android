@@ -12,12 +12,12 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.physmin.android.activities.TestActivity
-import com.physmin.android.fragments.tasks.TestController
+import com.physmin.android.activities.TaskPlayerActivity
+import com.physmin.android.fragments.tasks.TaskController
 import kotlin.math.pow
 
 abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, attrs) {
-    lateinit var controller: TestController
+    lateinit var controller: TaskController
     internal var answer = -1
     internal var picked = false
     internal var isCorrect = "unknown"
@@ -34,7 +34,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
         touchSlop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
     }
 
-    fun setTestController(controller: TestController) {
+    fun setTestController(controller: TaskController) {
         this.controller = controller
     }
 
@@ -79,7 +79,7 @@ abstract class Pickable(context: Context, attrs: AttributeSet?): View(context, a
                 viewY = this.y
 
                 if (isDev())
-                    (context as TestActivity).showDebugMessage(getDebugMessage())
+                    (context as TaskPlayerActivity).showDebugMessage(getDebugMessage())
             }
             MotionEvent.ACTION_MOVE -> {
                 if (draggedView != null || ((event.rawX - touchX).pow(2) + (event.rawY - touchY).pow(2) > touchSlop.pow(2))) {

@@ -1,13 +1,13 @@
 package com.physmin.android.views.layouts
 
-import FunctionAnswerParcelable
-import TextAnswerParcelable
+import com.physmin.android.FunctionAnswerParcelable
+import com.physmin.android.TextAnswerParcelable
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import com.physmin.android.Pickable
-import com.physmin.android.fragments.tasks.TestController
+import com.physmin.android.fragments.tasks.TaskController
 import com.physmin.android.pickableGroupTag
 import com.physmin.android.views.*
 import com.physmin.android.views.items.ImageViewPickable
@@ -16,7 +16,7 @@ import com.physmin.android.views.items.TextViewPickable
 class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(context, attrs),
         ViewGroup.OnHierarchyChangeListener, View.OnClickListener {
 
-    lateinit var controller: TestController
+    lateinit var controller: TaskController
 
     init {
         layoutType = TWO_COLUMNS
@@ -24,7 +24,7 @@ class GroupPickable(context: Context, attrs: AttributeSet?): GroupScrollable(con
         setOnHierarchyChangeListener(this)
     }
 
-    fun setTestController(controller: TestController) {
+    fun setTestController(controller: TaskController) {
         this.controller = controller
     }
 

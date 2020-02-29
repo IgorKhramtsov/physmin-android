@@ -53,6 +53,7 @@ open class BaseGroup(context: Context, attributeSet: AttributeSet? = null):
             "one_column" -> ONE_COLUMN
             "two_columns" -> TWO_COLUMNS
             "one_two_columns" -> ONE_TWO_COLUMNS
+            null -> ONE_COLUMN
             else -> {
                 Log.e("GroupSettable", "cant parse layout type: $type")
                 ONE_COLUMN

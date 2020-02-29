@@ -1,16 +1,14 @@
 package com.physmin.android.views
 
-import FunctionParcelable
+import com.physmin.android.FunctionParcelable
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.animation.OvershootInterpolator
-import androidx.core.animation.doOnEnd
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
 import com.physmin.android.R

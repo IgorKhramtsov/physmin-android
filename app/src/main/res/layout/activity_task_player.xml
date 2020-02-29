@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.TestActivity"
+    tools:context=".activities.TaskPlayerActivity"
     android:id="@+id/test_layout">
 
     <com.physmin.android.views.ProgressBarView

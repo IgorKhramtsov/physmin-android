@@ -1,6 +1,7 @@
 package com.physmin.android.fragments
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,8 +12,11 @@ import kotlinx.android.synthetic.main.fragment_test_complete.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_STATUS = "param1"
+private const val ARG_TOPIC = "param2"
+
+const val RC_SUCC = 1
+const val RC_FAIL = -1
 
 /**
  * A simple [Fragment] subclass.
@@ -21,15 +25,16 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class FragmentTestComplete: Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    // Success or fail
+    private var status: String? = null
+    private var topicPath: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            status = it.getString(ARG_STATUS)
+            topicPath = it.getString(ARG_TOPIC)
         }
     }
 
@@ -37,28 +42,25 @@ class FragmentTestComplete: Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_test_complete, container, false)
         view.button_test_completed.setOnClickListener {
-            activity!!.finish()
+            requireActivity().let {
+                val intent = Intent()
+                intent.putExtra("topicPath", topicPath)
+                it.setResult(if (status == "Success") RC_SUCC else RC_FAIL, intent)
+                it.finish()
+            }
+
         }
         return view
     }
 
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentTestComplete.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
                 FragmentTestComplete().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+                        putString(ARG_STATUS, param1)
+                        putString(ARG_TOPIC, param2)
                     }
                 }
     }

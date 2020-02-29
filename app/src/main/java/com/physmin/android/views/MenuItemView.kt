@@ -191,7 +191,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
         popupWindow = null
     }
 
-    fun deleteActions() {
+    fun clearActions() {
         actionList.clear()
         isDisabled = true
         popupWindow = null

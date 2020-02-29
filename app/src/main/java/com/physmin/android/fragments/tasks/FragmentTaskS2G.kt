@@ -1,7 +1,7 @@
 package com.physmin.android.fragments.tasks
 
-import QuestionParcelable
-import TextAnswerParcelable
+import com.physmin.android.QuestionParcelable
+import com.physmin.android.TextAnswerParcelable
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
@@ -14,19 +14,21 @@ fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toIn
 
 private const val ARG_QUESTS = "param1"
 private const val ARG_ANSWERS = "param2"
+private const val ARG_ID = "param4"
 
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [FragmentTestGraph2State.OnFragmentInteractionListener] interface
+ * [FragmentTaskGraph2State.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [FragmentTestGraph2State.newInstance] factory method to
+ * Use the [FragmentTaskGraph2State.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class FragmentTestGraph2State: FragmentTestBase() {
+class FragmentTaskGraph2State: FragmentTaskBase() {
     override var layoutResource = R.layout.fragment_test_state2graph
+    override var taskType = "S2G"
     private var questions: ArrayList<QuestionParcelable>? = null
     private var answers: ArrayList<TextAnswerParcelable>? = null
 
@@ -35,6 +37,7 @@ class FragmentTestGraph2State: FragmentTestBase() {
         arguments?.let {
             questions = it.getParcelableArrayList<QuestionParcelable>(ARG_QUESTS)
             answers = it.getParcelableArrayList<TextAnswerParcelable>(ARG_ANSWERS)
+            taskId = it.getInt(ARG_ID)
         }
     }
 
@@ -77,11 +80,14 @@ class FragmentTestGraph2State: FragmentTestBase() {
          * @return A new instance of fragment FragmentTestGraph2State.
          */
         @JvmStatic
-        fun newInstance(questions: ArrayList<QuestionParcelable>, answers: ArrayList<TextAnswerParcelable>) =
-                FragmentTestGraph2State().apply {
+        fun newInstance(questions: ArrayList<QuestionParcelable>,
+                        answers: ArrayList<TextAnswerParcelable>,
+                        taskId: Int) =
+                FragmentTaskGraph2State().apply {
                     arguments = Bundle().apply {
                         putParcelableArrayList(ARG_QUESTS, questions)
                         putParcelableArrayList(ARG_ANSWERS, answers)
+                        putInt(ARG_ID, taskId)
                     }
                 }
     }

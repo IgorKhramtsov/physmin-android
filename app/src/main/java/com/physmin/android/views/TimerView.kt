@@ -83,6 +83,8 @@ class TimerView(context: Context, attrs: AttributeSet?): View(context, attrs) {
 
     }
 
+    fun getTime() = _time
+
     private fun createStaticLayout() {
         _staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             StaticLayout.Builder.obtain(_time.toString(), 0, _time.toString().length, paintText, width - paddingRight - paddingLeft)
@@ -94,7 +96,7 @@ class TimerView(context: Context, attrs: AttributeSet?): View(context, attrs) {
     private fun generateVisualElements() {
         val width = this.width - shadowOffsetX
         val height = this.height - shadowOffsetY
-        if(width <= 0 || height <= 0) {
+        if (width <= 0 || height <= 0) {
             _hsvWheelRect = null
             _backShadowPanelBitmap = null
             return
@@ -145,7 +147,7 @@ class TimerView(context: Context, attrs: AttributeSet?): View(context, attrs) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if(_backShadowPanelBitmap == null)
+        if (_backShadowPanelBitmap == null)
             generateVisualElements()
 
         _backShadowPanelBitmap?.let {

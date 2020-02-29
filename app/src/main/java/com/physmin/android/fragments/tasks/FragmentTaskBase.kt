@@ -7,33 +7,45 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.physmin.android.Pickable
-import com.physmin.android.activities.TestActivity
+import com.physmin.android.activities.TaskPlayerActivity
 import com.physmin.android.pickableGroupTag
 import com.physmin.android.settableGroupTag
 import com.physmin.android.views.layouts.GroupPickable
 import com.physmin.android.views.layouts.GroupSettable
 import java.lang.Error
 
-interface TestController {
+interface TaskController {
+    var taskId: Int
+    var taskType: String
+
     var settableGroup: GroupSettable
     var pickableGroup: GroupPickable
-    var isTestCompleted: Boolean
+    var isTaskCompleted: Boolean
     var _pickedItem: Pickable?
 
-    fun updateTestStatus()
+    fun updateTaskStatus()
     fun takePickedItem(): Pickable?
     fun setPickedItem(item: Pickable?)
     fun resetPickedItem()
     fun isAnswersCorrect(): Boolean
 }
 
-abstract class FragmentTestBase : Fragment(), TestController {
+abstract class FragmentTaskBase: Fragment(), TaskController {
     abstract var layoutResource: Int
+    override var taskId: Int = 0
 
     lateinit var listener: TestCompletingListener
     override lateinit var pickableGroup: GroupPickable
     override lateinit var settableGroup: GroupSettable
-    override var isTestCompleted: Boolean = false
+    override var isTaskCompleted: Boolean = false
+        set(value) {
+            if (field == value)
+                return
+
+            if (value) onTestComplete()
+            else onTestCompleteRejected()
+            field = value
+        }
     override var _pickedItem: Pickable? = null
         set(value) {
             field?.deselect() // Deselect previous
@@ -46,9 +58,8 @@ abstract class FragmentTestBase : Fragment(), TestController {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if(context !is TestActivity) throw Error("${this.javaClass.name} can be created only in TestActivity!")
+        if (context !is TaskPlayerActivity) throw Error("${this.javaClass.name} can be created only in TestActivity!")
         listener = context
-        context.testController = this // TODO: this is bad. Think how to do it better.
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -77,7 +88,7 @@ abstract class FragmentTestBase : Fragment(), TestController {
     }
 
     override fun setPickedItem(item: Pickable?) {
-        if(_pickedItem == item)
+        if (_pickedItem == item)
             resetPickedItem()
         else
             _pickedItem = item
@@ -87,26 +98,20 @@ abstract class FragmentTestBase : Fragment(), TestController {
         this._pickedItem = null
     }
 
-    override fun updateTestStatus() {
-        val newIsChecked = settableGroup.isAllChecked()
-        if(isTestCompleted == newIsChecked)
-            return
-
-        isTestCompleted = newIsChecked
-        if(isTestCompleted) onTestComplete()
-        else onTestCompleteRejected()
+    override fun updateTaskStatus() {
+        isTaskCompleted = settableGroup.isAllChecked()
     }
 
     open fun onTestComplete() {
         pickableGroup.visibility = View.GONE
 
-        listener.onTestComplete()
+        listener.onTaskComplete()
     }
 
     open fun onTestCompleteRejected() {
         pickableGroup.visibility = View.VISIBLE
 
-        listener.onTestCompleteRejected()
+        listener.onTaskCompleteRejected()
     }
 
     override fun isAnswersCorrect(): Boolean {
@@ -114,7 +119,9 @@ abstract class FragmentTestBase : Fragment(), TestController {
     }
 
     interface TestCompletingListener {
-        fun onTestComplete()
-        fun onTestCompleteRejected()
+        // When user set last answer
+        fun onTaskComplete()
+        // When user have all answers setted, and unset one
+        fun onTaskCompleteRejected()
     }
 }

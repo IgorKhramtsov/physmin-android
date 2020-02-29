@@ -1,5 +1,6 @@
 package com.physmin.android
 
+import android.view.View
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -28,19 +29,33 @@ const val settableGroupTag = "settableGroup"
 
 interface API {
     val getExercise: String
+    val getExam: String
     val getTest: String
     val getUserProgress: String
+    val sendBundleStats: String
 }
 
 data class API_prod(override val getExercise: String = "api-v1-getExerciseBundle",
+                    override val getExam: String = "api-v1-getExamBundle",
                     override val getTest: String = "getTest",
-                    override val getUserProgress: String = "api-v1-getUserProgress"
+                    override val getUserProgress: String = "api-v1-getUserProgress",
+                    override val sendBundleStats: String = "api-v1-sendBundleStats"
 ): API
 
 data class API_debug(override val getExercise: String = "api-v1-getExerciseBundle",
+                     override val getExam: String = "api-v1-getExamBundle",
                      override val getTest: String = "getTestDev",
-                     override val getUserProgress: String = "api-v1-getUserProgress"
+                     override val getUserProgress: String = "api-v1-getUserProgress",
+                     override val sendBundleStats: String = "api-v1-sendBundleStats"
 ): API
+
+fun View.Show() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.Hide() {
+    this.visibility = View.GONE
+}
 
 class Singleton<O, V>(initializer: () -> V): ReadOnlyProperty<O, V?> {
     private var initializer: (() -> V)? = initializer
