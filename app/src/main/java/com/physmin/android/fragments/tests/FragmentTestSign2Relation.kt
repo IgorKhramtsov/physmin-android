@@ -10,12 +10,11 @@ import android.view.ViewGroup
 import com.physmin.android.R
 import com.physmin.android.activities.FunctionAnswerRelationSignParcelable
 import com.physmin.android.activities.QuestionParcelable
+import com.physmin.android.views.GraphView
 import com.physmin.android.views.dpToPx
 import com.physmin.android.views.items.RelationSignView
 import com.physmin.android.views.layouts.ONE_TWO_COLUMNS
 import com.physmin.android.views.layouts.TWO_COLUMNS
-import kotlinx.android.synthetic.main.fragment_test_relation_signs.view.*
-import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -58,10 +57,11 @@ class FragmentTestSign2Relation : FragmentTestBase() {
         } else if (answers!!.count() % 2 == 0)
             settableGroup.layoutType = TWO_COLUMNS
 
-        view.graphView_rs_task.functions = questions!![0].functions
+        val graphView = view.findViewById<GraphView>(R.id.graphView_rs_task)
+        graphView.functions = questions!![0].functions
 
         answers?.forEach {
-            settableGroup.addRelationSignView(it, view.graphView_rs_task)
+            settableGroup.addRelationSignView(it, graphView)
         }
     }
 

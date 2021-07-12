@@ -31,8 +31,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
-import kotlinx.android.synthetic.main.activity_test.*
-import kotlinx.android.synthetic.main.activity_test.view.*
+import com.physmin.android.databinding.ActivityTestBinding
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
@@ -45,6 +44,7 @@ const val ERROR_TIMEOUT = 1
 const val ERROR_SERVER = 2
 
 class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener {
+    private lateinit var binding: ActivityTestBinding
     private lateinit var firebaseFunctions: FirebaseFunctions
     lateinit var testBundle: TestBundle
 
@@ -62,15 +62,17 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test)
+        binding = ActivityTestBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        debugTextView = test_layout.debugTextView
-        errorTextView = test_layout.errorTextView
-        buttonNext = test_layout.button_test_next
-        timerView = test_layout.Timer
-        progressBarView = test_layout.progressBar
-        loadingAnimation = test_layout.loadingHorBar
-        floatingMenu = test_layout.floating_menu
+        debugTextView = binding.debugTextView
+        errorTextView = binding.errorTextView
+        buttonNext = binding.buttonTestNext
+        timerView = binding.Timer
+        progressBarView = binding.progressBar
+        loadingAnimation = binding.loadingHorBar
+        floatingMenu = binding.floatingMenu
 
         timerView.visibility = GONE
         floatingMenu.visibility = GONE
@@ -79,8 +81,8 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
         firebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
         if (isDev()) {
             getTestFunctionName = "getTestDev"
-            floatingMenu.action_next.setOnClickListener { switchTest() }
-            floatingMenu.action_list.setOnClickListener {
+            binding.actionNext.setOnClickListener { switchTest() }
+            binding.actionList.setOnClickListener {
                 supportFragmentManager.commit {
                     replace(R.id.test_host_fragment, FragmentTestList(testBundle.getAsArray()))
                     addToBackStack("home")
@@ -88,8 +90,8 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
                 }
             }
         } else {
-            floatingMenu.removeButton(this.action_list)
-            floatingMenu.removeButton(this.action_next)
+            floatingMenu.removeButton(binding.actionList)
+            floatingMenu.removeButton(binding.actionNext)
         }
 
         loadTestBundle()
@@ -152,7 +154,7 @@ class TestActivity: AppCompatActivity(), FragmentTestBase.TestCompletingListener
             array.add(data.getJSONObject(i))
         testBundle = TestBundle(array)
 
-        progressBar.segmentCount = array.count()
+        binding.progressBar.segmentCount = array.count()
 
         buttonNext.setOnClickListener { switchTest() }
     }

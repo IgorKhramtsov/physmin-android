@@ -24,17 +24,21 @@ import com.google.firebase.auth.EmailAuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.physmin.android.BuildConfig
 import com.physmin.android.R
-import kotlinx.android.synthetic.main.activity_tests_subjects.*
+import com.physmin.android.databinding.ActivityTestsSubjectsBinding
 import java.util.*
 
 
 class MainActivity: AppCompatActivity() {
-
+    private lateinit var binding: ActivityTestsSubjectsBinding
     private var RC_SIGN_IN: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tests_subjects)
+        binding = ActivityTestsSubjectsBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+//        setContentView(R.layout.activity_tests_subjects)
+
 
         if (BuildConfig.DEBUG) {
             val language_code = "ru"
@@ -46,19 +50,19 @@ class MainActivity: AppCompatActivity() {
             resources.updateConfiguration(conf, dm)
         }
 
-        drawerLayout.setScrimColor(Color.TRANSPARENT)
-        drawerLayout.drawerElevation = 8f
+        binding.drawerLayout.setScrimColor(Color.TRANSPARENT)
+        binding.drawerLayout.drawerElevation = 8f
 
-        menuItemView_progressive_concepts.setAction("Тестирование") {
+        binding.menuItemViewProgressiveConcepts.setAction("Тестирование") {
             val intent = Intent(this, TestActivity::class.java)
             startActivity(intent)
         }
-        menuItemView_progressive_concepts.setAction("Обучение") {}
+        binding.menuItemViewProgressiveConcepts.setAction("Обучение") {}
 
         startAuthActivity()
 
-        this.textViewSignOut.setOnClickListener { signOut() }
-        this.textViewRegistration.setOnClickListener { upgradeAnonymousAcc() }
+        binding.textViewSignOut.setOnClickListener { signOut() }
+        binding.textViewRegistration.setOnClickListener { upgradeAnonymousAcc() }
 
     }
 
@@ -134,16 +138,16 @@ class MainActivity: AppCompatActivity() {
     private fun updateProfileInfo() {
         val user = FirebaseAuth.getInstance().currentUser!!
         if (user.isAnonymous) {
-            textViewEmail.visibility = View.GONE
-            textViewEmailVerification.visibility = View.GONE
-            textViewSignOut.visibility = View.GONE
-            textViewRegistration.visibility = View.VISIBLE
-            textViewName.text = "Гость"
-            textViewInitials.text = "Г"
-            textViewStatistics.isClickable = false
-            textViewStatistics.setTextColor(ContextCompat.getColor(this, R.color.textColorLightDisabled))
-            textViewSettings.isClickable = false
-            textViewSettings.setTextColor(ContextCompat.getColor(this, R.color.textColorLightDisabled))
+            binding.textViewEmail.visibility = View.GONE
+            binding.textViewEmailVerification.visibility = View.GONE
+            binding.textViewSignOut.visibility = View.GONE
+            binding.textViewRegistration.visibility = View.VISIBLE
+            binding.textViewName.text = "Гость"
+            binding.textViewInitials.text = "Г"
+            binding.textViewStatistics.isClickable = false
+            binding.textViewStatistics.setTextColor(ContextCompat.getColor(this, R.color.textColorLightDisabled))
+            binding.textViewSettings.isClickable = false
+            binding.textViewSettings.setTextColor(ContextCompat.getColor(this, R.color.textColorLightDisabled))
         } else {
             var initials = ""
             if (user.displayName != null) {
@@ -153,18 +157,18 @@ class MainActivity: AppCompatActivity() {
                 }
             }
 
-            textViewEmail.visibility = View.VISIBLE
-            textViewSignOut.visibility = View.VISIBLE
-            textViewRegistration.visibility = View.GONE
+            binding.textViewEmail.visibility = View.VISIBLE
+            binding.textViewSignOut.visibility = View.VISIBLE
+            binding.textViewRegistration.visibility = View.GONE
 
-            textViewName.text = user.displayName
-            textViewInitials.text = initials
-            textViewEmail.text = user.email
-            textViewEmailVerification.visibility = if (user.isEmailVerified) View.GONE else View.VISIBLE
-            textViewStatistics.isClickable = true
-            textViewStatistics.setTextColor(ContextCompat.getColor(this, R.color.textColorLight))
-            textViewSettings.isClickable = true
-            textViewSettings.setTextColor(ContextCompat.getColor(this, R.color.textColorLight))
+            binding.textViewName.text = user.displayName
+            binding.textViewInitials.text = initials
+            binding.textViewEmail.text = user.email
+            binding.textViewEmailVerification.visibility = if (user.isEmailVerified) View.GONE else View.VISIBLE
+            binding.textViewStatistics.isClickable = true
+            binding.textViewStatistics.setTextColor(ContextCompat.getColor(this, R.color.textColorLight))
+            binding.textViewSettings.isClickable = true
+            binding.textViewSettings.setTextColor(ContextCompat.getColor(this, R.color.textColorLight))
         }
     }
 }

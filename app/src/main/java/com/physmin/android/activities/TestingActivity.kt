@@ -4,15 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.physmin.android.R
-import kotlinx.android.synthetic.main.activity_testing.*
+import com.physmin.android.databinding.ActivityTestingBinding
 
 class TestingActivity: AppCompatActivity() {
+    private lateinit var binding: ActivityTestingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_testing)
+        binding = ActivityTestingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        menuItemView_concepts.setOnClickListener {
+        binding.menuItemViewConcepts.setOnClickListener {
             val intent = Intent(this, TestActivity::class.java)
             startActivity(intent)
         }

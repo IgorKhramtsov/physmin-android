@@ -14,7 +14,6 @@ import com.physmin.android.activities.TextAnswerParcelable
 import com.physmin.android.views.items.ImageViewSettable
 import com.physmin.android.views.items.TextViewPickable
 import com.physmin.android.views.dpToPx
-import kotlinx.android.synthetic.main.fragment_test_state2graph.view.*
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 

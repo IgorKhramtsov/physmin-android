@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
-import kotlinx.android.synthetic.main.menuitem_popup.view.*
 import kotlin.math.roundToInt
 import android.graphics.*
 import android.graphics.drawable.GradientDrawable
@@ -210,9 +209,10 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             isTouchable = true
         }
 
-        popupView.menuitem_actions.removeAllViews()
+        val actionsListView = popupView.findViewById<LinearLayout>(R.id.menuitem_actions)
+        actionsListView.removeAllViews()
         for ((name,action) in actionList) {
-            popupView.menuitem_actions.addView(TextView(context).apply {
+            actionsListView.addView(TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
                     it.topMargin = 16.dpToPx().roundToInt()
                     it.leftMargin = 20.dpToPx().roundToInt()

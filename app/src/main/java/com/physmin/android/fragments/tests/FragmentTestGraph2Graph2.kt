@@ -11,7 +11,6 @@ import com.physmin.android.R
 import com.physmin.android.activities.FunctionAnswerParcelable
 import com.physmin.android.activities.QuestionParcelable
 import com.physmin.android.views.layouts.GroupScrollable
-import kotlinx.android.synthetic.main.fragment_test_graph2graph_2.view.*
 
 private const val ARG_QUESTION = "param1"
 private const val ARG_ANSWERS = "param2"

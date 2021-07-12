@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.physmin.android.activities.TestActivity
 import com.physmin.android.R
-import kotlinx.android.synthetic.main.fragment_subj_kinematic.view.*
+import com.physmin.android.databinding.FragmentSubjKinematicBinding
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,12 +44,13 @@ class FragmentSubjectKinematic : androidx.fragment.app.Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view : View = inflater.inflate(R.layout.fragment_subj_kinematic, container, false)
-        view.button_concepts.setOnClickListener {view ->
+//        val view : View = inflater.inflate(R.layout.fragment_subj_kinematic, container, false)
+        val binding = FragmentSubjKinematicBinding.inflate(layoutInflater)
+        binding.buttonConcepts.setOnClickListener {view ->
             val intent : Intent = Intent(view.context, TestActivity::class.java)
             startActivity(intent)
         }
-        return view
+        return binding.root
     }
 
     // TODO: Rename method, update argument and hook method into UI event
