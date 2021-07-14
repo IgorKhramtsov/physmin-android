@@ -67,6 +67,7 @@ class RelationSignView(context: Context, attributeSet: AttributeSet?, letter: St
         return answerView?.answer == correctAnswers
     }
 
+
     var letter: String? = null
         set(value) {
             field = value

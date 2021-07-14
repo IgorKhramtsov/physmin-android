@@ -156,9 +156,10 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
     /// if percent == 1 - user should receive exam bundle
     /// if percent > 1 - user complete topic
     fun setComplenteessPercent(percent: Float) {
-        if (percent < 0)
-            throw Error("completeness percent < 0")
-        this.completingPercent = percent
+        if (percent > 1)
+            this.completingPercent = 1f
+        else
+            this.completingPercent = percent
         invalidate()
     }
 
@@ -283,7 +284,7 @@ class MenuItemView(context: Context, attrs: AttributeSet?): View(context, attrs)
             }
 
             canvas.withTranslation(width / 2f, 0f) {
-                if (completingPercent > 1) {
+                if (completingPercent <= -1) {
                     progressFinishedDrawable.let {
                         it.setBounds(-(iconBackWidth / 2).roundToInt(),
                                 iconBackHeight.roundToInt() + 7.toPx(),

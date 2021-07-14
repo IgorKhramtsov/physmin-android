@@ -56,8 +56,8 @@ class FragmentTaskGraph2Graph: FragmentTaskBase() {
 
         question?.forEach {
             settableGroup.addQuestionGraphic(it.functions)
-            for (i in 0 until it.correctIDs.count())
-                settableGroup.addQuestionBlankView(it.correctIDs.toIntArray())
+            for (i in 0 until correctAnswersCount)
+                settableGroup.addQuestionBlankView(it.correctIDs.toIntArray(), it.id)
         }
 
         answers?.forEach {

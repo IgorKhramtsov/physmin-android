@@ -28,25 +28,22 @@ const val pickableGroupTag = "pickableGroup"
 const val settableGroupTag = "settableGroup"
 
 interface API {
-    val getExercise: String
-    val getExam: String
+    val getTopicBundle: String
     val getTest: String
     val getUserProgress: String
-    val sendBundleStats: String
+    val sendAnswersBundle: String
 }
 
-data class API_prod(override val getExercise: String = "api-v1-getExerciseBundle",
-                    override val getExam: String = "api-v1-getExamBundle",
+data class API_prod(override val getTopicBundle: String = "api-v1-getTopicBundle",
                     override val getTest: String = "getTest",
                     override val getUserProgress: String = "api-v1-getUserProgress",
-                    override val sendBundleStats: String = "api-v1-sendBundleStats"
+                    override val sendAnswersBundle: String = "api-v1-sendAnswersBundle"
 ): API
 
-data class API_debug(override val getExercise: String = "api-v1-getExerciseBundle",
-                     override val getExam: String = "api-v1-getExamBundle",
+data class API_debug(override val getTopicBundle: String = "api-v1-getTopicBundle",
                      override val getTest: String = "getTestDev",
                      override val getUserProgress: String = "api-v1-getUserProgress",
-                     override val sendBundleStats: String = "api-v1-sendBundleStats"
+                     override val sendAnswersBundle: String = "api-v1-sendAnswersBundle"
 ): API
 
 fun View.Show() {

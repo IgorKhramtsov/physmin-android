@@ -31,6 +31,7 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
 
             this.correctAnswers = answer.correctSign
             this.graphView = graphView
+            this.questionId = answer.id
         }
 
         this.addView(relationSignView)
@@ -45,19 +46,21 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
         this.addView(graphView, layoutParams)
     }
 
-    fun addViewSettable(correctIds: IntArray, functions: ArrayList<FunctionParcelable>) {
+    fun addViewSettable(correctIds: IntArray, functions: ArrayList<FunctionParcelable>, questionId: Int) {
         val questView = ImageViewSettable(this.context, null).apply {
-            correctAnswers = correctIds
-            graph.functions = functions
+            this.correctAnswers = correctIds
+            this.questionId = questionId
+            this.graph.functions = functions
         }
 
         val layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
         this.addView(questView, layoutParams)
     }
 
-    fun addQuestionBlankView(correctAnswers: IntArray) {
+    fun addQuestionBlankView(correctAnswers: IntArray, questionId: Int) {
         val imageViewSettableBlank = ImageViewSettableBlank(context, null).apply {
             this.correctAnswers = correctAnswers
+            this.questionId = questionId
         }
 
         val layoutParams = LayoutParams(140.dpToPx().toInt(), 85.dpToPx().toInt())
@@ -96,13 +99,25 @@ class GroupSettable(context: Context, attributeSet: AttributeSet?): BaseGroup(co
     }
 
     fun isAllCorrect(): Boolean {
-        var child: View
         for (i in 0 until childCount) {
-            child = getChildAt(i)
-            if (child is Settable && !child.isCorrect())
-                return false
+            getChildAt(i).let {
+                if (it is Settable && !it.isCorrect())
+                    return false
+            }
         }
 
         return true
+    }
+
+    fun getAnswers(): HashMap<Int, Int> {
+        val result = HashMap<Int, Int>()
+        for (i in 0 until childCount) {
+            getChildAt(i).let {
+                if (it is Settable)
+                    // In G2G with 2 answers, this should be an array of user answers..
+                    result[it.questionId] = it.getAnswer()
+            }
+        }
+        return result
     }
 }

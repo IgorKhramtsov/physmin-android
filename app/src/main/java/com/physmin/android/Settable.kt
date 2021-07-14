@@ -22,7 +22,12 @@ abstract class Settable(context: Context, attrs: AttributeSet?): View(context, a
             onAnswerChanged(field)
         }
 
+    open var questionId: Int = -1
+
     abstract fun isCorrect(): Boolean
+    open fun getAnswer(): Int {
+        return this.answerView!!.answer
+    }
 
     open fun onAnswerChanged(answerView: Pickable?) { }
 

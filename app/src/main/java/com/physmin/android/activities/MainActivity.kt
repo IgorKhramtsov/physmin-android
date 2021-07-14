@@ -76,7 +76,6 @@ class MainActivity: AppCompatActivity() {
 
         var data: HashMap<String, Int>
         var completion: Float
-        var isExam: Boolean
         for (topic in topicMap) {
             if (!userProgressObject.contains(topic.key))
                 continue
@@ -86,11 +85,11 @@ class MainActivity: AppCompatActivity() {
             }
             data = userProgressObject[topic.key] as HashMap<String, Int>
             completion = data["completed"]!!.toFloat() / data["totalExercise"]!!.toFloat()
-            isExam = (completion == 1f)
+            val isExam = (completion >= 1f)
 
             topic.value.setComplenteessPercent(completion)
             topic.value.clearActions()
-            if (completion <= 1)
+            if (completion >= 0)
                 topic.value.setAction(if (isExam) "Контрольный тест" else "Практика") {
                     val intent = Intent(this, TaskPlayerActivity::class.java)
                     intent.putExtra("topicPath", topic.key)
@@ -135,6 +134,7 @@ class MainActivity: AppCompatActivity() {
                 val data = (userProgressObject!![topicPath] as HashMap<String, Any>)
                 data["completed"] = (data["completed"] as Int).inc()
                 updateProgress()
+                loadProgress()
             }
 
         } else {

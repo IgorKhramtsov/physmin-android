@@ -133,7 +133,7 @@ class FunctionParcelable(): Parcelable {
 }
 
 class QuestionParcelable(): Parcelable {
-    var id: Int = 0
+    var id: Int = -1
     var correctIDs = ArrayList<Int>()
     var functions = ArrayList<FunctionParcelable>()
 
@@ -229,7 +229,7 @@ class RSAnswerParcelable(): Parcelable {
     var letter = ""
     var leftSegment = IntArray(2)
     var rightSegment = IntArray(2)
-    var correctSign = 0
+    var correctSign: Int? = null
 
     constructor(obj: HashMap<String, *>): this() {
         obj.let {
@@ -237,7 +237,8 @@ class RSAnswerParcelable(): Parcelable {
             letter = it["letter"] as String
             leftSegment = (it["leftSegment"] as ArrayList<Int>).toIntArray()
             rightSegment = (it["rightSegment"] as ArrayList<Int>).toIntArray()
-            correctSign = it["correctSign"] as Int
+            if (it.contains("correctSign"))
+                correctSign = it["correctSign"] as Int
         }
     }
 
@@ -263,7 +264,7 @@ class RSAnswerParcelable(): Parcelable {
             writeString(letter)
             writeIntArray(leftSegment)
             writeIntArray(rightSegment)
-            writeInt(correctSign)
+            correctSign?.let { writeInt(it) }
         }
     }
 

@@ -28,6 +28,7 @@ interface TaskController {
     fun setPickedItem(item: Pickable?)
     fun resetPickedItem()
     fun isAnswersCorrect(): Boolean
+    fun getAnswers(): HashMap<Int, Int>
 }
 
 abstract class FragmentTaskBase: Fragment(), TaskController {
@@ -116,6 +117,10 @@ abstract class FragmentTaskBase: Fragment(), TaskController {
 
     override fun isAnswersCorrect(): Boolean {
         return settableGroup.isAllCorrect()
+    }
+
+    override fun getAnswers(): HashMap<Int, Int> {
+        return settableGroup.getAnswers()
     }
 
     interface TestCompletingListener {

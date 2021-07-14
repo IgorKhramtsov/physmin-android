@@ -43,7 +43,7 @@ class FragmentTaskGraph2State: FragmentTaskBase() {
 
     override fun onCreateViewEvent(view: View) {
         questions?.forEach {
-            settableGroup.addViewSettable(it.correctIDs.toIntArray(), it.functions)
+            settableGroup.addViewSettable(it.correctIDs.toIntArray(), it.functions, it.id)
         }
 
         answers?.forEach {

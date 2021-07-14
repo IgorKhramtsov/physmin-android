@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.physmin.android.fragments.tasks.*
 import com.google.android.gms.tasks.Task
@@ -43,7 +44,8 @@ class TaskPlayerActivity: AppCompatActivity(), FragmentTaskBase.TestCompletingLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_player)
-        topicPath = intent.getStringExtra("topicPath") ?: throw Exception("topic parameter not passed")
+        topicPath = intent.getStringExtra("topicPath")
+                ?: throw Exception("topic parameter not passed")
         isExam = intent.getBooleanExtra("isExam", false)
 
         timerView.Hide()
@@ -84,42 +86,14 @@ class TaskPlayerActivity: AppCompatActivity(), FragmentTaskBase.TestCompletingLi
         }
     }
 
-    private fun sendAnswersBundle(data: HashMap<String, Any>) {
-        data["topicPath"] = topicPath
-        firebaseFunctions
-                .getHttpsCallable(links.sendBundleStats)
-                .call(data)
-                .continueWith {task ->
-                    when (task.exception) {
-                        is SocketTimeoutException -> {
-                            Log.e(javaClass.name, "sendAnswersBundle() - Timeout!")
-//                            showError(ERROR_TIMEOUT)
-                        }
-                        is FirebaseFunctionsException -> {
-                            Log.e(javaClass.name, "FirebaseException [${(task.exception as FirebaseFunctionsException).code}], ${(task.exception as FirebaseFunctionsException).message}")
-//                            showError(ERROR_SERVER)
-                        }
-                        is Exception -> {
-                            Log.e(javaClass.name, "UnknownError ${task.exception.toString()}")
-//                            showError(ERROR_UNKNOWN)
-                        }
-                    }
-
-                    null
-                }
-    }
-
     private fun fetchBundle(): Task<HashMap<String, *>> {
         val data = hashMapOf(
-                "topic" to topicPath
+                "topic" to topicPath,
+                "isExam" to isExam
         )
-        val linkToFunction = if (isExam)
-            links.getExam
-        else
-            links.getExercise
 
         return firebaseFunctions
-                .getHttpsCallable(linkToFunction)
+                .getHttpsCallable(links.getTopicBundle)
                 .call(data)
                 .continueWith { task ->
                     when (task.exception) {
@@ -139,6 +113,34 @@ class TaskPlayerActivity: AppCompatActivity(), FragmentTaskBase.TestCompletingLi
 
                     val result = task.result?.data as HashMap<String, *>
                     result
+                }
+    }
+
+    private fun sendAnswersBundle(data: HashMap<String, Any>): Task<Double?> {
+        data["topicPath"] = topicPath
+        return firebaseFunctions
+                .getHttpsCallable(links.sendAnswersBundle)
+                .call(data)
+                .continueWith { task ->
+                    when (task.exception) {
+                        is SocketTimeoutException -> {
+                            Log.e(javaClass.name, "sendAnswersBundle() - Timeout!")
+//                            showError(ERROR_TIMEOUT)
+                        }
+                        is FirebaseFunctionsException -> {
+                            Log.e(javaClass.name, "FirebaseException [${(task.exception as FirebaseFunctionsException).code}], ${(task.exception as FirebaseFunctionsException).message}")
+//                            showError(ERROR_SERVER)
+                        }
+                        is Exception -> {
+                            Log.e(javaClass.name, "UnknownError ${task.exception.toString()}")
+//                            showError(ERROR_UNKNOWN)
+                        }
+                    }
+                    when(task.result?.data){
+                        is Int -> ((task.result?.data) as Int).toDouble()
+                        is Double -> task.result?.data as Double
+                        else -> null
+                    }
                 }
     }
 
@@ -164,16 +166,34 @@ class TaskPlayerActivity: AppCompatActivity(), FragmentTaskBase.TestCompletingLi
     }
 
     override fun onBundleComplete() {
+        var status = "Success"
+        var score = 1.0
+
         supportFragmentManager.commit {
-            replace(R.id.test_host_fragment, FragmentTestComplete.newInstance("Success", topicPath)) // or Fail
+            replace(R.id.test_host_fragment, Fragment())
             timerView.Hide()
             progressBarView.Hide()
             floatingMenu.Hide()
             buttonNext.Hide()
+
+            loadingAnimation.Show()
         }
+        sendAnswersBundle(bundleController!!.getStats()).addOnCompleteListener {
+            if (isExam) {
+                score = it.result
+                        ?: throw Exception("Cant get bundle result")
+                status = if (score > 0.75) "Success" else "Failure"
+            }
 
-        sendAnswersBundle(bundleController!!.getStats())
-
+            supportFragmentManager.commit {
+                replace(R.id.test_host_fragment, FragmentTestComplete.newInstance(status, topicPath, score)) // or Fail
+                timerView.Hide()
+                progressBarView.Hide()
+                floatingMenu.Hide()
+                buttonNext.Hide()
+                loadingAnimation.Hide()
+            }
+        }
     }
 
     override fun onTaskComplete() {
