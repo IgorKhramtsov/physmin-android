@@ -44,6 +44,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "280499204418-cu5ck5j5k3mgmtkbkegru4ni4nv7ah3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.physmin.android.dev",
+            "certificate_hash": "ee832c8c7cbbaa589737fc205f4be7c22faa3caf"
+          }
+        },
+        {
           "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
           "client_type": 3
         }

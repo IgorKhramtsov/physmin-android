@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import com.physmin.android.App
 import com.physmin.android.BuildConfig
 import com.physmin.android.R
@@ -30,7 +32,7 @@ const val RC_PLAY_BUNDLE = 1
 
 class MainActivity: AppCompatActivity() {
 
-    private var functions: FirebaseFunctions = FirebaseFunctions.getInstance("europe-west1")
+    private lateinit var functions: FirebaseFunctions
     private val authManager: FirebaseAuthManager = FirebaseAuthManager(this)
     private val topicMap: Map<String, MenuItemView> by lazy {
         mapOf(
@@ -54,6 +56,7 @@ class MainActivity: AppCompatActivity() {
         this.textViewSignOut.setOnClickListener { authManager.signOut() }
         this.textViewRegistration.setOnClickListener { authManager.upgradeAnonymousAcc() }
 
+        functions = Firebase.functions
         authManager.startAuthActivity()
         loadProgress()
     }
