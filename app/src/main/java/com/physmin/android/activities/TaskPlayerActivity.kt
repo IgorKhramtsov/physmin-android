@@ -225,6 +225,7 @@ class TaskPlayerActivity: AppCompatActivity(), FragmentTaskBase.TestCompletingLi
     }
 
     fun showDebugMessage(text: String) {
+        return;
         debugTextView.text = text
         debugTextView.Show()
         debugTextView.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.graphic_back_gray, null))

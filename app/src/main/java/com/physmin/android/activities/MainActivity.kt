@@ -56,7 +56,7 @@ class MainActivity: AppCompatActivity() {
         this.textViewSignOut.setOnClickListener { authManager.signOut() }
         this.textViewRegistration.setOnClickListener { authManager.upgradeAnonymousAcc() }
 
-        functions = Firebase.functions
+        functions = FirebaseFunctions.getInstance("europe-west1")
         authManager.startAuthActivity()
         loadProgress()
     }
