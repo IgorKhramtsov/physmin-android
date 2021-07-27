@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<com.example.physmin.views.TestConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ui_background"
     android:isScrollContainer="false"
-    tools:context=".fragments.tests.FragmentTestGraph2Graph">
+    tools:context=".fragments.tasks.FragmentTaskGraph2Graph">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
@@ -39,11 +24,11 @@
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.physmin.views.GroupSettable
+    <com.physmin.android.views.layouts.GroupSettable
         android:id="@+id/settableGroup_g2g"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
@@ -52,23 +37,14 @@
         android:layout_marginRight="0dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        app:bg_spacingHorizontal="8dp"
+        app:bg_spacingVertical="8dp"
+        app:bg_layoutType="two_columns"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/textView"/>
 
-        <com.example.physmin.views.GraphView
-            android:id="@+id/GraphicView_g2g_question"
-            android:layout_width="160dp"
-            android:layout_height="110dp"/>
-
-        <com.example.physmin.views.ImageViewSettableBlank
-            android:id="@+id/GraphicView_g2g_blank1"
-            android:layout_width="160dp"
-            android:layout_height="110dp" />
-
-    </com.example.physmin.views.GroupSettable>
-
-    <com.example.physmin.views.GroupPickable
+    <com.physmin.android.views.layouts.GroupPickable
         android:id="@+id/pickableGroup_g2g"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -80,15 +56,16 @@
         android:layout_marginBottom="16dp"
         android:isScrollContainer="true"
         android:orientation="vertical"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        app:horizontalSpacing="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:bg_spacingHorizontal="8dp"
+        app:bg_spacingVertical="8dp"
+        app:bg_layoutType="two_columns"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settableGroup_g2g"
         app:layout_constraintVertical_bias="0.0"
-        app:verticalSpacing="8dp"
         tools:layout_editor_absoluteY="234dp" />
 
-</com.example.physmin.views.TestConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

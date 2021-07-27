@@ -1,0 +1,4 @@
+<resources>
+    <declare-styleable name="CustomButton">
+    </declare-styleable>
+</resources>

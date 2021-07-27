@@ -1,6 +1,0 @@
-<resources>
-    <declare-styleable name="TextViewPickable">
-        <attr name="outlineColor" format="color" />
-        <attr name="answer" format="integer" />
-    </declare-styleable>
-</resources>

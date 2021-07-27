@@ -1,0 +1,72 @@
+<!-- drawable/ellipse_2.xml -->
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="131dp"
+    android:height="131dp"
+    android:viewportWidth="131"
+    android:viewportHeight="131"
+    >
+
+    <group>
+
+        <clip-path
+            android:pathData="M129.5 65.5C129.5 100.846 100.846 129.5 65.5 129.5C30.1538 129.5 1.5 100.846 1.5 65.5C1.5 30.1538 30.1538 1.5 65.5 1.5C100.846 1.5 129.5 30.1538 129.5 65.5Z"
+            />
+
+        <path
+            android:pathData="M1.5 1.5V129.5H129.5V1.5"
+            android:fillColor="#222A68"
+            />
+
+        <group
+            android:translateX="1.043"
+            android:translateY="-0.355"
+            android:pivotX="65.5"
+            android:pivotY="65.5"
+            android:scaleX="2.172"
+            android:scaleY="2.454"
+            android:rotation="90"
+            >
+
+            <path
+                android:pathData="M1.5 1.5V129.5H129.5V1.5"
+                >
+
+                <aapt:attr name="android:fillColor">
+
+                    <gradient
+                        android:type="linear"
+                        android:startX="33.5"
+                        android:startY="65.5"
+                        android:endX="97.5"
+                        android:endY="65.5"
+                        >
+
+                        <item
+                            android:color="#2F3A8F"
+                            android:offset="0"
+                            />
+
+                        <item
+                            android:color="#18205A"
+                            android:offset="1"
+                            />
+
+                    </gradient>
+
+                </aapt:attr>
+
+            </path>
+
+        </group>
+
+    </group>
+
+    <path
+        android:pathData="M129.5 65.5C129.5 100.846 100.846 129.5 65.5 129.5C30.1538 129.5 1.5 100.846 1.5 65.5C1.5 30.1538 30.1538 1.5 65.5 1.5C100.846 1.5 129.5 30.1538 129.5 65.5Z"
+        android:strokeWidth="3"
+        android:strokeColor="#F6F6F6"
+        />
+
+</vector>

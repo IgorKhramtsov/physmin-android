@@ -6,7 +6,16 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_main2">Main2Activity</string>
 
+    <string name="messageTimeoutError">External Error. Не удалось подключится к серверу, проверьте ваше соединение.</string>
+    <string name="messageServerError">Internal Error. Сервер временно недоступен, попробуйте еще раз.</string>
+    <string name="messageUnknownError">Произошла неизвестная ошибка.</string>
+
+    <string name="messageButtonTryAgain">Повторить</string>
+    <string name="messageButtonNext">Далее</string>
+    <string name="messageButtonContinue">Продолжить</string>
+
     <string name="relation_sign_more">\u003E</string>
     <string name="relation_sign_less">\u003C</string>
     <string name="relation_sign_equal">\u003D</string>
+
 </resources>

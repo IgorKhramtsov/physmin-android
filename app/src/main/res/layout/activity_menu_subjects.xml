@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.physmin.android.activities.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ui_background"
+        tools:context="com.physmin.android.activities.MainActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/AppTheme.ActionBarStyle.TitleTextStyle" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Поступательное движение"
+            android:textColor="@color/textColor"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="39dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Вращательное движение"
+            android:textColor="@color/textColor"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menuItemView_progressive_final" />
+
+        <com.physmin.android.views.MenuItemView
+            android:id="@+id/menuItemView_progressive_graphs"
+            android:layout_width="127dp"
+            android:layout_height="118dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:itemBack_icon="@drawable/ic_menuitem_back"
+            app:itemIcon="@drawable/ic_concept_icon"
+            app:itemTitle="Графики"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <com.physmin.android.views.MenuItemView
+            android:id="@+id/menuItemView_progressive_concepts"
+            android:layout_width="127dp"
+            android:layout_height="118dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:itemBack_icon="@drawable/ic_menuitem_back"
+            app:itemIcon="@drawable/ic_concept_icon"
+            app:itemTitle="Понятия"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <com.physmin.android.views.MenuItemView
+            android:id="@+id/menuItemView_progressive_final"
+            android:layout_width="197dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:itemBack_icon="@drawable/ic_menuitemcomplex_back"
+            app:itemTitle="Закрепление"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menuItemView_progressive_concepts"
+            app:type="Horizontal" />
+
+        <com.physmin.android.views.MenuItemView
+            android:id="@+id/menuItemView_rotation_concepts"
+            android:layout_width="127dp"
+            android:layout_height="118dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            app:itemBack_icon="@drawable/ic_menuitem_back"
+            app:itemIcon="@drawable/ic_concept_icon"
+            app:itemTitle="Понятия"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+        <com.physmin.android.views.MenuItemView
+            android:id="@+id/menuItemView_rotation_graphs"
+            android:layout_width="127dp"
+            android:layout_height="118dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:itemBack_icon="@drawable/ic_menuitem_back"
+            app:itemIcon="@drawable/ic_concept_icon"
+            app:itemTitle="Графики"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="265dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        >
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="265dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/sidemenu_background"
+            >
+
+            <TextView
+                android:id="@+id/textViewSignOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:shadowColor="@color/textShadow"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="4"
+                android:text="Выйти"
+                android:clickable="true"
+                android:textColor="@color/textColorLightSecond"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageViewAvatar"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginTop="26dp"
+                android:src="@drawable/avatar_drawable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewInitials"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:gravity="center"
+                android:text="И.Х."
+                android:textColor="@color/textColorLight"
+                android:textSize="48sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageViewAvatar"
+                app:layout_constraintEnd_toEndOf="@+id/imageViewAvatar"
+                app:layout_constraintStart_toStartOf="@+id/imageViewAvatar"
+                app:layout_constraintTop_toTopOf="@+id/imageViewAvatar" />
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:shadowColor="@color/textShadow"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="4"
+                android:text="Игорь Храмцов"
+                android:textColor="@color/textColorLight"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewAvatar" />
+
+            <TextView
+                android:id="@+id/textViewEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="igorxramcov@yandex.ru"
+                android:textColor="@color/textColorLightThird"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+            <TextView
+                android:id="@+id/textViewEmailVerification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/roboto_lightitalic"
+                android:text="Не подтвержден"
+                android:textColor="@color/textColorLightFour"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="282dp"
+                android:gravity="bottom"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textViewRegistration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:shadowColor="@color/textShadow"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="4"
+                    android:text="Регистрация"
+                    android:clickable="true"
+                    android:textColor="@color/textColorLight"
+                    android:textSize="26sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textViewNavigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:shadowColor="@color/textShadow"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="4"
+                    android:text="Навигация"
+                    android:clickable="true"
+                    android:textColor="@color/textColorLight"
+                    android:textSize="26sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="87dp"
+                android:gravity="bottom"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/textViewStatistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:shadowColor="@color/textShadow"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="4"
+                    android:text="Статистика"
+                    android:clickable="true"
+                    android:textColor="@color/textColorLight"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/textViewSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:shadowColor="@color/textShadow"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="4"
+                    android:text="Настройки"
+                    android:clickable="true"
+                    android:textColor="@color/textColorLight"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

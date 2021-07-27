@@ -1,6 +1,6 @@
 <resources>
     <declare-styleable name="GroupPickable">
-        <attr name="verticalSpacing" format="dimension" />
-        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="gp_spacingVertical" format="dimension" />
+        <attr name="gp_spacingHorizontal" format="dimension" />
     </declare-styleable>
 </resources>

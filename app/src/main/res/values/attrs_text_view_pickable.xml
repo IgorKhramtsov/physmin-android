@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="TextViewPickable">
+        <attr name="textViewPickableText" format="string" />
+        <attr name="textViewPickableAnswer" format="integer" />
+        <attr name="textViewPickableTextSize" format="dimension" />
+        <attr name="textViewPickableTextColor" format="color" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "280499204418",
+    "firebase_url": "https://physmin.firebaseio.com",
+    "project_id": "physmin",
+    "storage_bucket": "physmin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280499204418:android:69ca5e6801408d43",
+        "android_client_info": {
+          "package_name": "com.physmin.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjLTE7FG7zVbMQZB10ufu0l2U0CVwyjIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280499204418:android:aacf547f652506c4",
+        "android_client_info": {
+          "package_name": "com.physmin.android.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280499204418-cu5ck5j5k3mgmtkbkegru4ni4nv7ah3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.physmin.android.dev",
+            "certificate_hash": "ee832c8c7cbbaa589737fc205f4be7c22faa3caf"
+          }
+        },
+        {
+          "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjLTE7FG7zVbMQZB10ufu0l2U0CVwyjIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280499204418-qv8m4b6uqnb6dm37jgl5nlate75nv483.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

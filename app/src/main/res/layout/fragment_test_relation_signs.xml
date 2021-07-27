@@ -1,37 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.example.physmin.views.TestConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".fragments.tests.FragmentTestSign2Relation">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.tasks.FragmentTaskRS">
 
-        <ImageView
-            android:id="@+id/imageView_rs_task"
-            android:layout_width="355dp"
-            android:layout_height="144dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <com.example.physmin.views.GroupSettable
-        android:id="@+id/settableGroup_rs"
-        android:layout_width="0dp"
-        android:layout_height="186dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="20sp"
+        android:text="Восстановите неравенство"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_rs_task" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.physmin.android.views.layouts.GroupPickable
+        android:id="@+id/groupPickable"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.physmin.android.views.layouts.BaseGroup
+        android:id="@+id/relationSign_BaseGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6">
+
+        <com.physmin.android.views.GraphView
+            android:id="@+id/graphView_rs_task"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginTop="8dp"
+            app:needShowDividers="true" />
+    </com.physmin.android.views.layouts.BaseGroup>
 
 
-    </com.example.physmin.views.TestConstraintLayout>
+    <com.physmin.android.views.layouts.GroupSettable
+        android:id="@+id/settableGroup_rs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        app:bg_layoutType="one_column"
+        app:bg_spacingHorizontal="24dp"
+        app:bg_spacingVertical="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relationSign_BaseGroup" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

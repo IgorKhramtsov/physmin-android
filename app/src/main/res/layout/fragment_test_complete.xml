@@ -1,0 +1,62 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.physmin.android.fragments.FragmentTestComplete">
+
+    <TextView
+        android:id="@+id/textViewTaskScore"
+        android:layout_width="250dp"
+        android:layout_height="87dp"
+        android:gravity="center"
+        android:textColor="@color/textColorLight"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/animation_view"
+        app:layout_constraintEnd_toEndOf="@+id/animation_view"
+        app:layout_constraintStart_toStartOf="@+id/animation_view"
+        app:layout_constraintTop_toTopOf="@+id/animation_view" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_test_completed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="12dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="12dp"
+        android:text="@string/messageButtonContinue"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/animation_view" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="299dp"
+        android:layout_height="299dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/animation_complete" />
+
+    <TextView
+        android:id="@+id/textViewTaskCompletingMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="Тест успешно завершен!"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/animation_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
